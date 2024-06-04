@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitis.RLoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/level_up_login2" />
+    <TextView
+        android:id="@+id/tv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="back"
+        android:padding="16dp"
+        android:textSize="18dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_login_id"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="아이디 입력"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_login_pw"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호 입력"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/input_layout_login_id"
+        android:inputType="textPassword"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:src="@drawable/level_up_button"
+        android:layout_below="@id/input_layout_login_pw"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        />
+
+
+</RelativeLayout>
