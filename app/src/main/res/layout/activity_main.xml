@@ -7,11 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".activitis.MainActivity"
     android:orientation="vertical">
-    <com.google.android.material.appbar.MaterialToolbar
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:menu="@menu/bottom_nav_menu"
-        android:background="@color/black"/>
 
     <FrameLayout
         android:id="@+id/frame"
@@ -27,5 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="labeled"/>
+        app:labelVisibilityMode="labeled"
+        android:background="#ffc700"/>
 </LinearLayout>

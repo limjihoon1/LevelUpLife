@@ -51,7 +51,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:src="@drawable/level_up_button"
+        android:src="@drawable/nextbutton"
         android:layout_below="@id/input_layout_login_pw"
         android:layout_alignParentRight="true"
         android:layout_marginRight="50dp"
