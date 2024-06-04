@@ -21,6 +21,7 @@ class ProfileFragment : Fragment(){
     }
     private fun rendum(){
 
+
     }
 
 }
