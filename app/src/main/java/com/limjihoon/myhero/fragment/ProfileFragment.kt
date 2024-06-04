@@ -20,6 +20,7 @@ class ProfileFragment : Fragment(){
         return binding.root
     }
     private fun rendum(){
+//        asd
 
     }
 
