@@ -17,5 +17,7 @@ class ChatBotActivity : AppCompatActivity() {
         setContentView(binding.root)
         Toast.makeText(this, "안농 나는 쳇봇 영승리 라고해 ", Toast.LENGTH_SHORT).show()
 
+//
+
     }
 }
