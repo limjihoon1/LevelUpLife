@@ -1,10 +1,12 @@
 package com.limjihoon.myhero.fragment
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
@@ -22,7 +24,23 @@ class HomeFragment : Fragment(){
     ): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(),ChatBotActivity::class.java)) }
+        binding.creatTodo.setOnClickListener { rendum() }
         return binding.root
+
+    }
+    private fun rendum(){
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo, null)
+        builder.setView(dialogView)
+
+        val dialog = builder.create()
+        dialog.show()
+
+        val dialogButton: Button = dialogView.findViewById(R.id.confirmButton)
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+        }
 
     }
 
