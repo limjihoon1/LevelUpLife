@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF"
+    android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="캐릭터를 선택해주세요"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 보유한 캐릭터만 선택 가능합니다"
+        android:textSize="14sp"
+        android:textColor="#808080"
+        android:gravity="center"
+        android:paddingBottom="16dp"/>
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="4"
+        android:rowCount="3"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/level_up_char_hiden2"
+            android:background="@drawable/char_bg"/>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/level_up_char1"
+            android:background="@drawable/char_bg"/>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/level_up_char7"
+            android:background="@drawable/char_bg"/>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/level_up_char11"
+            android:background="@drawable/char_bg"/>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/level_up_char2"
+            android:background="@drawable/char_bg"/>
+
+    </GridLayout>
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="선택완료"
+        android:textColor="@color/black"
+        android:backgroundTint="#FFCD4A"
+        android:padding="12dp"
+        android:gravity="center"/>
+
+</LinearLayout>
