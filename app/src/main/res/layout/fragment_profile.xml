@@ -6,17 +6,67 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/rendum"
         android:adjustViewBounds="true"
-        />
-    <ImageView
-        android:id="@+id/btn"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/rendum2" />
+
+    <LinearLayout
+        android:id="@+id/rendum_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
-        android:src="@drawable/level_up_button"
-        />
+        android:background="@drawable/button_rendum"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/buttonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="시작하기"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/buttonSubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingTop="4dp"
+            android:text="( 10 coin )"
+
+            android:textColor="#B3E5FC"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/outlineText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:strokeColor="#FFFFFF"
+        android:text="캐릭터 뽑기\n도감을 완성해 보세요!"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/mainText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="캐릭터 뽑기\n도감을 완성해 보세요!"
+        android:textColor="#00FFDD"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
