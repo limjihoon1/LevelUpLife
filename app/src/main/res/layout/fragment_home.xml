@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/first_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="16dp"
+        android:backgroundTint="@color/white"
         >
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -20,9 +22,18 @@
                 android:layout_height="130dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="30dp"
-                android:src="@drawable/ypg"/>
+                android:src="@drawable/profile"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:src="@drawable/level_up_char6"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="70dp"/>
+                />
+
             <TextView
                 android:id="@+id/nickname"
                 android:layout_width="wrap_content"
@@ -61,19 +72,19 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="#ffffda00"
-                android:layout_marginTop="16dp"
+                android:src="@drawable/coin"
+                android:layout_marginTop="18dp"
                 android:layout_alignParentRight="true"
-
-                android:layout_marginRight="120dp"
+                android:layout_marginRight="128dp"
                 android:layout_below="@id/nickname"/>
             <ProgressBar
                 android:id="@+id/bar"
-                android:layout_width="150dp"
+                android:layout_width="130dp"
                 android:layout_height="25dp"
                 android:layout_toRightOf="@id/img"
                 android:layout_below="@id/coin"
                 android:layout_marginTop="16dp"
+                android:layout_marginLeft="20dp"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
 
 
@@ -86,7 +97,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/coin"
                 android:layout_marginTop="18dp"
-                android:layout_marginRight="225dp"
+                android:layout_marginRight="216dp"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -113,21 +124,23 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/white"
         >
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             >
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@color/black"
+                android:src="@drawable/todolist2"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="20dp"/>
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@color/black"
+                android:src="@drawable/mapicon"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="20dp"
                 android:layout_alignParentRight="true"/>
@@ -136,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quest"
                 android:textSize="30dp"
-                android:layout_marginLeft="135dp"
+                android:layout_marginLeft="148dp"
                 android:layout_marginTop="35dp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recy"
@@ -147,6 +160,7 @@
                 android:layout_marginTop="120dp"
                 />
             <RelativeLayout
+                android:id="@+id/re1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -154,28 +168,63 @@
                 android:layout_marginTop="120dp">
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="75dp"
                     app:cardCornerRadius="8dp"
-                    android:backgroundTint="#123456"/>
+                    android:backgroundTint="#DFBFE6"/>
+
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="240dp"
-                    android:layout_height="60dp"
-                    app:cardCornerRadius="8dp"
+                    android:layout_height="74dp"
                     android:layout_marginLeft="50dp"
-                    android:backgroundTint="@color/white"/>
+                    android:backgroundTint="@color/white"
+                    app:cardCornerRadius="8dp" />
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@color/white"
-                    android:layout_marginTop="15dp"
+                    android:src="@drawable/xicon"
+                    android:layout_marginTop="22.5dp"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/vicon"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="22.5dp"
+                    android:layout_marginRight="10dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_below="@id/re1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    app:cardCornerRadius="8dp"
+                    android:backgroundTint="#FFCD4A"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="240dp"
+                    android:layout_height="74dp"
+                    android:layout_marginLeft="50dp"
+                    android:backgroundTint="@color/white"
+                    app:cardCornerRadius="8dp" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/xicon"
+                    android:layout_marginTop="22.5dp"
                     android:layout_marginLeft="10dp"/>
                 <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@color/white"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="10dp"/>
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/vicon"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="22.5dp"
+                    android:layout_marginRight="10dp"/>
             </RelativeLayout>
         </RelativeLayout>
 

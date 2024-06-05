@@ -1,15 +1,315 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".fragment.">
 
-    <TextView
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/first_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="16dp">
 
-        android:text="setting"
-        android:textSize="100dp"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-</RelativeLayout>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="8dp"
+                android:src="@drawable/setting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/img"
+                android:layout_marginLeft="35dp"
+                android:layout_marginBottom="10dp"
+                android:text="캐릭터변경 +"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/profile" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="70dp"
+                android:src="@drawable/level_up_char6" />
+            />
+
+            <TextView
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="65dp"
+                android:text="닉네임 입니다"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nickname"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="175dp"
+                android:text="Lv :1"
+                android:textColor="#ffff0000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nickname"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="50dp"
+                android:text="10 COIN"
+                android:textColor="#ffffda00"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/nickname"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="128dp"
+                android:src="@drawable/coin" />
+
+            <ProgressBar
+                android:id="@+id/bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="130dp"
+                android:layout_height="25dp"
+                android:layout_below="@id/coin"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@id/img"
+
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coin"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="216dp"
+                android:text="exp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coin"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="25dp"
+                android:text="20/50"
+                android:textSize="14sp" />
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:text="도감"
+                android:textColor="#CDA51B"
+                android:textSize="30sp" />
+
+            <GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:columnCount="4"
+                android:rowCount="3"
+
+
+                >
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char1_bl" />
+
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char2_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char3_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char4_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char5_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char6_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char7_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char8_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char9_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char10" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/level_up_char11_bl" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/char_bg"
+                    android:src="@drawable/qmark" />
+
+            </GridLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ProgressBar
+
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="250dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:progress="20"
+                    android:layout_marginTop="10dp"
+                    android:progressDrawable="@drawable/prograsbar1" />
+
+                <TextView
+                    android:id="@+id/progressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/progressBar"
+                    android:layout_centerVertical="true"
+                    android:text="20%"
+
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/topTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:text="도감 100% 달성 보상"
+                android:textColor="#FFC107"
+                android:layout_marginTop="6dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/bottomTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="4dp"
+                android:text="Hidden Item"
+                android:textColor="#FFC107"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</LinearLayout>
