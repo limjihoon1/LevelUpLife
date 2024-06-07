@@ -32,6 +32,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/ypg"
             android:background="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -46,9 +47,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/ypg"
             android:background="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
     <ImageView
+        android:id="@+id/btn_next"
         android:layout_width="100dp"
         android:layout_height="60dp"
         android:src="@drawable/nextbutton"

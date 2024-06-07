@@ -24,11 +24,11 @@ class HomeFragment : Fragment(){
     ): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(),ChatBotActivity::class.java)) }
-        binding.creatTodo.setOnClickListener { rendum() }
+        binding.creatTodo.setOnClickListener { listCreate() }
         return binding.root
 
     }
-    private fun rendum(){
+    private fun listCreate(){
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo, null)
