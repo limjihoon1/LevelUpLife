@@ -171,6 +171,7 @@
                 >
 
                 <ImageView
+                    android:id="@+id/char1"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -179,6 +180,7 @@
 
 
                 <ImageView
+                    android:id="@+id/char2"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -186,6 +188,7 @@
                     android:src="@drawable/level_up_char2_bl" />
 
                 <ImageView
+                    android:id="@+id/char3"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -193,6 +196,7 @@
                     android:src="@drawable/level_up_char3_bl" />
 
                 <ImageView
+                    android:id="@+id/char4"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -200,6 +204,7 @@
                     android:src="@drawable/level_up_char4_bl" />
 
                 <ImageView
+                    android:id="@+id/char5"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -207,6 +212,7 @@
                     android:src="@drawable/level_up_char5_bl" />
 
                 <ImageView
+                    android:id="@+id/char6"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -214,6 +220,7 @@
                     android:src="@drawable/level_up_char6_bl" />
 
                 <ImageView
+                    android:id="@+id/char7"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -221,6 +228,7 @@
                     android:src="@drawable/level_up_char7_bl" />
 
                 <ImageView
+                    android:id="@+id/char8"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
 
@@ -229,6 +237,7 @@
                     android:src="@drawable/level_up_char8_bl" />
 
                 <ImageView
+                    android:id="@+id/char9"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -236,13 +245,15 @@
                     android:src="@drawable/level_up_char9_bl" />
 
                 <ImageView
+                    android:id="@+id/char10"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
                     android:background="@drawable/char_bg"
-                    android:src="@drawable/level_up_char10" />
+                    android:src="@drawable/level_up_char10_bl" />
 
                 <ImageView
+                    android:id="@+id/char11"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
@@ -250,6 +261,7 @@
                     android:src="@drawable/level_up_char11_bl" />
 
                 <ImageView
+                    android:id="@+id/charhiden"
                     android:layout_width="60dp"
                     android:layout_height="80dp"
                     android:layout_margin="12dp"
