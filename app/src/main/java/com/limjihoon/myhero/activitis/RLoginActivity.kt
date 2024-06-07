@@ -1,20 +1,26 @@
 package com.limjihoon.myhero.activitis
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.databinding.ActivityRloginBinding
 
 class RLoginActivity : AppCompatActivity() {
-    lateinit var binding:ActivityRloginBinding
+    lateinit var binding: ActivityRloginBinding
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -25,15 +31,29 @@ class RLoginActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         supportActionBar?.hide()
 
-        binding= ActivityRloginBinding.inflate(layoutInflater)
+        binding = ActivityRloginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.tvBack.setOnClickListener { onBackPressed() }
+        binding.btnNext.setOnClickListener { login() }
 
     }
+
     override fun onBackPressed() {
         super.onBackPressed()
-        overridePendingTransition( R.anim.from_bottom_enter_start , R.anim.from_top_enter_exit)
+        overridePendingTransition(R.anim.from_bottom_enter_start, R.anim.from_top_enter_exit)
     }
 
+    private fun login() {
+
+        val email = binding.inputLayoutLoginId.editText!!.text.toString()
+        val password = binding.inputLayoutLoginPw.editText!!.text.toString()
+
+        Firebase.firestore.collection("users").whereEqualTo("email",email).get().addOnSuccessListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+        }
+
+    }
 
 }

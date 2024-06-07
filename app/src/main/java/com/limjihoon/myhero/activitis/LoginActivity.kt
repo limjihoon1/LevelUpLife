@@ -27,13 +27,14 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLogIn.setOnClickListener {
-            startActivity(Intent(this, RLoginActivity::class.java))
+            startActivity(Intent(this, SigninActivity::class.java))
             overridePendingTransition(R.anim.from_bottom_enter_xml, R.anim.from_top_enter_xml)
 
         }
 
         binding.btnSignIn.setOnClickListener {
-            startActivity(Intent(this, SigninActivity::class.java))
+
+            startActivity(Intent(this, RLoginActivity::class.java))
             overridePendingTransition(R.anim.from_bottom_enter_xml, R.anim.from_top_enter_xml)
         }
         binding.btn.setOnClickListener { startActivity(Intent(this,MainActivity::class.java)) }
