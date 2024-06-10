@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.IntroActivity
-import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.databinding.ActivityIntroBinding
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.databinding.FragmentSearchBinding
@@ -27,6 +26,7 @@ class HomeFragment : Fragment(){
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(),ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
         binding.createMap.setOnClickListener { startActivity(Intent(requireContext(),MapActivity::class.java)) }
+
         return binding.root
 
     }
