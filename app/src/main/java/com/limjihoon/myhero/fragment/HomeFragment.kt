@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.IntroActivity
+import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.databinding.ActivityIntroBinding
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.databinding.FragmentSearchBinding

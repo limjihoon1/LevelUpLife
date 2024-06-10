@@ -3,8 +3,6 @@ package com.limjihoon.myhero.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +16,7 @@ import com.limjihoon.myhero.databinding.FragmentProfileBinding
 import kotlin.random.Random
 
 
-class ProfileFragment : Fragment() {
+class RendumFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
 
 
