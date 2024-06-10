@@ -47,7 +47,7 @@ class SigninActivity2 : AppCompatActivity() {
 
         )
 
-        Firebase.firestore.collection("users").document("1").set(user)
+        Firebase.firestore.collection("users").document(nickname).set(user)
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
 

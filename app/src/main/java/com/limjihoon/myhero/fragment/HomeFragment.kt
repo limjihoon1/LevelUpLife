@@ -25,6 +25,8 @@ class HomeFragment : Fragment(){
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(),ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
+        binding.createMap.setOnClickListener { startActivity(Intent(requireContext(),MapActivity::class.java)) }
+
         return binding.root
 
     }
