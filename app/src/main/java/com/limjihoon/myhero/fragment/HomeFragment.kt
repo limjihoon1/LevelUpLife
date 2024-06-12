@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
@@ -42,7 +43,12 @@ class HomeFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(),ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
-        binding.createMap.setOnClickListener { startActivity(Intent(requireContext(), MapActivity::class.java)) }
+        var intent = Intent(requireContext(), MapActivity::class.java)
+
+        intent.putExtra("lat",(activity as MainActivity).myLocation?.latitude ?: 37.555)
+        intent.putExtra("lng",(activity as MainActivity).myLocation?.longitude ?: 126.9746)
+
+        binding.createMap.setOnClickListener {startActivity(intent) }
 
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), itmes)
     }
