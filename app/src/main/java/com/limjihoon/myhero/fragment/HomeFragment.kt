@@ -69,7 +69,6 @@ class HomeFragment : Fragment(){
         val retrofit2 = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService2 = retrofit2.create(RetrofitService::class.java)
     }
-
     private fun listCreate(){
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater

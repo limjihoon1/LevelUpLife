@@ -4,21 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.ListFragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
-import com.limjihoon.myhero.fragment.NotificationsFragment
-import com.limjihoon.myhero.fragment.ProfileFragment
-import com.limjihoon.myhero.fragment.SearchFragment
+import com.limjihoon.myhero.fragment.RendumFragment
+import com.limjihoon.myhero.fragment.MapFragment
 import com.limjihoon.myhero.fragment.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
@@ -38,13 +33,13 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.frame, HomeFragment()).commit()
 
                 R.id.bnv_search -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, SearchFragment()).commit()
+                    .replace(R.id.frame, MapFragment()).commit()
 
                 R.id.bnv_notifications -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, NotificationsFragment()).commit()
+                    .replace(R.id.frame, com.limjihoon.myhero.fragment.ListFragment()).commit()
 
                 R.id.bnv_profile -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, ProfileFragment()).commit()
+                    .replace(R.id.frame, RendumFragment()).commit()
 
                 R.id.bnv_settings -> supportFragmentManager.beginTransaction()
                     .replace(R.id.frame, SettingsFragment()).commit()

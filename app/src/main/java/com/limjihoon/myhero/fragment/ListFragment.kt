@@ -8,7 +8,7 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.databinding.FragmentNotificationsBinding
 
-class NotificationsFragment : Fragment(){
+class ListFragment : Fragment(){
     lateinit var binding: FragmentNotificationsBinding
     override fun onCreateView(
         inflater: LayoutInflater,
