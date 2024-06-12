@@ -36,7 +36,6 @@ class SettingsFragment : Fragment() {
     var fild11: String? = "char11"
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,31 +49,14 @@ class SettingsFragment : Fragment() {
         FirebaseApp.initializeApp(requireContext())
         val db = FirebaseFirestore.getInstance()
 
-        // Firestore에서 필드 값 가져오기
-        db.collection("users").document("1").get().addOnSuccessListener { doc ->
-            if (doc != null && doc.exists()) {
-                fild1 = getFieldAsString(doc, fild1)
-                fild2 = getFieldAsString(doc, fild2)
-                fild3 = getFieldAsString(doc, fild3)
-                fild4 = getFieldAsString(doc, fild4)
-                fild5 = getFieldAsString(doc, fild5)
-                fild6 = getFieldAsString(doc, fild6)
-                fild7 = getFieldAsString(doc, fild7)
-                fild8 = getFieldAsString(doc, fild8)
-                fild9 = getFieldAsString(doc, fild9)
-                fild10 = getFieldAsString(doc, fild10)
-                fild11 = getFieldAsString(doc, fild11)
 
-                updateUI()
-            }
-        }
 
         binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
         binding.changeImage.setOnClickListener { select() }
 
         // Firebase 초기화
         FirebaseApp.initializeApp(requireContext())
-        val db = FirebaseFirestore.getInstance()
+
 
         // Firestore에서 필드 값 가져오기
         db.collection("users").document("1").get().addOnSuccessListener { doc ->
@@ -240,216 +222,216 @@ class SettingsFragment : Fragment() {
 
             builder.setView(dialogView)
 
-        val dialog = builder.create()
-        if (fild1 == "1") {
-            image1.visibility = View.VISIBLE
-        } else {
-            image1.visibility = View.GONE
-        }
-        if (fild2 == "1") {
-            image2.visibility = View.VISIBLE
-        } else {
-            image2.visibility = View.GONE
-        }
-        if (fild3 == "1") {
-            image3.visibility = View.VISIBLE
-        } else {
-            image3.visibility = View.GONE
-        }
-        if (fild4 == "1") {
-            image4.visibility = View.VISIBLE
-        } else {
-            image4.visibility = View.GONE
-        }
-        if (fild5 == "1") {
-            image5.visibility = View.VISIBLE
-        } else {
-            image5.visibility = View.GONE
-        }
-        if (fild6 == "1") {
-            image6.visibility = View.VISIBLE
-        } else {
-            image6.visibility = View.GONE
-        }
-        if (fild7 == "1") {
-            image7.visibility = View.VISIBLE
-        } else {
-            image7.visibility = View.GONE
-        }
-        if (fild8 == "1") {
-            image8.visibility = View.VISIBLE
-        } else {
-            image8.visibility = View.GONE
-        }
-        if (fild9 == "1") {
-            image9.visibility = View.VISIBLE
-        } else {
-            image9.visibility = View.GONE
-        }
-        if (fild10 == "1") {
-            image10.visibility = View.VISIBLE
-        } else {
-            image10.visibility = View.GONE
-        }
-        if (fild11 == "1") {
-            image11.visibility = View.VISIBLE
-        } else {
-            image11.visibility = View.GONE
-        }
-        if (fild1 == "1" && fild2 == "1" && fild3 == "1" && fild4 == "1" && fild5 == "1" && fild6 == "1" && fild7 == "1" && fild8 == "1" && fild9 == "1" && fild10 == "1" && fild11 == "1") {
-            imagehiden.visibility = View.VISIBLE
-        }else{
-            imagehiden.visibility = View.GONE
-        }
-        image1.setOnClickListener {
-            image1.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+            val dialog = builder.create()
+            if (fild1 == "1") {
+                image1.visibility = View.VISIBLE
+            } else {
+                image1.visibility = View.GONE
+            }
+            if (fild2 == "1") {
+                image2.visibility = View.VISIBLE
+            } else {
+                image2.visibility = View.GONE
+            }
+            if (fild3 == "1") {
+                image3.visibility = View.VISIBLE
+            } else {
+                image3.visibility = View.GONE
+            }
+            if (fild4 == "1") {
+                image4.visibility = View.VISIBLE
+            } else {
+                image4.visibility = View.GONE
+            }
+            if (fild5 == "1") {
+                image5.visibility = View.VISIBLE
+            } else {
+                image5.visibility = View.GONE
+            }
+            if (fild6 == "1") {
+                image6.visibility = View.VISIBLE
+            } else {
+                image6.visibility = View.GONE
+            }
+            if (fild7 == "1") {
+                image7.visibility = View.VISIBLE
+            } else {
+                image7.visibility = View.GONE
+            }
+            if (fild8 == "1") {
+                image8.visibility = View.VISIBLE
+            } else {
+                image8.visibility = View.GONE
+            }
+            if (fild9 == "1") {
+                image9.visibility = View.VISIBLE
+            } else {
+                image9.visibility = View.GONE
+            }
+            if (fild10 == "1") {
+                image10.visibility = View.VISIBLE
+            } else {
+                image10.visibility = View.GONE
+            }
+            if (fild11 == "1") {
+                image11.visibility = View.VISIBLE
+            } else {
+                image11.visibility = View.GONE
+            }
+            if (fild1 == "1" && fild2 == "1" && fild3 == "1" && fild4 == "1" && fild5 == "1" && fild6 == "1" && fild7 == "1" && fild8 == "1" && fild9 == "1" && fild10 == "1" && fild11 == "1") {
+                imagehiden.visibility = View.VISIBLE
+            } else {
+                imagehiden.visibility = View.GONE
+            }
+            image1.setOnClickListener {
+                image1.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char1)
-        }
-        image2.setOnClickListener {
-            image2.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char1)
+            }
+            image2.setOnClickListener {
+                image2.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char2)
-        }
-        image3.setOnClickListener {
-            image3.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char2)
+            }
+            image3.setOnClickListener {
+                image3.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char3)
-        }
-        image4.setOnClickListener {
-            image4.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char3)
+            }
+            image4.setOnClickListener {
+                image4.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char4)
-        }
-        image5.setOnClickListener {
-            image5.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char4)
+            }
+            image5.setOnClickListener {
+                image5.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char5)
-        }
-        image6.setOnClickListener {
-            image6.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char5)
+            }
+            image6.setOnClickListener {
+                image6.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char6)
-        }
-        image7.setOnClickListener {
-            image7.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char6)
+            }
+            image7.setOnClickListener {
+                image7.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char7)
-        }
-        image8.setOnClickListener {
-            image8.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char7)
+            }
+            image8.setOnClickListener {
+                image8.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char8)
-        }
-        image9.setOnClickListener {
-            image9.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char8)
+            }
+            image9.setOnClickListener {
+                image9.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
 
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
                 image11.setBackgroundResource(R.drawable.char_bg)
                 imagehiden.setBackgroundResource(R.drawable.char_bg)
@@ -459,65 +441,67 @@ class SettingsFragment : Fragment() {
                 image10.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
 
 
-            image11.setBackgroundResource(R.drawable.char_bg)
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char10)
-        }
-        image11.setOnClickListener {
-            image11.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                image11.setBackgroundResource(R.drawable.char_bg)
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char10)
+            }
+            image11.setOnClickListener {
+                image11.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
 
-            imagehiden.setBackgroundResource(R.drawable.char_bg)
-            binding.myChar.setImageResource(R.drawable.level_up_char11)
-        }
-        imagehiden.setOnClickListener {
-            imagehiden.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                imagehiden.setBackgroundResource(R.drawable.char_bg)
+                binding.myChar.setImageResource(R.drawable.level_up_char11)
+            }
+            imagehiden.setOnClickListener {
+                imagehiden.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
-            image1.setBackgroundResource(R.drawable.char_bg)
-            image2.setBackgroundResource(R.drawable.char_bg)
-            image3.setBackgroundResource(R.drawable.char_bg)
-            image4.setBackgroundResource(R.drawable.char_bg)
-            image5.setBackgroundResource(R.drawable.char_bg)
-            image6.setBackgroundResource(R.drawable.char_bg)
-            image7.setBackgroundResource(R.drawable.char_bg)
-            image8.setBackgroundResource(R.drawable.char_bg)
-            image9.setBackgroundResource(R.drawable.char_bg)
-            image10.setBackgroundResource(R.drawable.char_bg)
-            image11.setBackgroundResource(R.drawable.char_bg)
+                image1.setBackgroundResource(R.drawable.char_bg)
+                image2.setBackgroundResource(R.drawable.char_bg)
+                image3.setBackgroundResource(R.drawable.char_bg)
+                image4.setBackgroundResource(R.drawable.char_bg)
+                image5.setBackgroundResource(R.drawable.char_bg)
+                image6.setBackgroundResource(R.drawable.char_bg)
+                image7.setBackgroundResource(R.drawable.char_bg)
+                image8.setBackgroundResource(R.drawable.char_bg)
+                image9.setBackgroundResource(R.drawable.char_bg)
+                image10.setBackgroundResource(R.drawable.char_bg)
+                image11.setBackgroundResource(R.drawable.char_bg)
 
-            binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
+                binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
 
-        }
-
-
+            }
 
 
-        dialog.show()
 
-        val dialogButton: Button = dialogView.findViewById(R.id.confirmButton)
-        dialogButton.setOnClickListener {
-            dialog.dismiss()
+
+            dialog.show()
+
+            val dialogButton: Button = dialogView.findViewById(R.id.confirmButton)
+            dialogButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
         }
 
     }

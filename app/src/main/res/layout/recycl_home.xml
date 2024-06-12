@@ -20,6 +20,7 @@
         app:cardCornerRadius="8dp" />
 
     <ImageView
+        android:id="@+id/btn_Delete"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="19dp"
@@ -27,6 +28,7 @@
         android:src="@drawable/xicon" />
 
     <ImageView
+        android:id="@+id/btn_Update"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
