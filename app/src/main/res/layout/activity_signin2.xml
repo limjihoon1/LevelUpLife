@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitis.SigninActivity2"
-    android:orientation="vertical">
+    tools:context=".activitis.SigninActivity2">
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_input_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
         android:hint="닉네임">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/char1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/layout_input_nickname"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:src="@drawable/level_up_char1_bl"/>
+
+    <ImageView
+        android:id="@+id/char2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/char1"
+        android:layout_marginStart="10dp"
+        android:layout_below="@id/layout_input_nickname"
+        android:src="@drawable/level_up_char4_bl"/>
+
     <Button
         android:id="@+id/btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="확인~"
-        />
+        android:layout_below="@id/char2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:text="확인~" />
 
 
-</LinearLayout>
+</RelativeLayout>
