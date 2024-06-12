@@ -20,6 +20,8 @@ class TodoRecyclerAdapter(val context: Context, val items: List<Todo>) : Recycle
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
+
+        holder.binding.tvWorkTodo.text = item.workTodo
     }
 
 }

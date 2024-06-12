@@ -22,7 +22,11 @@ interface RetrofitService {
     @GET("/levelUpLife/member/getMember.php")
     fun getMember(@Query("uid") uid: String) : Call<Member2>
 
+    @POST("/levelUpLife/member/insertTodo.php")
+    fun insertTodo(@Body todo: Todo) : Call<String>
+
     @GET("/levelUpLife/member/getTodo.php")
-    fun getTodo(@Query("uid") uid: String) : Call<String>
+    fun getTodo(@Query("uid") uid: String) : Call<List<Todo>>
+//    fun getTodo(@Query("uid") uid: String) : Call<String>
 
 }
