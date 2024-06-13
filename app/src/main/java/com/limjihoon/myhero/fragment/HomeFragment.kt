@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.MapActivity
@@ -57,7 +58,7 @@ class HomeFragment : Fragment() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-        retrofitService.getMember("asdfghjklzzxcvbnmqwer1").enqueue(object : Callback<Member2> {
+        retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
             override fun onResponse(call: Call<Member2>, response: Response<Member2>) {
                 val data = response.body()
                 data?.let {

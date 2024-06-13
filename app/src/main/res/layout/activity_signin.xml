@@ -23,7 +23,7 @@
         android:textSize="18dp" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/input_layout_login_id1"
+        android:id="@+id/input_layout_login_email1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
         app:cardCornerRadius="12dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout_login_id"
+            android:id="@+id/input_layout_login_email"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:background="#51d9d9d9"
@@ -45,6 +45,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:inputType="textEmailAddress"
                 android:background="@color/white"
                 android:backgroundTint="#51d9d9d9" />
 
@@ -56,7 +57,7 @@
         android:id="@+id/input_layout_login_pw1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/input_layout_login_id1"
+        android:layout_below="@id/input_layout_login_email1"
         android:layout_centerHorizontal="true"
         android:backgroundTint="#51d9d9d9"
         android:layout_marginBottom="4dp"
@@ -101,6 +102,7 @@
                 android:background="@color/white"
                 android:backgroundTint="#51d9d9d9"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
 
@@ -124,9 +126,10 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:backgroundTint="#51d9d9d9"
-                android:inputType="textPassword" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -151,7 +154,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="45dp"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/levle_up_life_char1_re" />
+                android:src="@drawable/level_up_life_char1_re_bl" />
 
             <ImageView
                 android:id="@+id/char2"

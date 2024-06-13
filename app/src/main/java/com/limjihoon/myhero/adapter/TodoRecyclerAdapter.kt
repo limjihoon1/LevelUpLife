@@ -20,14 +20,15 @@ class TodoRecyclerAdapter(
 
     inner class VH(val binding: RecyclHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.btnDelete.setOnClickListener {
+            binding.ivDelete.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = items[position]
                     deleteTodoItem(item.no, position)
                 }
             }
-            binding.btnUpdate.setOnClickListener {
+
+            binding.ivSuccess.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = items[position]
