@@ -160,7 +160,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
                 android:layout_toRightOf="@id/char1"
-
                 android:src="@drawable/level_up_char4_bl" />
 
         </RelativeLayout>
