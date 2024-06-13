@@ -8,17 +8,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
-import com.limjihoon.myhero.G
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.storage
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
-
-
 
 
 class SettingsFragment : Fragment() {
@@ -36,7 +39,6 @@ class SettingsFragment : Fragment() {
     var fild11: String? = "char11"
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,33 +46,8 @@ class SettingsFragment : Fragment() {
     ): View? {
         binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
         binding.changeImage.setOnClickListener { select() }
+        binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
 
-
-        // Firebase 초기화
-        FirebaseApp.initializeApp(requireContext())
-        val db = FirebaseFirestore.getInstance()
-
-        // Firestore에서 필드 값 가져오기
-        db.collection("users").document("1").get().addOnSuccessListener { doc ->
-            if (doc != null && doc.exists()) {
-                fild1 = getFieldAsString(doc, fild1)
-                fild2 = getFieldAsString(doc, fild2)
-                fild3 = getFieldAsString(doc, fild3)
-                fild4 = getFieldAsString(doc, fild4)
-                fild5 = getFieldAsString(doc, fild5)
-                fild6 = getFieldAsString(doc, fild6)
-                fild7 = getFieldAsString(doc, fild7)
-                fild8 = getFieldAsString(doc, fild8)
-                fild9 = getFieldAsString(doc, fild9)
-                fild10 = getFieldAsString(doc, fild10)
-                fild11 = getFieldAsString(doc, fild11)
-
-                updateUI()
-            }
-        }
-
-        binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
-        binding.changeImage.setOnClickListener { select() }
 
         // Firebase 초기화
         FirebaseApp.initializeApp(requireContext())
@@ -97,6 +74,7 @@ class SettingsFragment : Fragment() {
 
         return binding.root
     }
+
 
     private fun getFieldAsString(doc: DocumentSnapshot, field: String?): String {
         return when (val value = doc.get(field!!)) {
@@ -172,73 +150,25 @@ class SettingsFragment : Fragment() {
 
     }
 
-    private fun select() {
 
+    fun select() {
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custum_dialog_select_char, null)
+        val image1: ImageView = dialogView.findViewById(R.id.select_char1)
+        val image2: ImageView = dialogView.findViewById(R.id.select_char2)
+        val image3: ImageView = dialogView.findViewById(R.id.select_char3)
+        val image4: ImageView = dialogView.findViewById(R.id.select_char4)
+        val image5: ImageView = dialogView.findViewById(R.id.select_char5)
+        val image6: ImageView = dialogView.findViewById(R.id.select_char6)
+        val image7: ImageView = dialogView.findViewById(R.id.select_char7)
+        val image8: ImageView = dialogView.findViewById(R.id.select_char8)
+        val image9: ImageView = dialogView.findViewById(R.id.select_char9)
+        val image10: ImageView = dialogView.findViewById(R.id.select_char10)
+        val image11: ImageView = dialogView.findViewById(R.id.select_char11)
+        val imagehiden: ImageView = dialogView.findViewById(R.id.select_charhiden)
 
-        fun getFieldAsString(doc: DocumentSnapshot, field: String?): String {
-            return when (val value = doc.get(field!!)) {
-                is String -> value
-                else -> value.toString()
-            }
-        }
-
-        fun updateUI() {
-            if (fild1 == "1") {
-                binding.char1.setImageResource(R.drawable.level_up_char1)
-            }
-            if (fild2 == "1") {
-                binding.char2.setImageResource(R.drawable.level_up_char2)
-            }
-            if (fild3 == "1") {
-                binding.char3.setImageResource(R.drawable.level_up_char3)
-            }
-            if (fild4 == "1") {
-                binding.char4.setImageResource(R.drawable.level_up_char4)
-            }
-            if (fild5 == "1") {
-                binding.char5.setImageResource(R.drawable.level_up_char5)
-            }
-            if (fild6 == "1") {
-                binding.char6.setImageResource(R.drawable.level_up_char6)
-            }
-            if (fild7 == "1") {
-                binding.char7.setImageResource(R.drawable.level_up_char7)
-            }
-            if (fild8 == "1") {
-                binding.char8.setImageResource(R.drawable.level_up_char8)
-            }
-            if (fild9 == "1") {
-                binding.char9.setImageResource(R.drawable.level_up_char9)
-            }
-            if (fild10 == "1") {
-                binding.char10.setImageResource(R.drawable.level_up_char10)
-            }
-            if (fild11 == "1") {
-                binding.char11.setImageResource(R.drawable.level_up_char11)
-            }
-            if (fild1 == "1" && fild2 == "1" && fild3 == "1" && fild4 == "1" && fild5 == "1" && fild6 == "1" && fild7 == "1" && fild8 == "1" && fild9 == "1" && fild10 == "1" && fild11 == "1") {
-                binding.charhiden.setImageResource(R.drawable.level_up_char_hiden2)
-            }
-        }
-
-        fun select() {
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.custum_dialog_select_char, null)
-            val image1: ImageView = dialogView.findViewById(R.id.select_char1)
-            val image2: ImageView = dialogView.findViewById(R.id.select_char2)
-            val image3: ImageView = dialogView.findViewById(R.id.select_char3)
-            val image4: ImageView = dialogView.findViewById(R.id.select_char4)
-            val image5: ImageView = dialogView.findViewById(R.id.select_char5)
-            val image6: ImageView = dialogView.findViewById(R.id.select_char6)
-            val image7: ImageView = dialogView.findViewById(R.id.select_char7)
-            val image8: ImageView = dialogView.findViewById(R.id.select_char8)
-            val image9: ImageView = dialogView.findViewById(R.id.select_char9)
-            val image10: ImageView = dialogView.findViewById(R.id.select_char10)
-            val image11: ImageView = dialogView.findViewById(R.id.select_char11)
-            val imagehiden: ImageView = dialogView.findViewById(R.id.select_charhiden)
-
-            builder.setView(dialogView)
+        builder.setView(dialogView)
 
         val dialog = builder.create()
         if (fild1 == "1") {
@@ -298,7 +228,7 @@ class SettingsFragment : Fragment() {
         }
         if (fild1 == "1" && fild2 == "1" && fild3 == "1" && fild4 == "1" && fild5 == "1" && fild6 == "1" && fild7 == "1" && fild8 == "1" && fild9 == "1" && fild10 == "1" && fild11 == "1") {
             imagehiden.visibility = View.VISIBLE
-        }else{
+        } else {
             imagehiden.visibility = View.GONE
         }
         image1.setOnClickListener {
@@ -451,12 +381,12 @@ class SettingsFragment : Fragment() {
 
             image10.setBackgroundResource(R.drawable.char_bg)
 
-                image11.setBackgroundResource(R.drawable.char_bg)
-                imagehiden.setBackgroundResource(R.drawable.char_bg)
-                binding.myChar.setImageResource(R.drawable.level_up_char9)
-            }
-            image10.setOnClickListener {
-                image10.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+            image11.setBackgroundResource(R.drawable.char_bg)
+            imagehiden.setBackgroundResource(R.drawable.char_bg)
+            binding.myChar.setImageResource(R.drawable.level_up_char9)
+        }
+        image10.setOnClickListener {
+            image10.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
 
             image1.setBackgroundResource(R.drawable.char_bg)
@@ -519,6 +449,5 @@ class SettingsFragment : Fragment() {
         dialogButton.setOnClickListener {
             dialog.dismiss()
         }
-
     }
 }

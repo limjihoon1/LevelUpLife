@@ -26,7 +26,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="150dp"
         android:hint="아이디 입력"
 
         >
@@ -71,12 +71,60 @@
             android:backgroundTint="@color/ypg"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_input_nickname"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_layout_login_pw_cin"
+        android:layout_centerHorizontal="true"
+        android:hint="비밀번호 확인">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:backgroundTint="@color/ypg"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <ImageView
+        android:id="@+id/char1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/btn_next"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:src="@drawable/level_up_char1_bl"/>
+
+    <ImageView
+        android:id="@+id/char2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/char1"
+        android:layout_marginStart="10dp"
+        android:layout_below="@id/btn_next"
+        android:src="@drawable/level_up_char4_bl"/>
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/char2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:text="확인~" />
+
+
 
     <ImageView
         android:id="@+id/btn_next"
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:layout_below="@id/input_layout_login_pw_cin"
+        android:layout_below="@id/layout_input_nickname"
         android:layout_alignParentRight="true"
         android:layout_marginRight="50dp"
         android:src="@drawable/nextbutton" />
