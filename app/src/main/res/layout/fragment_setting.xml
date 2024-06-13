@@ -99,15 +99,18 @@
                     android:text="10 COIN"
                     android:textColor="#ffffda00"
                     android:textSize="20sp"
+
                     android:textStyle="bold|italic" />
 
                 <ImageView
+                    android:id="@+id/coin_icon"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_below="@id/nickname"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="18dp"
                     android:layout_marginRight="128dp"
+
                     android:src="@drawable/coin" />
 
                 <ProgressBar
@@ -328,7 +331,7 @@
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif-medium"
                         android:paddingTop="4dp"
-                        android:text="Hidden Item"
+                        android:text="Hidden Hero"
                         android:textColor="#FFC107"
                         android:textSize="18sp" />
 

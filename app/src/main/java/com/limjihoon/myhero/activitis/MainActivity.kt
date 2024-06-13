@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFirstRun() {
-        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
+        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", tutorial)
 
         if (isFirstRun) {
             showMultiPageDialog()
