@@ -33,6 +33,7 @@ class MapActivity : AppCompatActivity() {
         mapView.start(mapLifiCycleCallback, mapShow)
 
     }
+
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
         override fun onMapDestroy() {
 
@@ -55,14 +56,14 @@ class MapActivity : AppCompatActivity() {
             val cameraUpdate = CameraUpdateFactory.newCenterPosition(mypos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
-            val labelOptions = LabelOptions.from(mypos).setStyles(R.drawable.level_up_char5)
+            val labelOptions = LabelOptions.from(mypos).setStyles(R.drawable.sw)
             val labelOptionsLayout = kakaoMap.labelManager!!.layer!!
             labelOptionsLayout.addLabel(labelOptions)
 
             val placeLists: List<DocumentOfPlace>? = kakaoData?.documents
             placeLists?.forEach {
                 val mypo = LatLng.from(it.y.toDouble(), it.x.toDouble())
-                val options = LabelOptions.from(mypo).setStyles(R.drawable.coin)
+                val options = LabelOptions.from(mypo).setStyles(R.drawable.sll)
                     .setTexts(it.place_name, "${it.distance}m").setTag(it)
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
             }
