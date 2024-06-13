@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationRequest
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,9 +24,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
 import com.limjihoon.myhero.data.KakaoData
+import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
 import com.limjihoon.myhero.fragment.RendumFragment

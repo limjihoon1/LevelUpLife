@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
                 data?.let {
                     binding.nickname.text = it.nickname
                     binding.level.text = "Lv : ${it.level}"
-                    binding.tvExp.text = "${it.exp}/50"
+                    binding.tvExp2.text = "${it.exp}/50"
                     binding.coin.text = "${it.coin} COIN"
                     uid = it.uid
 
