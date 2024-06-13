@@ -2,24 +2,45 @@ package com.limjihoon.myhero.activitis
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationRequest
 import android.os.Bundle
-
+import android.os.Looper
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.location.LocationCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
+
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
+import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
 import com.limjihoon.myhero.fragment.RendumFragment
 import com.limjihoon.myhero.fragment.MapFragment
 import com.limjihoon.myhero.fragment.SettingsFragment
+import com.limjihoon.myhero.network.RetrofitHelper
+import com.limjihoon.myhero.network.RetrofitService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
     var tutorial=true
+    var myLocation: Location? = null
+    var kakaoData:KakaoData?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -48,11 +69,76 @@ class MainActivity : AppCompatActivity() {
         }
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
         checkFirstRun()
+        val permissionstate =
+            checkCallingOrSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionLauncher: ActivityResultLauncher<String> =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if (it == true) {
+                    startLast()
+                } else {
+                    AlertDialog.Builder(this).setMessage("위치정보 허용 해야함").create().show()
+                    finish()
+                }
 
+            }
+        if (permissionstate == PackageManager.PERMISSION_DENIED) {
+            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            Toast.makeText(this, "위치정보 허용", Toast.LENGTH_SHORT).show()
+        } else {
+            startLast()
+        }
+
+    }
+    private fun startLast() {
+        val request = com.google.android.gms.location.LocationRequest.create().apply {
+            priority = com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 1000
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 위치 권한이 부여되지 않았을 경우 처리
+            return
+        }
+
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
+    }
+
+    val locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            super.onLocationResult(p0)
+            myLocation = p0.lastLocation
+            LocationServices.getFusedLocationProviderClient(this@MainActivity).removeLocationUpdates(this)
+            myStation()
+        }
+
+    }
+    private fun myStation(){
+        val retrofit =RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+        val call =retrofitService.kakoDataSearch("지하철역",myLocation!!.longitude.toString(),myLocation!!.latitude.toString())
+        call.enqueue(object : Callback<KakaoData> {
+            override fun onResponse(call: Call<KakaoData>, response: Response<KakaoData>) {
+                kakaoData=response.body()
+
+            }
+
+            override fun onFailure(call: Call<KakaoData>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     private fun checkFirstRun() {
-        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
+        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", tutorial)
 
         if (isFirstRun) {
             showMultiPageDialog()
