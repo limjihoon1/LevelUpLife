@@ -12,143 +12,155 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/level_up_login2" />
+
     <TextView
         android:id="@+id/tv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="back"
         android:padding="16dp"
-        android:textSize="18dp"/>
-<androidx.cardview.widget.CardView
-    android:id="@+id/input_layout_login_id1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="150dp"
-    android:background="#51d9d9d9"
-    android:backgroundTint="#51d9d9d9"
-    app:cardCornerRadius="12dp"
-    >
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_login_id"
-        android:layout_width="300dp"
+        android:text="back"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/input_layout_login_id1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#51d9d9d9"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
         android:background="#51d9d9d9"
-        android:hint="아이디 입력"
-        app:hintTextColor="@color/white" >
+        android:backgroundTint="#51d9d9d9"
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="12dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_login_id"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="#51d9d9d9"
             android:backgroundTint="#51d9d9d9"
-            />
+            android:hint="이메일 입력"
+            app:hintTextColor="@color/white">
 
-    </com.google.android.material.textfield.TextInputLayout>
-</androidx.cardview.widget.CardView>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="#51d9d9d9" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/input_layout_login_pw1"
         android:layout_width="wrap_content"
-        app:cardCornerRadius="12dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_layout_login_id1"
+        android:layout_centerHorizontal="true"
         android:backgroundTint="#51d9d9d9"
-        android:layout_centerHorizontal="true">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_login_pw"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="비밀번호 입력">
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="12dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:backgroundTint="#51d9d9d9"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_login_pw"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호 입력">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="#51d9d9d9"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/input_layout_login_pw_cin1"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/input_layout_login_pw1"
-        app:cardCornerRadius="12dp"
+        android:layout_marginBottom="4dp"
         android:layout_centerHorizontal="true"
         android:backgroundTint="#51d9d9d9"
-        android:layout_height="wrap_content">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_login_pw_cin"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="비밀번호 확인">
+        app:cardCornerRadius="12dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:backgroundTint="#51d9d9d9"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_login_pw_cin"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호 확인">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="#51d9d9d9"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/layout_input_nickname1"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/input_layout_login_pw_cin1"
         android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        android:backgroundTint="#51d9d9d9">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_input_nickname"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="닉네임 설정">
+        android:backgroundTint="#51d9d9d9"
+        app:cardCornerRadius="12dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:backgroundTint="#51d9d9d9"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_input_nickname"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="닉네임 설정">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="#51d9d9d9"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="300dp"
         android:layout_height="164dp"
         android:layout_below="@id/layout_input_nickname1"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
-        app:cardCornerRadius="12dp"
         android:backgroundTint="#51d9d9d9"
-        android:layout_centerHorizontal="true"
-        >
+        app:cardCornerRadius="12dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-    <ImageView
-        android:id="@+id/char1"
-        android:layout_width="90dp"
-        android:layout_height="120dp"
-        android:src="@drawable/levle_up_life_char1_re"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="20dp"
-        />
+            android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/char2"
-        android:layout_width="90dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="10dp"
-        android:layout_toRightOf="@id/char1"
-        android:src="@drawable/level_up_char4_bl"
+            <ImageView
+                android:id="@+id/char1"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/levle_up_life_char1_re" />
 
-        android:layout_centerVertical="true"
-        />
+            <ImageView
+                android:id="@+id/char2"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toRightOf="@id/char1"
+
+                android:src="@drawable/level_up_char4_bl" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -159,9 +171,9 @@
         android:layout_height="80dp"
         android:layout_below="@id/card"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/nextbutton"
-        android:textColor="@color/white"
         android:padding="10dp"
-        android:text="확인~" />
+        android:src="@drawable/nextbutton"
+        android:text="확인~"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
