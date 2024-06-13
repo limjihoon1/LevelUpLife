@@ -3,6 +3,7 @@ package com.limjihoon.myhero.activitis
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -14,12 +15,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.databinding.ActivityRloginBinding
 
 class RLoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityRloginBinding
+    private val auth = Firebase.auth
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +51,17 @@ class RLoginActivity : AppCompatActivity() {
         val email = binding.inputLayoutLoginId.editText!!.text.toString()
         val password = binding.inputLayoutLoginPw.editText!!.text.toString()
 
-        Firebase.firestore.collection("users").whereEqualTo("email",email).get().addOnSuccessListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-        }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
 
+            if (it.isSuccessful) {
+
+                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                Log.d("loginErr", "로그인 오류")
+            }
+        }
     }
 
 }
