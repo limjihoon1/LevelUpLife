@@ -62,30 +62,81 @@ class SigninActivity2 : AppCompatActivity() {
             Toast.makeText(this, "캐릭터를 선택하지 않으셨습니다.", Toast.LENGTH_SHORT).show()
         } else {
 
-            val uid = "asdfghjklzzxcvbnmqwer1"
-            val member = Member(email, uid, nickname, hero)
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
-            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-            val retrofitService = retrofit.create(RetrofitService::class.java)
+                if (it.isSuccessful) {
+                    val uid = auth.currentUser?.uid.toString()
+                    val member = Member(email, uid, nickname, hero)
 
-            retrofitService.insertMember(member).enqueue(object : Callback<String> {
-                override fun onResponse(p0: Call<String>, p1: Response<String>) {
-                    val data = p1.body()
+                    val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                    val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                    AlertDialog.Builder(this@SigninActivity2).setMessage("$data").create().show()
+                    retrofitService.insertMember(member).enqueue(object : Callback<String> {
+                        override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                            val data = p1.body()
 
-//                    startActivity(Intent(this@SigninActivity2, MainActivity::class.java))
-//                    finish()
-//                    Toast.makeText(this@SigninActivity2, "$data", Toast.LENGTH_SHORT).show()
-                    Log.d("good", "로그인 성공")
+                            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
 
+                                if (it.isSuccessful) {
+                                    startActivity(
+                                        Intent(
+                                            this@SigninActivity2,
+                                            MainActivity::class.java
+                                        )
+                                    )
+                                    finish()
+                                    Toast.makeText(
+                                        this@SigninActivity2,
+                                        "$data",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.d("good", "로그인 성공")
+                                } else {
+                                    Toast.makeText(
+                                        this@SigninActivity2,
+                                        "로그인 실패",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+
+                        override fun onFailure(p0: Call<String>, p1: Throwable) {
+                            Log.d("error", "${p1.message}")
+                        }
+
+                    })
+
+                } else {
+                    Toast.makeText(this, "회원가입 실패", Toast.LENGTH_SHORT).show()
                 }
+            }
 
-                override fun onFailure(p0: Call<String>, p1: Throwable) {
-                    Log.d("error", "${p1.message}")
-                }
 
-            })
+//            val uid = "asdfghjklzzxcvbnmqwer1"
+//            val member = Member(email, uid, nickname, hero)
+//
+//            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+//            val retrofitService = retrofit.create(RetrofitService::class.java)
+//
+//            retrofitService.insertMember(member).enqueue(object : Callback<String> {
+//                override fun onResponse(p0: Call<String>, p1: Response<String>) {
+//                    val data = p1.body()
+//
+//                    AlertDialog.Builder(this@SigninActivity2).setMessage("$data").create().show()
+//
+////                    startActivity(Intent(this@SigninActivity2, MainActivity::class.java))
+////                    finish()
+////                    Toast.makeText(this@SigninActivity2, "$data", Toast.LENGTH_SHORT).show()
+//                    Log.d("good", "로그인 성공")
+//
+//                }
+//
+//                override fun onFailure(p0: Call<String>, p1: Throwable) {
+//                    Log.d("error", "${p1.message}")
+//                }
+//
+//            })
 
 //            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 //
@@ -129,36 +180,4 @@ class SigninActivity2 : AppCompatActivity() {
 
     }
 
-    private fun btnnext() {
-        var email = intent.getStringExtra("email")
-        var password = intent.getStringExtra("password")
-        var nickname = binding.layoutInputNickname.editText!!.text.toString()
-        val user = hashMapOf(
-            "email" to email,
-            "password" to password,
-            "nickname" to nickname,
-            "char1" to "0",
-            "char2" to "0",
-            "char3" to "0",
-            "char4" to "0",
-            "char5" to "0",
-            "char6" to "0",
-            "char7" to "0",
-            "char8" to "0",
-            "char9" to "0",
-            "char10" to "0",
-            "char11" to "0",
-            "charhiden" to "0"
-        )
-
-        Firebase.firestore.collection("users").document(nickname).set(user)
-            .addOnSuccessListener { documentReference ->
-                Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
-
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "회원가입 실패: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        startActivity(Intent(this, MainActivity::class.java))
-    }
 }

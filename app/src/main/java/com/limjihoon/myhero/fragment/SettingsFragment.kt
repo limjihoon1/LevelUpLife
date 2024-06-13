@@ -1,31 +1,38 @@
 package com.limjihoon.myhero.fragment
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.google.android.material.navigation.NavigationView
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.storage
+import com.google.firebase.firestore.firestore
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
+import com.limjihoon.myhero.activitis.LoginActivity
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
-
 
 class SettingsFragment : Fragment() {
     lateinit var binding: FragmentSettingBinding
+    private val auth = Firebase.auth
+    private val spf by lazy { activity?.getSharedPreferences("loginSave", AppCompatActivity.MODE_PRIVATE) }
+    private val spf2 by lazy { activity?.getSharedPreferences("userInfo", AppCompatActivity.MODE_PRIVATE) }
+    private val spfEdit by lazy { spf?.edit() }
+    private val spfEdit2 by lazy { spf2?.edit() }
     var fild1: String? = "char1"
     var fild2: String? = "char2"
     var fild3: String? = "char3"
@@ -38,16 +45,12 @@ class SettingsFragment : Fragment() {
     var fild10: String? = "char10"
     var fild11: String? = "char11"
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
-        binding.changeImage.setOnClickListener { select() }
-        binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
-
 
         // Firebase 초기화
         FirebaseApp.initializeApp(requireContext())
@@ -73,6 +76,35 @@ class SettingsFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.changeImage.setOnClickListener { select() }
+        binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
+
+        binding.navigationView.setNavigationItemSelectedListener { p0 ->
+            if (p0.itemId == R.id.menu_logout) {
+                AlertDialog.Builder(requireContext()).setTitle("로그아웃")
+                    .setMessage("로그아웃 하시겠습니까?").setPositiveButton("확인") { dialog, id ->
+                        spfEdit?.putBoolean("isLogin", false)
+                        spfEdit2?.clear()
+                        spfEdit?.apply()
+                        spfEdit2?.apply()
+                        G.uid = ""
+                        G.nickname = ""
+                        auth.signOut()
+                        startActivity(Intent(requireContext(), LoginActivity::class.java))
+                        activity?.finish()
+                        Toast.makeText(requireContext(), "로그아웃 완료", Toast.LENGTH_SHORT).show()
+                    }.setNegativeButton("취소") { dialog, id ->
+                        dialog.dismiss()
+                    }.create().show()
+
+            }
+
+            false
+        }
+
     }
 
 
@@ -149,7 +181,6 @@ class SettingsFragment : Fragment() {
         binding.progressBar.progress = ppp
 
     }
-
 
     fun select() {
         val builder = AlertDialog.Builder(requireContext())
@@ -439,9 +470,6 @@ class SettingsFragment : Fragment() {
             binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
 
         }
-
-
-
 
         dialog.show()
 

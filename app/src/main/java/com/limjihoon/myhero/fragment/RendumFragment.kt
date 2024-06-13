@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.limjihoon.myhero.R
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentProfileBinding
 import kotlin.random.Random
 
@@ -46,6 +47,13 @@ class RendumFragment : Fragment() {
         binding.rendumBtn.setOnClickListener { rendum() }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val ma = activity as MainActivity
+        ma.member ?: return
+
+        AlertDialog.Builder(requireContext()).setMessage("${ma.member?.nickname}").create().show()
     }
 //    private fun dilrendum() {
 //        Handler(Looper.getMainLooper()).postDelayed({

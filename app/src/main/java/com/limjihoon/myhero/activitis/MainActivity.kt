@@ -39,8 +39,9 @@ import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
+    var member: Member2? = null
     var tutorial=true
     var myLocation: Location? = null
     var kakaoData:KakaoData?=null
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
 
         supportFragmentManager.beginTransaction().add(R.id.frame, HomeFragment()).commit()
+        getMember()
 
         binding.bnv.setOnItemSelectedListener {
             when (it.itemId) {
@@ -96,6 +98,31 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun getMember() {
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
+            override fun onResponse(p0: Call<Member2>, p1: Response<Member2>) {
+
+                if (p1.body() != null) {
+                    member = p1.body()
+                } else {
+                    Toast.makeText(this@MainActivity, "회원 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT).show()
+                    Log.d("uid..", "${G.uid}")
+                }
+
+
+            }
+
+            override fun onFailure(p0: Call<Member2>, p1: Throwable) {
+                Toast.makeText(this@MainActivity, "${p1.message}", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
     private fun startLast() {
         val request = com.google.android.gms.location.LocationRequest.create().apply {
             priority = com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY

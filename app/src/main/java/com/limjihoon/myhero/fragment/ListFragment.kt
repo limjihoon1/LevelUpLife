@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentNotificationsBinding
 
 class ListFragment : Fragment(){
     lateinit var binding: FragmentNotificationsBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,6 +30,10 @@ class ListFragment : Fragment(){
         binding.wv.settings.allowFileAccess = true
 
         binding.wv.webViewClient = WebViewClient()
+
+        val ma = activity as MainActivity
+        ma.member ?: return
+        
     }
 
 }
