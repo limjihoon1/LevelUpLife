@@ -19,7 +19,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
 import com.limjihoon.myhero.data.KakaoData
@@ -45,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        val navView: BottomNavigationView = findViewById(R.id.bnv)
+        navView.itemIconTintList=null
+
+
 
         supportFragmentManager.beginTransaction().add(R.id.frame, HomeFragment()).commit()
 
