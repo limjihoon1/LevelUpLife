@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
-
 
 class SettingsFragment : Fragment() {
     lateinit var binding: FragmentSettingBinding
@@ -67,6 +70,7 @@ class SettingsFragment : Fragment() {
         binding.changeImage.setOnClickListener { select() }
         binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
     }
+
 
     private fun getFieldAsString(doc: DocumentSnapshot, field: String?): String {
         return when (val value = doc.get(field!!)) {
