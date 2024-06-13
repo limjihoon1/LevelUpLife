@@ -36,7 +36,7 @@
         android:id="@+id/input_layout_login_id"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="아이디 입력"
+        android:hint="이메일 입력"
         android:layout_centerHorizontal="true"
 
         >
@@ -53,26 +53,22 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-
         android:backgroundTint="#bbd9d9d9"
         app:cardCornerRadius="12dp"
-        android:layout_below="@id/input_layout_login_id1"
-        >
+        android:layout_below="@id/input_layout_login_id1" >
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_login_pw"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="비밀번호 입력"
-        android:layout_centerHorizontal="true"
+        android:layout_centerHorizontal="true" >
 
-
-        android:inputType="textPassword"
-        >
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="textPassword" />
 
-           />
     </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.cardview.widget.CardView>
