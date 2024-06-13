@@ -18,11 +18,13 @@ import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.data.DocumentOfPlace
+import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.databinding.ActivityMapBinding
 import java.lang.Exception
 
 class MapActivity : AppCompatActivity() {
     lateinit var binding: ActivityMapBinding
+    var kakaoData: KakaoData?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMapBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -57,7 +59,7 @@ class MapActivity : AppCompatActivity() {
             val labelOptionsLayout = kakaoMap.labelManager!!.layer!!
             labelOptionsLayout.addLabel(labelOptions)
 
-            val placeLists: List<DocumentOfPlace>? = (activity as MainActivity).kakaoData?.documents
+            val placeLists: List<DocumentOfPlace>? = kakaoData?.documents
             placeLists?.forEach {
                 val mypo = LatLng.from(it.y.toDouble(), it.x.toDouble())
                 val options = LabelOptions.from(mypo).setStyles(R.drawable.coin)

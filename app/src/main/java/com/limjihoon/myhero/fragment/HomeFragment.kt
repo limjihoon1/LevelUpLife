@@ -45,9 +45,6 @@ class HomeFragment : Fragment(){
         binding.creatTodo.setOnClickListener { listCreate() }
         var intent = Intent(requireContext(), MapActivity::class.java)
 
-        intent.putExtra("lat",(activity as MainActivity).myLocation?.latitude ?: 37.555)
-        intent.putExtra("lng",(activity as MainActivity).myLocation?.longitude ?: 126.9746)
-
         binding.createMap.setOnClickListener {startActivity(intent) }
 
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), itmes)
