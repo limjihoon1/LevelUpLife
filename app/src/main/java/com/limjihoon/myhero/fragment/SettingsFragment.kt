@@ -6,24 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.storage
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
-
-
 
 
 class SettingsFragment : Fragment() {
@@ -40,17 +30,12 @@ class SettingsFragment : Fragment() {
     var fild10: String? = "char10"
     var fild11: String? = "char11"
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
-        binding.changeImage.setOnClickListener { select() }
-        binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
-
 
         // Firebase 초기화
         FirebaseApp.initializeApp(requireContext())
@@ -76,6 +61,11 @@ class SettingsFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.changeImage.setOnClickListener { select() }
+        binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
     }
 
     private fun getFieldAsString(doc: DocumentSnapshot, field: String?): String {
@@ -151,55 +141,6 @@ class SettingsFragment : Fragment() {
         binding.progressBar.progress = ppp
 
     }
-
-    private fun select() {
-
-
-        fun getFieldAsString(doc: DocumentSnapshot, field: String?): String {
-            return when (val value = doc.get(field!!)) {
-                is String -> value
-                else -> value.toString()
-            }
-        }
-
-        fun updateUI() {
-            if (fild1 == "1") {
-                binding.char1.setImageResource(R.drawable.level_up_char1)
-            }
-            if (fild2 == "1") {
-                binding.char2.setImageResource(R.drawable.level_up_char2)
-            }
-            if (fild3 == "1") {
-                binding.char3.setImageResource(R.drawable.level_up_char3)
-            }
-            if (fild4 == "1") {
-                binding.char4.setImageResource(R.drawable.level_up_char4)
-            }
-            if (fild5 == "1") {
-                binding.char5.setImageResource(R.drawable.level_up_char5)
-            }
-            if (fild6 == "1") {
-                binding.char6.setImageResource(R.drawable.level_up_char6)
-            }
-            if (fild7 == "1") {
-                binding.char7.setImageResource(R.drawable.level_up_char7)
-            }
-            if (fild8 == "1") {
-                binding.char8.setImageResource(R.drawable.level_up_char8)
-            }
-            if (fild9 == "1") {
-                binding.char9.setImageResource(R.drawable.level_up_char9)
-            }
-            if (fild10 == "1") {
-                binding.char10.setImageResource(R.drawable.level_up_char10)
-            }
-            if (fild11 == "1") {
-                binding.char11.setImageResource(R.drawable.level_up_char11)
-            }
-            if (fild1 == "1" && fild2 == "1" && fild3 == "1" && fild4 == "1" && fild5 == "1" && fild6 == "1" && fild7 == "1" && fild8 == "1" && fild9 == "1" && fild10 == "1" && fild11 == "1") {
-                binding.charhiden.setImageResource(R.drawable.level_up_char_hiden2)
-            }
-        }
 
     fun select() {
         val builder = AlertDialog.Builder(requireContext())
@@ -431,12 +372,12 @@ class SettingsFragment : Fragment() {
 
             image10.setBackgroundResource(R.drawable.char_bg)
 
-                image11.setBackgroundResource(R.drawable.char_bg)
-                imagehiden.setBackgroundResource(R.drawable.char_bg)
-                binding.myChar.setImageResource(R.drawable.level_up_char9)
-            }
-            image10.setOnClickListener {
-                image10.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+            image11.setBackgroundResource(R.drawable.char_bg)
+            imagehiden.setBackgroundResource(R.drawable.char_bg)
+            binding.myChar.setImageResource(R.drawable.level_up_char9)
+        }
+        image10.setOnClickListener {
+            image10.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
 
             image1.setBackgroundResource(R.drawable.char_bg)

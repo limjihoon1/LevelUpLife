@@ -5,13 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitis.BoardManageActivity">
+    tools:context=".activitis.MemberManageActivity">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="게시글 관리"
+        android:text="회원 관리"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAlignment="center"

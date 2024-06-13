@@ -25,7 +25,7 @@
             android:name=".activitis.BoardManageActivity"
             android:exported="false" />
         <activity
-            android:name=".activitis.MamberManageActivity"
+            android:name=".activitis.MemberManageActivity"
             android:exported="false" />
         <activity
             android:name=".activitis.MapActivity"

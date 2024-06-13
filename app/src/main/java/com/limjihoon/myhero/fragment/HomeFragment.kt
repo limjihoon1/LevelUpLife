@@ -56,7 +56,7 @@ class HomeFragment : Fragment(){
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-        retrofitService.getMember("asdfghjklzzxcvbnmqwer1").enqueue(object : Callback<Member2> {
+        retrofitService.getMember("ZevqYU2WU3aMWsN61LWcXxSBlA52").enqueue(object : Callback<Member2> {
             override fun onResponse(p0: Call<Member2>, p1: Response<Member2>) {
                 val data = p1.body()
 
@@ -71,6 +71,8 @@ class HomeFragment : Fragment(){
 
                 if (data.hero == 1) {
                     binding.hero.setImageResource(R.drawable.level_up_char1)
+                } else if(data.hero == 12) {
+                    binding.hero.setImageResource(R.drawable.level_up_char_hiden2)
                 }
 
                 val retrofit2 = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
