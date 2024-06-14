@@ -3,6 +3,7 @@ package com.limjihoon.myhero.fragment
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,14 @@ import java.lang.Exception
 class MapFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
     private var kakaoMap: KakaoMap? = null
+    var search=""
+    private val handler = Handler()
+    private val updateTask = object : Runnable {
+        override fun run() {
+            search()  // search 메소드 호출
+            handler.postDelayed(this, 1000)  // 1초마다 반복
+        }
+    }
 
 
     override fun onCreateView(
@@ -55,8 +64,9 @@ class MapFragment : Fragment() {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
         binding.mySw.setOnClickListener { moveToMyLocation() }
+        binding.search.setOnClickListener { search() }
 
-
+        handler.post(updateTask)
     }
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
         override fun onMapDestroy() {
@@ -114,6 +124,9 @@ class MapFragment : Fragment() {
             }
         }
     }
+    private fun search(){
+
+    }
     private fun moveToMyLocation() {
         kakaoMap?.let {
             val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
@@ -122,7 +135,8 @@ class MapFragment : Fragment() {
 
             it.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16))
         } ?: run {
-            Toast.makeText(activity, "Map is not ready yet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "잠시 기다린후 다시한번 눌러주세요", Toast.LENGTH_SHORT).show()
         }
     }
+
 }

@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     var tutorial = true
     var myLocation: Location? = null
     var kakaoData: KakaoData? = null
+    var search =""
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
