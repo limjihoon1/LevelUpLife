@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavigationView_NoText" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceActive">@style/BottomNavigationView_NoTextAppearance</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationView_NoTextAppearance</item>
+        <item name="itemIconTint">@null</item>
+    </style>
+
+    <style name="BottomNavigationView_NoTextAppearance">
+        <item name="android:textSize">0sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+</resources>

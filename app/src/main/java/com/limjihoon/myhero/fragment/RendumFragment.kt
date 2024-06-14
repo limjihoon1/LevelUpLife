@@ -3,26 +3,22 @@ package com.limjihoon.myhero.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentProfileBinding
 import kotlin.random.Random
 
 
-class ProfileFragment : Fragment() {
+class RendumFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
-
 
     private var loadingDialog: AlertDialog? = null
     val updatedField1: Map<String, Any> = hashMapOf("char1" to 1)
@@ -50,6 +46,12 @@ class ProfileFragment : Fragment() {
         binding.rendumBtn.setOnClickListener { rendum() }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val ma = activity as MainActivity
+        ma.member ?: return
+
     }
 //    private fun dilrendum() {
 //        Handler(Looper.getMainLooper()).postDelayed({

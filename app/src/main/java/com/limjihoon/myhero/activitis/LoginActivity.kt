@@ -37,6 +37,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RLoginActivity::class.java))
             overridePendingTransition(R.anim.from_bottom_enter_xml, R.anim.from_top_enter_xml)
         }
-        binding.btn.setOnClickListener { startActivity(Intent(this,MainActivity::class.java)) }
+
     }
 }
