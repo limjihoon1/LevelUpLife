@@ -1,5 +1,7 @@
 package com.limjihoon.myhero.network
 
+import com.limjihoon.myhero.data.AdminMember
+import com.limjihoon.myhero.data.Board
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member
@@ -48,7 +50,6 @@ interface RetrofitService {
 
     @GET("/levelUpLife/member/UpdateTodo.php")
     fun updateTodo(@Query("no") no: Int): Call<String>
-
 
 
 
