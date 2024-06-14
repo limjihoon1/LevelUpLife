@@ -1,5 +1,7 @@
 package com.limjihoon.myhero.network
 
+import com.limjihoon.myhero.data.AdminMember
+import com.limjihoon.myhero.data.Board
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member
@@ -18,7 +20,7 @@ interface RetrofitService {
     fun getEmail(@Query("email") email: String): Call<Member>
 
     @GET("/levelUpLife/member/getNickname.php")
-    fun getNickname(@Query("nickname") nickname: String): Call<Member>
+    fun getNickname(@Query("nickname") nickname: String) : Call<Member>
 
     @POST("/levelUpLife/member/insertMember.php")
     fun insertMember(@Body member: Member): Call<String>
@@ -48,4 +50,26 @@ interface RetrofitService {
 
     @GET("/levelUpLife/member/UpdateTodo.php")
     fun updateTodo(@Query("no") no: Int): Call<String>
+
+
+
+
+
+
+
+
+
+
+    @GET("/levelUpLife/admin/adminGetMember.php")
+    fun adminGetMember() : Call<List<AdminMember>>
+
+    @GET("/levelUpLife/admin/adminDeleteMember.php")
+    fun adminDeleteMember(@Query("no") no: Int, @Query("uid") uid: String) : Call<String>
+
+    @GET("/levelUpLife/admin/adminGetBoard.php")
+    fun adminGetBoard() : Call<List<Board>>
+
+    @GET("/levelUpLife/admin/adminDeleteBoard.php")
+    fun adminDeleteBoard(@Query("no") no: Int) : Call<String>
+
 }
