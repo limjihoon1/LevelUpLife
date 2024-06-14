@@ -1,6 +1,5 @@
 package com.limjihoon.myhero.fragment
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragment : Fragment() {
-    lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentHomeBinding
     private var uid = ""
     var items = mutableListOf<Todo>()
 
@@ -47,6 +46,7 @@ class HomeFragment : Fragment() {
 
         // items를 어댑터에 전달하여 초기화합니다.
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)
+
     }
 
     override fun onResume() {
@@ -68,8 +68,19 @@ class HomeFragment : Fragment() {
                     binding.coin.text = "${it.coin} COIN"
                     uid = it.uid
 
-                    if (it.hero == 1) {
-                        binding.hero.setImageResource(R.drawable.level_up_char1)
+                    when(it.hero) {
+                        1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
+                        2 -> { binding.hero.setImageResource(R.drawable.level_up_char2) }
+                        3 -> { binding.hero.setImageResource(R.drawable.level_up_char3) }
+                        4 -> { binding.hero.setImageResource(R.drawable.level_up_char4) }
+                        5 -> { binding.hero.setImageResource(R.drawable.level_up_char5) }
+                        6 -> { binding.hero.setImageResource(R.drawable.level_up_char6) }
+                        7 -> { binding.hero.setImageResource(R.drawable.level_up_char7) }
+                        8 -> { binding.hero.setImageResource(R.drawable.level_up_char8) }
+                        9 -> { binding.hero.setImageResource(R.drawable.level_up_char9) }
+                        10 -> { binding.hero.setImageResource(R.drawable.level_up_char10) }
+                        11 -> { binding.hero.setImageResource(R.drawable.level_up_char11) }
+                        12 -> { binding.hero.setImageResource(R.drawable.level_up_char_hiden2) }
                     }
 
                     fetchTodos()
