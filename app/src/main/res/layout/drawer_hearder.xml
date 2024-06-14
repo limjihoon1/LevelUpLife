@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_layout"
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:background="@color/ypgbtn">
 
     <ImageView
-        android:id="@+id/iv"
+        android:id="@+id/iv_hero"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/level_up_char_hiden2"
+        android:src="@drawable/level_up_char1"
         android:layout_margin="8dp"/>
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tv_nickname_hearder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="android"
         android:textColor="#ff0088ff"
-        android:layout_below="@id/iv"
+        android:layout_below="@id/iv_hero"
         android:layout_marginLeft="16dp"
         />
-
-
-
-
-
 
 </RelativeLayout>

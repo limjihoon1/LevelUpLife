@@ -16,6 +16,19 @@ data class Member2(
     val exp: Int = 0,
     val coin: Int = 0,
     val hero: Int = 0,
+    val qcc: Int = 0,
+)
+
+data class AdminMember(
+    val no: Int = 0,
+    val email: String = "",
+    val uid: String = "",
+    val nickname: String = "",
+    val level: Int = 0,
+    val exp: Int = 0,
+    val coin: Int = 0,
+    val hero: Int = 0,
+    val qcc: Int = 0,
 )
 
 data class Inventory(
