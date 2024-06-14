@@ -1,5 +1,6 @@
 package com.limjihoon.myhero.network
 
+import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member
 import com.limjihoon.myhero.data.Member2
@@ -26,6 +27,9 @@ interface RetrofitService {
 
     @GET("/levelUpLife/member/getMember.php")
     fun getMember(@Query("uid") uid: String): Call<Member2>
+
+    @GET("/levelUpLife/member/getInventory.php")
+    fun getInventory(@Query("memberNo") memberNo: Int): Call<Inventory>
 
     @POST("/levelUpLife/member/insertTodo.php")
     fun insertTodo(@Body todo: Todo): Call<String>
