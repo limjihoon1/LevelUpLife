@@ -20,7 +20,6 @@ import kotlin.random.Random
 class RendumFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
 
-
     private var loadingDialog: AlertDialog? = null
     val updatedField1: Map<String, Any> = hashMapOf("char1" to 1)
     val updatedField2: Map<String, Any> = hashMapOf("char2" to 1)
@@ -53,7 +52,6 @@ class RendumFragment : Fragment() {
         val ma = activity as MainActivity
         ma.member ?: return
 
-        AlertDialog.Builder(requireContext()).setMessage("${ma.member?.nickname}").create().show()
     }
 //    private fun dilrendum() {
 //        Handler(Looper.getMainLooper()).postDelayed({

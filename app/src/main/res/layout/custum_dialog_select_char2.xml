@@ -38,6 +38,7 @@
             android:layout_height="80dp"
             android:src="@drawable/level_up_char1"
             android:background="@drawable/char_bg"/>
+
         <ImageView
             android:id="@+id/select_char2"
             android:layout_width="60dp"
@@ -106,6 +107,7 @@
             android:background="@drawable/char_bg"/>
 
     </GridLayout>
+
     <Button
         android:id="@+id/confirmButton"
         android:layout_width="wrap_content"

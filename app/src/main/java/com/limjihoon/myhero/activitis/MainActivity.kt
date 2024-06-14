@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationRequest
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -19,14 +18,12 @@ import androidx.viewpager2.widget.ViewPager2
 
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.navigation.NavigationBarView
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
+import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.databinding.ActivityMainBinding
@@ -45,20 +42,24 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
     var member: Member2? = null
-    var tutorial=true
+    var inventory: Inventory? = null
+    var tutorial = true
     var myLocation: Location? = null
-    var kakaoData:KakaoData?=null
+    var kakaoData: KakaoData? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val navView: BottomNavigationView = findViewById(R.id.bnv)
-        navView.itemIconTintList=null
+        navView.itemIconTintList = null
 
-
+        getMember()
 
         supportFragmentManager.beginTransaction().add(R.id.frame, HomeFragment()).commit()
-        getMember()
+
+        if (member == null && inventory == null) {
+            Toast.makeText(this, "로딩중...", Toast.LENGTH_SHORT).show()
+        }
 
         binding.bnv.setOnItemSelectedListener {
             when (it.itemId) {
@@ -111,8 +112,11 @@ class MainActivity : AppCompatActivity() {
 
                 if (p1.body() != null) {
                     member = p1.body()
+
+                    getInventory(member!!.no)
                 } else {
-                    Toast.makeText(this@MainActivity, "회원 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "회원 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT)
+                        .show()
                     Log.d("uid..", "${G.uid}")
                 }
 
@@ -124,6 +128,29 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+    }
+
+    private fun getInventory(no: Int) {
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.getInventory(no).enqueue(object : Callback<Inventory> {
+            override fun onResponse(p0: Call<Inventory>, p1: Response<Inventory>) {
+                if (p1.body() != null) {
+                    inventory = p1.body()
+                } else {
+                    Toast.makeText(this@MainActivity, "인벤토리 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            override fun onFailure(p0: Call<Inventory>, p1: Throwable) {
+                Toast.makeText(this@MainActivity, "${p1.message}", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
     }
 
     private fun startLast() {
@@ -145,25 +172,32 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
+        LocationServices.getFusedLocationProviderClient(this)
+            .requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
     }
 
     val locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
             myLocation = p0.lastLocation
-            LocationServices.getFusedLocationProviderClient(this@MainActivity).removeLocationUpdates(this)
+            LocationServices.getFusedLocationProviderClient(this@MainActivity)
+                .removeLocationUpdates(this)
             myStation()
         }
 
     }
-    private fun myStation(){
-        val retrofit =RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
+
+    private fun myStation() {
+        val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
-        val call =retrofitService.kakoDataSearch("지하철역",myLocation!!.longitude.toString(),myLocation!!.latitude.toString())
+        val call = retrofitService.kakoDataSearch(
+            "지하철역",
+            myLocation!!.longitude.toString(),
+            myLocation!!.latitude.toString()
+        )
         call.enqueue(object : Callback<KakaoData> {
             override fun onResponse(call: Call<KakaoData>, response: Response<KakaoData>) {
-                kakaoData=response.body()
+                kakaoData = response.body()
 
             }
 
@@ -211,7 +245,7 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 if (position == adapter.itemCount - 1) {
                     positiveButton.text = "확인 (다시는 보지 않음)"
-                    tutorial=true
+                    tutorial = true
 
                 } else {
                     positiveButton.text = "다음으로"

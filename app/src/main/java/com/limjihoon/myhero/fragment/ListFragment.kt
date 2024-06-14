@@ -22,7 +22,7 @@ class ListFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.wv.loadUrl("http://myhero.dothome.co.kr/test2")
+        binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
 
         binding.wv.settings.javaScriptEnabled = true
         binding.wv.settings.builtInZoomControls = true

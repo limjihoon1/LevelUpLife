@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <group android:id="@+id/g1">
 
         <item android:id="@+id/menu_logout" android:title="로그아웃"/>
         <item android:id="@+id/menu_die" android:title="회원탈퇴"/>
-        <item android:id="@+id/menu_list" android:title="내 개시물"/>
+        <item android:id="@+id/menu_list" android:title="내 개시물" />
         <item android:id="@+id/menu_todo" android:title="지나왔던 날들"/>
 
     </group>
