@@ -1,11 +1,16 @@
 package com.limjihoon.myhero.fragment
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -26,6 +31,7 @@ import java.lang.Exception
 
 class MapFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
+    private var kakaoMap: KakaoMap? = null
 
 
     override fun onCreateView(
@@ -35,7 +41,7 @@ class MapFragment : Fragment() {
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        return binding.root
+    return binding.root
 
     }
 
@@ -43,6 +49,12 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapView = view.findViewById<MapView>(R.id.map_view)
         mapView.start(mapLifiCycleCallback, mapShow)
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+        binding.qBtn.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.END)
+        }
+        binding.mySw.setOnClickListener { moveToMyLocation() }
 
 
     }
@@ -59,6 +71,7 @@ class MapFragment : Fragment() {
 
     private val mapShow: KakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         override fun onMapReady(kakaoMap: KakaoMap) {
+            this@MapFragment.kakaoMap = kakaoMap
 
             val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
             val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
@@ -67,15 +80,16 @@ class MapFragment : Fragment() {
             val cameraUpdate = CameraUpdateFactory.newCenterPosition(mypos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
-            val labelOptions = LabelOptions.from(mypos).setStyles(R.drawable.sw)
+            val labelOptions = LabelOptions.from(mypos).setStyles(R.drawable.eeeee)
             val labelOptionsLayout = kakaoMap.labelManager!!.layer!!
             labelOptionsLayout.addLabel(labelOptions)
 
             val placeLists: List<DocumentOfPlace>? = (activity as MainActivity).kakaoData?.documents
             placeLists?.forEach {
                 val mypo = LatLng.from(it.y.toDouble(), it.x.toDouble())
-                val options = LabelOptions.from(mypo).setStyles(R.drawable.sll)
+                val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
                     .setTexts(it.place_name, "${it.distance}m").setTag(it)
+                    
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
             }
             kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
@@ -91,24 +105,24 @@ class MapFragment : Fragment() {
                     }
                     val options= InfoWindowOptions.from(label.position)
                     options.body=layout
-                    options.setBodyOffset(0f,-10f)
+                    options.setBodyOffset(0f,-150f)
                     options.setTag(tag)
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
 
                 }
             }
-
-
         }
-
-
     }
+    private fun moveToMyLocation() {
+        kakaoMap?.let {
+            val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
+            val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+            val mypos: LatLng = LatLng.from(latitude, longitude)
 
-
-
+            it.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16))
+        } ?: run {
+            Toast.makeText(activity, "Map is not ready yet", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
-
-
-
-
