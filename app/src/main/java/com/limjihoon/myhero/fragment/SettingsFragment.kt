@@ -4,27 +4,27 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
+import com.limjihoon.myhero.activitis.BoardManageActivity
 import com.limjihoon.myhero.activitis.LoginActivity
 import com.limjihoon.myhero.activitis.MainActivity
+import com.limjihoon.myhero.activitis.MemberManageActivity
+import com.limjihoon.myhero.activitis.NotificationManageActivity
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
 
@@ -62,36 +62,123 @@ class SettingsFragment : Fragment() {
 
         inventory = ma.inventory
         updateUI2(ma)
+        setItemMenu(ma.member!!.level, ma)
 
         binding.changeImage.setOnClickListener { select(ma) }
         binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
 
         binding.navigationView.setNavigationItemSelectedListener { p0 ->
-            if (p0.itemId == R.id.menu_logout) {
-                AlertDialog.Builder(requireContext()).setTitle("로그아웃")
-                    .setMessage("로그아웃 하시겠습니까?").setPositiveButton("확인") { dialog, id ->
-                        spfEdit?.putBoolean("isLogin", false)
-                        spfEdit2?.clear()
-                        spfEdit?.apply()
-                        spfEdit2?.apply()
-                        G.uid = ""
-                        G.nickname = ""
-                        auth.signOut()
-                        startActivity(Intent(requireContext(), LoginActivity::class.java))
-                        activity?.finish()
-                        Toast.makeText(requireContext(), "로그아웃 완료", Toast.LENGTH_SHORT).show()
-                    }.setNegativeButton("취소") { dialog, id ->
-                        dialog.dismiss()
-                    }.create().show()
-
+            when (p0.itemId) {
+                R.id.menu_logout -> {
+                    AlertDialog.Builder(requireContext()).setTitle("로그아웃")
+                        .setMessage("로그아웃 하시겠습니까?").setPositiveButton("확인") { dialog, id ->
+                            spfEdit?.putBoolean("isLogin", false)
+                            spfEdit2?.clear()
+                            spfEdit?.apply()
+                            spfEdit2?.apply()
+                            G.uid = ""
+                            G.nickname = ""
+                            auth.signOut()
+                            startActivity(Intent(requireContext(), LoginActivity::class.java))
+                            activity?.finish()
+                            Toast.makeText(requireContext(), "로그아웃 완료", Toast.LENGTH_SHORT).show()
+                        }.setNegativeButton("취소") { dialog, id ->
+                            dialog.dismiss()
+                        }.create().show()
+                }
+                R.id.menu_member_manage -> {
+                    startActivity(Intent(requireContext(), MemberManageActivity::class.java))
+                }
+                R.id.menu_board_manage -> {
+                    startActivity(Intent(requireContext(), BoardManageActivity::class.java))
+                }
+                R.id.menu_notification_manage -> {
+                    startActivity(Intent(requireContext(), NotificationManageActivity::class.java))
+                }
+                R.id.menu_logout2 -> {
+                    AlertDialog.Builder(requireContext()).setTitle("로그아웃")
+                        .setMessage("로그아웃 하시겠습니까?").setPositiveButton("확인") { dialog, id ->
+                            spfEdit?.putBoolean("isLogin", false)
+                            spfEdit2?.clear()
+                            spfEdit?.apply()
+                            spfEdit2?.apply()
+                            G.uid = ""
+                            G.nickname = ""
+                            auth.signOut()
+                            startActivity(Intent(requireContext(), LoginActivity::class.java))
+                            activity?.finish()
+                            Toast.makeText(requireContext(), "로그아웃 완료", Toast.LENGTH_SHORT).show()
+                        }.setNegativeButton("취소") { dialog, id ->
+                            dialog.dismiss()
+                        }.create().show()
+                }
             }
+
 
             false
         }
 
 
-//        AlertDialog.Builder(requireContext()).setMessage("${ma.inventory?.char1}").create().show()
+    }
 
+    private fun setItemMenu(level: Int, ma: MainActivity) {
+        val headerLayout = binding.navigationView.getHeaderView(0).findViewById<RelativeLayout>(R.id.header_layout)
+        val iv = binding.navigationView.getHeaderView(0).findViewById<ImageView>(R.id.iv_hero)
+        val tv = binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tv_nickname_hearder)
+        val g1Items = listOf(
+            R.id.menu_logout,
+            R.id.menu_die,
+            R.id.menu_list,
+            R.id.menu_todo
+        )
+        val g2Items = listOf(
+            R.id.menu_member_manage,
+            R.id.menu_board_manage,
+            R.id.menu_notification_manage,
+            R.id.menu_logout2
+        )
+
+        // 모든 아이템 숨기기
+        (g1Items + g2Items).forEach { binding.navigationView.menu.findItem(it).isVisible = false }
+
+        // no 값에 따라 아이템 보이기
+        if (level == 999) {
+            g2Items.forEach { binding.navigationView.menu.findItem(it).isVisible = true }
+            headerLayout.setBackgroundResource(R.color.myPrimaryColor)
+            when(ma.member!!.hero){
+                1 -> iv.setImageResource(R.drawable.level_up_char1)
+                2 -> iv.setImageResource(R.drawable.level_up_char2)
+                3 -> iv.setImageResource(R.drawable.level_up_char3)
+                4 -> iv.setImageResource(R.drawable.level_up_char4)
+                5 -> iv.setImageResource(R.drawable.level_up_char5)
+                6 -> iv.setImageResource(R.drawable.level_up_char6)
+                7 -> iv.setImageResource(R.drawable.level_up_char7)
+                8 -> iv.setImageResource(R.drawable.level_up_char8)
+                9 -> iv.setImageResource(R.drawable.level_up_char9)
+                10 -> iv.setImageResource(R.drawable.level_up_char10)
+                11 -> iv.setImageResource(R.drawable.level_up_char11)
+                else -> iv.setImageResource(R.drawable.level_up_char_hiden2)
+            }
+            tv.text = ma.member!!.nickname
+            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        } else {
+            g1Items.forEach { binding.navigationView.menu.findItem(it).isVisible = true }
+            when(ma.member!!.hero){
+                1 -> iv.setImageResource(R.drawable.level_up_char1)
+                2 -> iv.setImageResource(R.drawable.level_up_char2)
+                3 -> iv.setImageResource(R.drawable.level_up_char3)
+                4 -> iv.setImageResource(R.drawable.level_up_char4)
+                5 -> iv.setImageResource(R.drawable.level_up_char5)
+                6 -> iv.setImageResource(R.drawable.level_up_char6)
+                7 -> iv.setImageResource(R.drawable.level_up_char7)
+                8 -> iv.setImageResource(R.drawable.level_up_char8)
+                9 -> iv.setImageResource(R.drawable.level_up_char9)
+                10 -> iv.setImageResource(R.drawable.level_up_char10)
+                11 -> iv.setImageResource(R.drawable.level_up_char11)
+                else -> iv.setImageResource(R.drawable.level_up_char_hiden2)
+            }
+            tv.text = ma.member!!.nickname
+        }
     }
 
     private fun updateUI2(ma: MainActivity) {

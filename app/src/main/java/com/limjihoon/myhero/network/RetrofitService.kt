@@ -1,5 +1,7 @@
 package com.limjihoon.myhero.network
 
+import com.limjihoon.myhero.data.AdminMember
+import com.limjihoon.myhero.data.Board
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member
@@ -51,5 +53,27 @@ interface RetrofitService {
 
     @GET("/levelUpLife/member/UpdateTodo.php")
     fun updateTodo(@Query("no") no: Int): Call<String>     //Update todo를 수정하면서 state값을 0에서 1로 만드는것 리사이클러뷰에는 리스트 사라짐
+
+
+
+
+
+
+
+
+
+
+
+    @GET("/levelUpLife/admin/adminGetMember.php")
+    fun adminGetMember() : Call<List<AdminMember>>
+
+    @GET("/levelUpLife/admin/adminDeleteMember.php")
+    fun adminDeleteMember(@Query("no") no: Int, @Query("uid") uid: String) : Call<String>
+
+    @GET("/levelUpLife/admin/adminGetBoard.php")
+    fun adminGetBoard() : Call<List<Board>>
+
+    @GET("/levelUpLife/admin/adminDeleteBoard.php")
+    fun adminDeleteBoard(@Query("no") no: Int) : Call<String>
 
 }
