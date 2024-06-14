@@ -4,5 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="ypg">#FFF8DD</color>
     <color name="ypgbtn">#E4A808</color>
+    <color name="mapsha">#8E6700</color>
+    <color name="mapbtn">#C99F0B</color>
 
 </resources>
