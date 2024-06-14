@@ -1,6 +1,7 @@
 package com.limjihoon.myhero.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -54,6 +55,9 @@ class TodoRecyclerAdapter(
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Toast.makeText(context, "삭제 에러: ${t.message}", Toast.LENGTH_SHORT).show()
+
+                    Log.d("error", "${t.message}")
+
                 }
             })
         }
@@ -75,7 +79,10 @@ class TodoRecyclerAdapter(
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Toast.makeText(context, "업데이트 에러: ${t.message}", Toast.LENGTH_SHORT).show()
+
+                    Log.d("error", "${t.message}")
                 }
+
             })
         }
     }
