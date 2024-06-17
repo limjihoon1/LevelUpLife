@@ -8,3 +8,12 @@ data class Board(
     val content: String = "",
     val imgUrl: String = "",
 )
+
+data class MyBoard(
+    val no: Int = 0,
+    val uid: String = "",
+    val nickname: String = "",
+    val level: String = "",
+    val content: String = "",
+    val imgUrl: String = "",
+)

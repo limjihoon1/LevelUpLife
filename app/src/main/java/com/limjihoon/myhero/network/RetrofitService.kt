@@ -6,6 +6,8 @@ import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member
 import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.data.MyBoard
+import com.limjihoon.myhero.data.MyTodo
 import com.limjihoon.myhero.data.Todo
 import retrofit2.Call
 import retrofit2.http.Body
@@ -71,5 +73,18 @@ interface RetrofitService {
 
     @GET("/levelUpLife/admin/adminDeleteBoard.php")
     fun adminDeleteBoard(@Query("no") no: Int) : Call<String>
+
+
+
+
+
+
+
+
+    @GET("/levelUpLife/my/getMyBoard.php")
+    fun getMyBoard(@Query("uid") uid: String) : Call<List<MyBoard>>
+
+    @GET("levelUpLife/my/getMyTodo.php")
+    fun  getMyTodo(@Query("uid") uid: String) : Call<List<MyTodo>>
 
 }
