@@ -8,3 +8,12 @@ data class Todo(
 //    var quest:String,
 
     )
+
+data class MyTodo(
+    val uid: String,
+    val workTodo: String,
+    var state: Int,
+    val no: Int,
+//    var quest:String,
+
+)
