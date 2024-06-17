@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call = retrofitService.kakoDataSearch(
-            "지하철역",
+            "",
             myLocation!!.longitude.toString(),
             myLocation!!.latitude.toString()
         )

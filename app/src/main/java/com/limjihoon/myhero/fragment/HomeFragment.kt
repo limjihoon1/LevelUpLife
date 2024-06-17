@@ -43,10 +43,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
-        var mapImtent =Intent(requireContext(), MapActivity::class.java)
-        mapImtent.putExtra("lat", (activity as MainActivity).myLocation?.latitude ?: 37.000)
-        mapImtent.putExtra("lng", (activity as MainActivity).myLocation?.longitude ?: 126.9746)
-        binding.createMap.setOnClickListener { startActivity(mapImtent)}
+
+        binding.createMap.setOnClickListener {
+            val mapIntent = Intent(requireContext(), MapActivity::class.java).apply {
+                putExtra("lat", (activity as MainActivity).myLocation?.latitude ?: 37.555)
+                putExtra("lng", (activity as MainActivity).myLocation?.longitude ?: 126.9746)
+            }
+            startActivity(mapIntent)
+        }
 
         // items를 어댑터에 전달하여 초기화합니다.
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)

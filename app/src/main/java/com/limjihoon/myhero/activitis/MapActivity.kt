@@ -1,6 +1,8 @@
 package com.limjihoon.myhero.activitis
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -8,6 +10,11 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -34,21 +41,42 @@ import com.kakao.vectormap.mapwidget.InfoWindowOptions
 import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.KakaoData
+import com.limjihoon.myhero.data.Markers
+import com.limjihoon.myhero.data.MetaOfPlace
+import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.ActivityMapBinding
+import com.limjihoon.myhero.network.RetrofitHelper
+import com.limjihoon.myhero.network.RetrofitService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 
 class MapActivity : AppCompatActivity() {
     lateinit var binding: ActivityMapBinding
-    var kakaoData: KakaoData?=null
+
     val mapView : MapView by lazy { findViewById(R.id.map_view) }
     var myLocation:Location ?=null
     val locationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
+    var searchQuery:String="화장실"
+    var latitude:Double=35.1796
+    var longitude:Double=129.0756
+    private var todouid =G.uid
+    var searchPlaceResponse:KakaoData?=null
+
+    var items = mutableListOf<Markers>()
+    var kakaoMap:KakaoMap? =null
+
     var lat:Double=0.0
     var lng:Double=0.0
+    var ss: Double = 35.55
+    var tt: Double = 127.632
+    var document :List<DocumentOfPlace>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,8 +86,22 @@ class MapActivity : AppCompatActivity() {
 
         lat=intent.getDoubleExtra("lat",0.0)
         lng=intent.getDoubleExtra("lng",0.0)
-        mapView.start(mapLifiCycleCallback, mapShow)
 
+        questMarkers()
+        searchPlaces()
+
+
+        binding.search.setOnClickListener {
+            searchQuery=binding.et.text.toString()
+            searchPlaces()
+//            recreate()
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.start(mapLifiCycleCallback, mapShow)
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -70,6 +112,42 @@ class MapActivity : AppCompatActivity() {
         override fun onMapError(p0: Exception?) {
 
         }
+
+    }
+
+
+    fun searchPlaces(){
+        val retrofit =RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        val call = retrofitService.kakaoSearchPlaceToString3(searchQuery, lng.toString(),lat.toString())
+        call.enqueue(object :Callback<KakaoData>{
+            override fun onResponse(
+                call: Call<KakaoData>,
+                response: Response<KakaoData>
+            ) {
+                // 응답받은 json 을 파싱한 객체 를 참조
+                searchPlaceResponse = response.body()
+                //먼저 데이터가 온전히 잘 왔는지 파악
+                var meta :MetaOfPlace? = searchPlaceResponse?.meta
+                document  = searchPlaceResponse?.documents
+                ss = document?.get(0)?.x?.toDouble() ?: 37.55
+                tt = document?.get(0)?.y?.toDouble() ?: 129.07
+
+                //마커설정
+                Toast.makeText(this@MapActivity, "$searchQuery\n${document?.get(0)?.x} , ${document?.get(0)?.y}", Toast.LENGTH_SHORT).show()
+
+
+            }
+
+            override fun onFailure(call: Call<KakaoData>, t: Throwable) {
+                androidx.appcompat.app.AlertDialog.Builder(this@MapActivity).setMessage("서버 오류 가 있습니다").create().show()
+            }
+
+        })
+
+
+
 
     }
     private fun requestMyrecatiomn(){
@@ -97,14 +175,12 @@ class MapActivity : AppCompatActivity() {
             myLocation=p0.lastLocation
             //위치정보 탐색이 종료 되었으니 내 위치정보 업데이트를 이제 그만 하기
             locationProviderClient.removeLocationUpdates(this)//이 디스는 locationCallback 객체를 말함
-
-
-
         }
     }
     private val mapShow: KakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         override fun onMapReady(kakaoMap: KakaoMap) {
             // 맵에 로딩이 완료되면 실행되는 영역
+            searchPlaces()
 
             //카메라 위치 이동
             val myPos: LatLng = LatLng.from(lat,lng)
@@ -123,10 +199,17 @@ class MapActivity : AppCompatActivity() {
 
             //여러지점에 대한 마커들 추가하기
             val positions: MutableList<LatLng> = mutableListOf()
-            positions.add(LatLng.from(37.556, 126.977))
-            positions.add(LatLng.from(37.557, 126.971))
-            positions.add(LatLng.from(37.576, 126.967))
-            positions.add(LatLng.from(37.556, 126.969))
+            positions.add(LatLng.from(latitude, longitude))
+
+
+            val placeLists:List<DocumentOfPlace>? = searchPlaceResponse?.documents
+            placeLists?.forEach {
+                //마커(라벨) 옵션 객체
+                val mypo = LatLng.from(it.y.toDouble(),it.x.toDouble())
+                val options =LabelOptions.from(mypo).setStyles(R.drawable.ic_pin).setTexts(it.place_name,"${it.distance}m").setTag(it)
+                kakaoMap.labelManager!!.layer!!.addLabel(options)
+            }
+
 
             //포지션 개수만큼 라커 추가
             for (pos in positions) {
@@ -137,53 +220,81 @@ class MapActivity : AppCompatActivity() {
             }
 
 
-            //라벨 클릭할 때 반응하기
-            kakaoMap.setOnLabelClickListener(object : KakaoMap.OnLabelClickListener {
-                override fun onLabelClicked(
-                    kakaoMap: KakaoMap?,
-                    layer: LabelLayer?,
-                    label: Label?
-                ) {
-                    //정보창 [ INFO WINDOW ]
-                    val layout: GuiLayout = GuiLayout(Orientation.Vertical)
+            kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
+                label.apply {
+                    val layout = GuiLayout(Orientation.Vertical)
                     layout.setPadding(16, 16, 16, 16)
                     layout.setBackground(R.drawable.char_bg, true)
+                    texts.forEach {
+                        val textt = GuiText(it)
+                        textt.setTextSize(28)
+                        textt.setTextColor(Color.WHITE)
+                        layout.addView(textt)
+                    }
+                    val options = InfoWindowOptions.from(label.position)
+                    options.body = layout
+                    options.setBodyOffset(0f, -150f)
+                    options.setTag(tag)
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
+                }
+            }
+            kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
+                val tag = infoWindow.tag
+                if (tag is DocumentOfPlace) {
+                    val place = tag
+                    val builder = AlertDialog.Builder(this@MapActivity)
+                    val inflater = layoutInflater
+                    val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo_map, null)
+                    builder.setView(dialogView)
+                    val tv: TextView = dialogView.findViewById(R.id.tv_place)
+                    tv.text = place.place_name
 
-                    //라벨 글씨를 보여주는 TextView 같은 GuiText
-                    label!!.texts.forEach {
-                        val guiText: GuiText = GuiText(it)
-                        guiText.setTextSize(30)
-                        guiText.setTextColor(Color.WHITE)
-                        layout.addView(guiText)
+                    val dialog = builder.create()
+                    dialog.show()
 
+                    val btnconfirm: Button = dialogView.findViewById(R.id.confirmButton)
+                    val todolist: EditText = dialogView.findViewById(R.id.scheduleEditText)
+                    val btncancel: Button = dialogView.findViewById(R.id.cancelButton)
+
+                    btnconfirm.setOnClickListener {
+                        val ss = todolist.text.toString()
+
+                        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+                        retrofitService.insertMap(todouid, ss, place.y.toDouble(), place.x.toDouble()).enqueue(object : Callback<String> {
+                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                if (response.isSuccessful && response.body() != null) {
+                                    Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                                    Log.d("업데이트 실패", "응답 실패: ${response.errorBody()?.string()}")
+                                }
+                                Log.d("성공", response.body().toString())
+                            }
+
+                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                Toast.makeText(this@MapActivity, "요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                                Log.d("실패", t.message.toString())
+                            }
+                        })
                     }
 
-                    //정보창 객체 만들기
-                    val infoWindoOptions: InfoWindowOptions = InfoWindowOptions.from(label.position)
-                    infoWindoOptions.body = layout
-                    infoWindoOptions.tag = "https://www.mrhi.or.kr"
-
-                    kakaoMap!!.mapWidgetManager!!.infoWindowLayer.removeAll()
-                    kakaoMap!!.mapWidgetManager!!.infoWindowLayer.addInfoWindow(infoWindoOptions)
-
+                    btncancel.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                } else {
+                    Toast.makeText(this@MapActivity, "장소 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
-            })
-            //정보창 클릭 처리
-            kakaoMap.setOnInfoWindowClickListener(object : KakaoMap.OnInfoWindowClickListener {
-                override fun onInfoWindowClicked(
-                    kakaoMap: KakaoMap?,
-                    infoWindow: InfoWindow?,
-                    guiId: String?
-                ) {
-                    val info: String = infoWindow!!.body.getTag().toString()
-
-                    val intent: Intent = Intent(Intent.ACTION_VIEW)
-                    intent.setData(Uri.parse(info))
-                }
-
-            })
+            }
 
         }
 
     }
+    private fun questMarkers(){
+
+    }
+
 }
