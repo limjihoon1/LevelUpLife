@@ -24,6 +24,7 @@ import com.limjihoon.myhero.activitis.BoardManageActivity
 import com.limjihoon.myhero.activitis.LoginActivity
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MemberManageActivity
+import com.limjihoon.myhero.activitis.MyBoardActivity
 import com.limjihoon.myhero.activitis.NotificationManageActivity
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
@@ -85,6 +86,15 @@ class SettingsFragment : Fragment() {
                         }.setNegativeButton("취소") { dialog, id ->
                             dialog.dismiss()
                         }.create().show()
+                }
+                R.id.menu_die -> {
+//                    auth.currentUser?.delete()
+                }
+                R.id.menu_list -> {
+                    startActivity(Intent(requireContext(), MyBoardActivity::class.java))
+                }
+                R.id.menu_todo -> {
+
                 }
                 R.id.menu_member_manage -> {
                     startActivity(Intent(requireContext(), MemberManageActivity::class.java))

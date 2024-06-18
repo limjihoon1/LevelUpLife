@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
-import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
@@ -46,8 +45,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
+
         binding.createMap.setOnClickListener {
-            updateQuest()
             val mapIntent = Intent(requireContext(), MapActivity::class.java).apply {
                 putExtra("lat", (activity as MainActivity).myLocation?.latitude ?: 37.555)
                 putExtra("lng", (activity as MainActivity).myLocation?.longitude ?: 126.9746)
@@ -55,7 +54,9 @@ class HomeFragment : Fragment() {
             startActivity(mapIntent)
         }
 
+        // items를 어댑터에 전달하여 초기화합니다.
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)
+
     }
 
     override fun onResume() {
@@ -64,6 +65,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchData() {
+
         retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
             override fun onResponse(call: Call<Member2>, response: Response<Member2>) {
                 val data = response.body()
@@ -74,19 +76,19 @@ class HomeFragment : Fragment() {
                     binding.coin.text = "${it.coin} COIN"
                     uid = it.uid
 
-                    when (it.hero) {
-                        1 -> binding.hero.setImageResource(R.drawable.level_up_char1)
-                        2 -> binding.hero.setImageResource(R.drawable.level_up_char2)
-                        3 -> binding.hero.setImageResource(R.drawable.level_up_char3)
-                        4 -> binding.hero.setImageResource(R.drawable.level_up_char4)
-                        5 -> binding.hero.setImageResource(R.drawable.level_up_char5)
-                        6 -> binding.hero.setImageResource(R.drawable.level_up_char6)
-                        7 -> binding.hero.setImageResource(R.drawable.level_up_char7)
-                        8 -> binding.hero.setImageResource(R.drawable.level_up_char8)
-                        9 -> binding.hero.setImageResource(R.drawable.level_up_char9)
-                        10 -> binding.hero.setImageResource(R.drawable.level_up_char10)
-                        11 -> binding.hero.setImageResource(R.drawable.level_up_char11)
-                        12 -> binding.hero.setImageResource(R.drawable.level_up_char_hiden2)
+                    when(it.hero) {
+                        1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
+                        2 -> { binding.hero.setImageResource(R.drawable.level_up_char2) }
+                        3 -> { binding.hero.setImageResource(R.drawable.level_up_char3) }
+                        4 -> { binding.hero.setImageResource(R.drawable.level_up_char4) }
+                        5 -> { binding.hero.setImageResource(R.drawable.level_up_char5) }
+                        6 -> { binding.hero.setImageResource(R.drawable.level_up_char6) }
+                        7 -> { binding.hero.setImageResource(R.drawable.level_up_char7) }
+                        8 -> { binding.hero.setImageResource(R.drawable.level_up_char8) }
+                        9 -> { binding.hero.setImageResource(R.drawable.level_up_char9) }
+                        10 -> { binding.hero.setImageResource(R.drawable.level_up_char10) }
+                        11 -> { binding.hero.setImageResource(R.drawable.level_up_char11) }
+                        12 -> { binding.hero.setImageResource(R.drawable.level_up_char_hiden2) }
                     }
 
                     fetchTodos()
@@ -95,12 +97,12 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<Member2>, t: Throwable) {
                 Log.d("error", "${t.message}")
-                Toast.makeText(requireContext(), "네트워크 오류가 발생했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     private fun fetchTodos() {
+
         retrofitService.getTodo(uid).enqueue(object : Callback<List<Todo>> {
             override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
                 val data = response.body()
