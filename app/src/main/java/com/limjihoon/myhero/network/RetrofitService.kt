@@ -75,6 +75,7 @@ interface RetrofitService {
 
     @GET("/levelUpLife/todo/UpdateTodoQuest.php")
     fun updateQuest(
+        @Query("no")no:Int,
         @Query("uid")uid:String,
         @Query("quest")quest:String,
     ):Call<String>

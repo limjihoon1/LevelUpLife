@@ -19,6 +19,7 @@ class TodoRecyclerAdapter(
     private val items: MutableList<Todo>
 ) : RecyclerView.Adapter<TodoRecyclerAdapter.VH>() {
 
+
     inner class VH(val binding: RecyclHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.ivDelete.setOnClickListener {
@@ -33,7 +34,7 @@ class TodoRecyclerAdapter(
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = items[position]
-                    updateTodoState(item.no, position)
+                    updateTodoState(item.no, item.uid, "normal", position)
                 }
             }
         }
@@ -55,34 +56,35 @@ class TodoRecyclerAdapter(
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Toast.makeText(context, "삭제 에러: ${t.message}", Toast.LENGTH_SHORT).show()
-
                     Log.d("error", "${t.message}")
-
                 }
             })
         }
 
-        private fun updateTodoState(no: Int, position: Int) {
+        private fun updateTodoState(no: Int, uid: String, quest: String, position: Int) {
             val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
             val retrofitService = retrofit.create(RetrofitService::class.java)
 
-            retrofitService.updateTodo(no).enqueue(object : Callback<String> {
+            retrofitService.updateQuest(no, uid, quest).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    if (response.isSuccessful && response.body() == "업데이트 성공") {
-                        items.removeAt(position)
-                        notifyItemRemoved(position)
-                        Toast.makeText(context, "업데이트 성공", Toast.LENGTH_SHORT).show()
+                    if (response.isSuccessful) {
+                        if (response.body() == "업데이트 성공") {
+                            items[position].state = 1 // 또는 다른 상태 업데이트
+                            notifyItemChanged(position)
+                            Toast.makeText(context, "성공", Toast.LENGTH_SHORT).show()
+
+                        } else {
+                            Toast.makeText(context, "업데이트 실패: ${response.body()}", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        Toast.makeText(context, "업데이트 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "업데이트 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Toast.makeText(context, "업데이트 에러: ${t.message}", Toast.LENGTH_SHORT).show()
-
                     Log.d("error", "${t.message}")
                 }
-
             })
         }
     }

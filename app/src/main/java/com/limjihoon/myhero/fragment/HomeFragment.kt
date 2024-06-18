@@ -55,9 +55,7 @@ class HomeFragment : Fragment() {
             startActivity(mapIntent)
         }
 
-        // items를 어댑터에 전달하여 초기화합니다.
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)
-
     }
 
     override fun onResume() {
@@ -66,30 +64,38 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchData() {
-
         retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
             override fun onResponse(call: Call<Member2>, response: Response<Member2>) {
                 val data = response.body()
+                var progress :Int = 0
                 data?.let {
                     binding.nickname.text = it.nickname
                     binding.level.text = "Lv : ${it.level}"
                     binding.tvExp2.text = "${it.exp}/50"
                     binding.coin.text = "${it.coin} COIN"
                     uid = it.uid
+                    if (it.exp ==0 ) progress=0
+                    if (it.exp ==10 ) progress=20
+                    if (it.exp ==20 ) progress=40
+                    if (it.exp ==30 ) progress=60
+                    if (it.exp ==40 ) progress=80
 
-                    when(it.hero) {
-                        1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
-                        2 -> { binding.hero.setImageResource(R.drawable.level_up_char2) }
-                        3 -> { binding.hero.setImageResource(R.drawable.level_up_char3) }
-                        4 -> { binding.hero.setImageResource(R.drawable.level_up_char4) }
-                        5 -> { binding.hero.setImageResource(R.drawable.level_up_char5) }
-                        6 -> { binding.hero.setImageResource(R.drawable.level_up_char6) }
-                        7 -> { binding.hero.setImageResource(R.drawable.level_up_char7) }
-                        8 -> { binding.hero.setImageResource(R.drawable.level_up_char8) }
-                        9 -> { binding.hero.setImageResource(R.drawable.level_up_char9) }
-                        10 -> { binding.hero.setImageResource(R.drawable.level_up_char10) }
-                        11 -> { binding.hero.setImageResource(R.drawable.level_up_char11) }
-                        12 -> { binding.hero.setImageResource(R.drawable.level_up_char_hiden2) }
+                    binding.bar.progress = progress
+
+
+                    when (it.hero) {
+                        1 -> binding.hero.setImageResource(R.drawable.level_up_char1)
+                        2 -> binding.hero.setImageResource(R.drawable.level_up_char2)
+                        3 -> binding.hero.setImageResource(R.drawable.level_up_char3)
+                        4 -> binding.hero.setImageResource(R.drawable.level_up_char4)
+                        5 -> binding.hero.setImageResource(R.drawable.level_up_char5)
+                        6 -> binding.hero.setImageResource(R.drawable.level_up_char6)
+                        7 -> binding.hero.setImageResource(R.drawable.level_up_char7)
+                        8 -> binding.hero.setImageResource(R.drawable.level_up_char8)
+                        9 -> binding.hero.setImageResource(R.drawable.level_up_char9)
+                        10 -> binding.hero.setImageResource(R.drawable.level_up_char10)
+                        11 -> binding.hero.setImageResource(R.drawable.level_up_char11)
+                        12 -> binding.hero.setImageResource(R.drawable.level_up_char_hiden2)
                     }
 
                     fetchTodos()
@@ -103,7 +109,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchTodos() {
-
         retrofitService.getTodo(uid).enqueue(object : Callback<List<Todo>> {
             override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
                 val data = response.body()
@@ -161,21 +166,5 @@ class HomeFragment : Fragment() {
         dialogButton2.setOnClickListener {
             dialog.dismiss()
         }
-    }
-
-    private fun updateQuest() {
-        retrofitService.updateQuest(uid, "normal").enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "퀘스트 업데이트 성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "퀘스트 업데이트 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Toast.makeText(requireContext(), "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 }

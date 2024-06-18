@@ -147,7 +147,8 @@
                 android:layout_height="80dp"
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/tv_quest"
-                android:src="@drawable/mapicon" />
+                android:src="@drawable/mapicon"
+                android:onClick="onCreateMapClick"/>
 
             <TextView
                 android:id="@+id/tv_quest"
