@@ -5,7 +5,7 @@ data class Todo(
     val workTodo: String,
     var state: Int,
     val no: Int,
-//    var quest:String,
+    var quest:String="normal",
 
     )
 

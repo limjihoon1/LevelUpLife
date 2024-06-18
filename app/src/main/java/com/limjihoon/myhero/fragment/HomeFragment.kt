@@ -30,6 +30,9 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var uid = ""
     var items = mutableListOf<Todo>()
+    private val retrofitService: RetrofitService by lazy {
+        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,8 +66,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchData() {
-        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-        val retrofitService = retrofit.create(RetrofitService::class.java)
 
         retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
             override fun onResponse(call: Call<Member2>, response: Response<Member2>) {
@@ -102,8 +103,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchTodos() {
-        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-        val retrofitService = retrofit.create(RetrofitService::class.java)
 
         retrofitService.getTodo(uid).enqueue(object : Callback<List<Todo>> {
             override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
@@ -117,6 +116,7 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<List<Todo>>, t: Throwable) {
                 Log.d("etodo", "${t.message}")
+                Toast.makeText(requireContext(), "할 일 목록을 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -135,21 +135,25 @@ class HomeFragment : Fragment() {
         val dialogTv = dialogView.findViewById<EditText>(R.id.scheduleEditText)
 
         dialogButton.setOnClickListener {
-            val todo = Todo(uid, dialogTv.text.toString(), 0, 0)
+            val todoText = dialogTv.text.toString().trim()
+            if (todoText.isEmpty()) {
+                Toast.makeText(requireContext(), "할 일 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-            val retrofitService = retrofit.create(RetrofitService::class.java)
+            val todo = Todo(uid, todoText, 0, 0)
 
             retrofitService.insertTodo(todo).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     val data = response.body()
                     Toast.makeText(requireContext(), "$data", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
-                    fetchTodos() // 새 할 일을 추가한 후 목록을 갱신합니다.
+                    fetchTodos()
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Log.d("error", "${t.message}")
+                    Toast.makeText(requireContext(), "할 일 추가에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
         }
@@ -157,5 +161,21 @@ class HomeFragment : Fragment() {
         dialogButton2.setOnClickListener {
             dialog.dismiss()
         }
+    }
+
+    private fun updateQuest() {
+        retrofitService.updateQuest(uid, "normal").enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "퀘스트 업데이트 성공", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "퀘스트 업데이트 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Toast.makeText(requireContext(), "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

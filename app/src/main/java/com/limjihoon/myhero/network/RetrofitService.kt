@@ -41,7 +41,7 @@ interface RetrofitService {
     @GET("/levelUpLife/member/getInventory.php")
     fun getInventory(@Query("memberNo") memberNo: Int): Call<Inventory>
 
-    @POST("/levelUpLife/member/insertTodo.php")
+    @POST("/levelUpLife/todo/insertTodo.php")
     fun insertTodo(@Body todo: Todo): Call<String>
 
     @GET("/levelUpLife/member/getTodo.php")
@@ -72,6 +72,13 @@ interface RetrofitService {
     @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakaoSearchPlaceToString3(@Query("query") query:String,@Query("x") longitude:String,@Query("y") latitude:String ) : Call<KakaoData>
+
+    @GET("/levelUpLife/todo/UpdateTodoQuest.php")
+    fun updateQuest(
+        @Query("uid")uid:String,
+        @Query("quest")quest:String,
+    ):Call<String>
+
 
 
 
