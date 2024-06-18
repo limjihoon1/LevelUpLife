@@ -132,7 +132,6 @@ class MapActivity : AppCompatActivity() {
                     tt = document?.get(0)?.y?.toDouble() ?: 129.07
 
                     //마커설정
-                    Toast.makeText(this@MapActivity, "$searchQuery\n${document?.get(0)?.x} , ${document?.get(0)?.y}", Toast.LENGTH_SHORT).show()
                     mapView.start(mapLifiCycleCallback,mapShow)
                 }
 
