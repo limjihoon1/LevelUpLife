@@ -31,7 +31,7 @@ interface RetrofitService {
     @GET("/levelUpLife/member/getInventory.php")
     fun getInventory(@Query("memberNo") memberNo: Int): Call<Inventory>
 
-    @POST("/levelUpLife/member/insertTodo.php")
+    @POST("/levelUpLife/todo/insertTodo.php")
     fun insertTodo(@Body todo: Todo): Call<String>
 
     @GET("/levelUpLife/member/getTodo.php")
@@ -50,6 +50,13 @@ interface RetrofitService {
 
     @GET("/levelUpLife/member/UpdateTodo.php")
     fun updateTodo(@Query("no") no: Int): Call<String>
+
+    @GET("/levelUpLife/todo/UpdateTodoQuest.php")
+    fun updateQuest(
+        @Query("uid")uid:String,
+        @Query("quest")quest:String,
+    ):Call<String>
+
 
 
 
