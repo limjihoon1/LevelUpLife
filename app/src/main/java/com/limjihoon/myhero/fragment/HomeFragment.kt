@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
