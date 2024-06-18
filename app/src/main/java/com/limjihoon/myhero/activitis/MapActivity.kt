@@ -87,9 +87,7 @@ class MapActivity : AppCompatActivity() {
         lat=intent.getDoubleExtra("lat",0.0)
         lng=intent.getDoubleExtra("lng",0.0)
 
-        questMarkers()
         searchPlaces()
-
 
         binding.search.setOnClickListener {
             searchQuery=binding.et.text.toString()
@@ -97,11 +95,6 @@ class MapActivity : AppCompatActivity() {
 //            recreate()
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.start(mapLifiCycleCallback, mapShow)
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -121,6 +114,7 @@ class MapActivity : AppCompatActivity() {
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
         val call = retrofitService.kakaoSearchPlaceToString3(searchQuery, lng.toString(),lat.toString())
+
         call.enqueue(object :Callback<KakaoData>{
             override fun onResponse(
                 call: Call<KakaoData>,
@@ -131,11 +125,16 @@ class MapActivity : AppCompatActivity() {
                 //먼저 데이터가 온전히 잘 왔는지 파악
                 var meta :MetaOfPlace? = searchPlaceResponse?.meta
                 document  = searchPlaceResponse?.documents
-                ss = document?.get(0)?.x?.toDouble() ?: 37.55
-                tt = document?.get(0)?.y?.toDouble() ?: 129.07
+                if (document.isNullOrEmpty()){
+                    androidx.appcompat.app.AlertDialog.Builder(this@MapActivity).setMessage("검색 결과가 없습니다").create().show()
+                }else{
+                    ss = document?.get(0)?.x?.toDouble() ?: 37.55
+                    tt = document?.get(0)?.y?.toDouble() ?: 129.07
 
-                //마커설정
-                Toast.makeText(this@MapActivity, "$searchQuery\n${document?.get(0)?.x} , ${document?.get(0)?.y}", Toast.LENGTH_SHORT).show()
+                    //마커설정
+                    Toast.makeText(this@MapActivity, "$searchQuery\n${document?.get(0)?.x} , ${document?.get(0)?.y}", Toast.LENGTH_SHORT).show()
+                    mapView.start(mapLifiCycleCallback,mapShow)
+                }
 
 
             }
@@ -180,7 +179,7 @@ class MapActivity : AppCompatActivity() {
     private val mapShow: KakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         override fun onMapReady(kakaoMap: KakaoMap) {
             // 맵에 로딩이 완료되면 실행되는 영역
-            searchPlaces()
+
 
             //카메라 위치 이동
             val myPos: LatLng = LatLng.from(lat,lng)
@@ -205,6 +204,7 @@ class MapActivity : AppCompatActivity() {
             val placeLists:List<DocumentOfPlace>? = searchPlaceResponse?.documents
             placeLists?.forEach {
                 //마커(라벨) 옵션 객체
+                Log.d("마커", it.place_name)
                 val mypo = LatLng.from(it.y.toDouble(),it.x.toDouble())
                 val options =LabelOptions.from(mypo).setStyles(R.drawable.ic_pin).setTexts(it.place_name,"${it.distance}m").setTag(it)
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
@@ -291,9 +291,6 @@ class MapActivity : AppCompatActivity() {
             }
 
         }
-
-    }
-    private fun questMarkers(){
 
     }
 
