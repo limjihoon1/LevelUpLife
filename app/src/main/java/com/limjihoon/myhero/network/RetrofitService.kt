@@ -4,6 +4,7 @@ import com.limjihoon.myhero.data.AdminMember
 import com.limjihoon.myhero.data.Board
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
+import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.Member
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.MyBoard
@@ -17,7 +18,14 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface RetrofitService {
+    @GET("/levelUpLife/map/LoadMap.php")
+    fun loadMap(@Query("todouid") todouid:String): Call<List<Markers>>
 
+    @GET("/levelUpLife/map/insertMap.php")
+    fun insertMap(@Query("todouid") todouid: String,
+                  @Query("worktodo") worktodo: String,
+                  @Query("lat") lat: Double,
+                  @Query("lng") lng: Double): Call<String>
     @GET("/levelUpLife/member/getEmail.php")
     fun getEmail(@Query("email") email: String): Call<Member>
 
@@ -39,6 +47,20 @@ interface RetrofitService {
     @GET("/levelUpLife/member/getTodo.php")
     fun getTodo(@Query("uid") uid: String): Call<List<Todo>>
 
+
+    @GET("/levelUpLife/member/DeleteTodo.php")
+    fun deleteTodo(@Query("no") no: Int): Call<String>
+
+    @GET("/levelUpLife/member/UpdateTodo.php")
+    fun updateTodo(@Query("no") no: Int): Call<String>
+
+
+
+
+
+
+
+
     @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakoDataSearch(
@@ -46,12 +68,10 @@ interface RetrofitService {
         @Query("x") longitude: String,
         @Query("y") latitude: String
     ): Call<KakaoData>
-
-    @GET("/levelUpLife/member/DeleteTodo.php")
-    fun deleteTodo(@Query("no") no: Int): Call<String>
-
-    @GET("/levelUpLife/member/UpdateTodo.php")
-    fun updateTodo(@Query("no") no: Int): Call<String>
+    //카카오 로컬 검색 api 요청해주는 코드 만들어줘 우선 응답type 을  :KakaoData
+    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @GET("/v2/local/search/keyword.json?sort=distance")
+    fun kakaoSearchPlaceToString3(@Query("query") query:String,@Query("x") longitude:String,@Query("y") latitude:String ) : Call<KakaoData>
 
 
 
