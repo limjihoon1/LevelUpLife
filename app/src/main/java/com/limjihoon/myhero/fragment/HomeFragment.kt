@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
@@ -159,7 +160,7 @@ class HomeFragment : Fragment() {
                     val data = response.body()
                     Toast.makeText(requireContext(), "$data", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
-                    fetchTodos() // 새 할 일을 추가한 후 목록을 갱신합니다.
+                    fetchTodos()
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
@@ -172,4 +173,5 @@ class HomeFragment : Fragment() {
             dialog.dismiss()
         }
     }
+
 }

@@ -344,6 +344,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onBackPressed() {
+
+        AlertDialog.Builder(this)
+            .setMessage("앱을 종료 하시겠습니까?")
+            .setPositiveButton("확인") { dialog, which ->
+                super.onBackPressed()
+            }
+            .setNegativeButton("취소") { dialog, which ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
 }
 
 
