@@ -37,6 +37,7 @@ class ListFragment : Fragment(){
         ma.dataManager.memberFlow.value ?: return
 
         dataManager = ma.dataManager
+        dataManager.memberFlow.value
 
 
     }

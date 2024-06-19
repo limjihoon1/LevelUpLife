@@ -92,6 +92,9 @@ interface RetrofitService {
     @GET("/levelUpLife/member/updateInventory.php")
     fun updateInventory(@Query("uid") uid: String, @Query("hero") hero: Int): Call<String>
 
+    @GET("/levelUpLife/member/updateInventoryHiden.php")
+    fun updateInventoryHiden(@Query("uid") uid: String): Call<String>
+
 
 
 
