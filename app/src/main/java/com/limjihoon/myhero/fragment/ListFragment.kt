@@ -1,11 +1,12 @@
 package com.limjihoon.myhero.fragment
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,10 +28,12 @@ import com.google.gson.Gson
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentNotificationsBinding
+import com.limjihoon.myhero.model.DataManager
 import org.json.JSONObject
 
 class ListFragment : Fragment(){
     lateinit var binding: FragmentNotificationsBinding
+    private lateinit var dataManager: DataManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,8 +46,6 @@ class ListFragment : Fragment(){
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
-
         binding.wv.settings.javaScriptEnabled = true
         binding.wv.settings.builtInZoomControls = true
         binding.wv.settings.displayZoomControls = false
@@ -60,22 +61,30 @@ class ListFragment : Fragment(){
         //1) native app 에서 web js를 제어하기
         //웹뷰에 보낼 메세지
         val ma = activity as MainActivity
-        ma.member ?: return
+        ma.dataManager.memberFlow.value ?: return
+        dataManager = ma.dataManager
+        val member = dataManager.memberFlow.value
 
-        if(ma.member != null){
+        if(member != null){
             val gson = Gson()
-            val userSet = gson.toJson(ma.member)
+            val userSet = gson.toJson(member)
             val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
+
             binding.wv.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
                         binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
                             { result->Log.d("web","${result}")})
+                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
                     }
                 }
             }
-            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
+            }, 2000)
+
         }
 
 
@@ -96,6 +105,33 @@ class ListFragment : Fragment(){
         binding.wv.addJavascriptInterface(MyWebViewConnector(),"Droid")
 
     }// onViewCreated
+
+    override fun onResume() {
+        super.onResume()
+//        val ma = activity as MainActivity
+//        ma.dataManager.memberFlow.value ?: return
+//        dataManager = ma.dataManager
+//        val member = dataManager.memberFlow.value
+//
+//        if(member != null){
+//            val gson = Gson()
+//            val userSet = gson.toJson(member)
+//            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
+//            binding.wv.webViewClient = object : WebViewClient() {
+//                override fun onPageFinished(view: WebView?, url: String?) {
+//                    super.onPageFinished(view, url)
+//                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
+//                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
+//                            { result->Log.d("web","${result}")})
+//                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
+//                    }
+//                }
+//            }
+//
+//            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
+//        }
+
+    }
 
 
     inner class MyWebViewConnector{
