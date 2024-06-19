@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
@@ -34,6 +36,10 @@ class HomeFragment : Fragment() {
         RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
     }
 
+    companion object {
+        private const val REQUEST_CODE_MAP_ACTIVITY = 1
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,16 +51,18 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
-        binding.creatTodo.setOnClickListener { listCreate() }
+        binding.creatTodo.setOnClickListener { listCreate("normal") }
 
         binding.createMap.setOnClickListener {
             val mapIntent = Intent(requireContext(), MapActivity::class.java).apply {
                 putExtra("lat", (activity as MainActivity).myLocation?.latitude ?: 37.555)
                 putExtra("lng", (activity as MainActivity).myLocation?.longitude ?: 126.9746)
             }
-            startActivity(mapIntent)
+            startActivityForResult(mapIntent, REQUEST_CODE_MAP_ACTIVITY)
         }
 
+        // 리사이클러뷰에 레이아웃 매니저 설정 및 어댑터 연결
+        binding.recy.layoutManager = LinearLayoutManager(requireContext())
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)
     }
 
@@ -67,21 +75,21 @@ class HomeFragment : Fragment() {
         retrofitService.getMember(G.uid).enqueue(object : Callback<Member2> {
             override fun onResponse(call: Call<Member2>, response: Response<Member2>) {
                 val data = response.body()
-                var progress :Int = 0
+                var progress: Int = 0
                 data?.let {
                     binding.nickname.text = it.nickname
                     binding.level.text = "Lv : ${it.level}"
                     binding.tvExp2.text = "${it.exp}/50"
                     binding.coin.text = "${it.coin} COIN"
                     uid = it.uid
-                    if (it.exp ==0 ) progress=0
-                    if (it.exp ==10 ) progress=20
-                    if (it.exp ==20 ) progress=40
-                    if (it.exp ==30 ) progress=60
-                    if (it.exp ==40 ) progress=80
-
+                    when (it.exp) {
+                        0 -> progress = 0
+                        10 -> progress = 20
+                        20 -> progress = 40
+                        30 -> progress = 60
+                        40 -> progress = 80
+                    }
                     binding.bar.progress = progress
-
 
                     when (it.hero) {
                         1 -> binding.hero.setImageResource(R.drawable.level_up_char1)
@@ -126,7 +134,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun listCreate() {
+    private fun listCreate(quest: String) {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo, null)
@@ -146,7 +154,7 @@ class HomeFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val todo = Todo(uid, todoText, 0, 0)
+            val todo = Todo(uid, todoText, 0, 0, quest)
 
             retrofitService.insertTodo(todo).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -165,6 +173,16 @@ class HomeFragment : Fragment() {
 
         dialogButton2.setOnClickListener {
             dialog.dismiss()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_MAP_ACTIVITY && resultCode == AppCompatActivity.RESULT_OK) {
+            val isUpdated = data?.getBooleanExtra("isUpdated", false) ?: false
+            if (isUpdated) {
+                fetchTodos()
+            }
         }
     }
 }

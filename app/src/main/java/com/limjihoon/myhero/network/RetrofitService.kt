@@ -21,6 +21,9 @@ interface RetrofitService {
     @GET("/levelUpLife/map/LoadMap.php")
     fun loadMap(@Query("todouid") todouid:String): Call<List<Markers>>
 
+    @GET("/levelUpLife/map/GetAllMarkers.php")
+    fun getAllMarkers():Call<List<Markers>>
+
     @GET("/levelUpLife/map/insertMap.php")
     fun insertMap(@Query("todouid") todouid: String,
                   @Query("worktodo") worktodo: String,
