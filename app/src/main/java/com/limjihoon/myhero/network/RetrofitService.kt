@@ -83,8 +83,21 @@ interface RetrofitService {
         @Query("quest")quest:String,
     ):Call<String>
 
+    @GET("/levelUpLife/todo/UpdateTodoQuest.php")
+    fun updateQuest(
+        @Query("no") no: Int,
+        @Query("uid")uid:String,
+        @Query("quest")quest:String,
+    ):Call<String>
 
+    @GET("/levelUpLife/member/updateHero.php")
+    fun updateHero(@Query("uid") uid: String, @Query("hero") hero: Int): Call<String>
 
+    @GET("/levelUpLife/member/updateInventory.php")
+    fun updateInventory(@Query("uid") uid: String, @Query("hero") hero: Int): Call<String>
+
+    @GET("/levelUpLife/member/updateInventoryHiden.php")
+    fun updateInventoryHiden(@Query("uid") uid: String): Call<String>
 
 
 
@@ -115,7 +128,10 @@ interface RetrofitService {
     @GET("/levelUpLife/my/getMyBoard.php")
     fun getMyBoard(@Query("uid") uid: String) : Call<List<MyBoard>>
 
-    @GET("levelUpLife/my/getMyTodo.php")
+    @GET("/levelUpLife/my/getMyTodo.php")
     fun  getMyTodo(@Query("uid") uid: String) : Call<List<MyTodo>>
+
+    @GET("/levelUpLife/my/myMemberOut.php")
+    fun myMemberOut(@Query("uid") uid: String) : Call<String>
 
 }

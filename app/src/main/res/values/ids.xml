@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="selected_char1" type="id" />
+    <item name="selected_char2" type="id" />
+    <item name="selected_char3" type="id" />
+    <item name="selected_char4" type="id" />
+    <item name="selected_char5" type="id" />
+    <item name="selected_char6" type="id" />
+    <item name="selected_char7" type="id" />
+    <item name="selected_char8" type="id" />
+    <item name="selected_char9" type="id" />
+    <item name="selected_char10" type="id" />
+    <item name="selected_char11" type="id" />
+    <item name="selected_charhiden" type="id" />
+</resources>

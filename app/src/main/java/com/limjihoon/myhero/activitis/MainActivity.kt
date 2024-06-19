@@ -1,9 +1,10 @@
 package com.limjihoon.myhero.activitis
 
-import android.content.Context
+import android.Manifest
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -14,12 +15,15 @@ import com.google.android.gms.location.LocationCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
-
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.messaging.FirebaseMessaging
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.adapter.ViewPagerAdapter
@@ -28,11 +32,16 @@ import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
+import com.limjihoon.myhero.fragment.ListFragment
 import com.limjihoon.myhero.fragment.RendumFragment
 import com.limjihoon.myhero.fragment.MapFragment
 import com.limjihoon.myhero.fragment.SettingsFragment
+import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,12 +50,11 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
-    var member: Member2? = null
-    var inventory: Inventory? = null
+    val dataManager = DataManager()
     var tutorial = true
     var myLocation: Location? = null
     var kakaoData: KakaoData? = null
-    var search =""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -54,11 +62,9 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.bnv)
         navView.itemIconTintList = null
 
-        getMember()
+        getMeberInventory()
 
-        supportFragmentManager.beginTransaction().add(R.id.frame, HomeFragment()).commit()
-
-        if (member == null && inventory == null) {
+        if (dataManager.memberFlow.value == null && dataManager.inventoryFlow.value == null) {
             Toast.makeText(this, "로딩중...", Toast.LENGTH_SHORT).show()
         }
 
@@ -71,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.frame, MapFragment()).commit()
 
                 R.id.bnv_notifications -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, com.limjihoon.myhero.fragment.ListFragment()).commit()
+                    .replace(R.id.frame, ListFragment()).commit()
 
                 R.id.bnv_profile -> supportFragmentManager.beginTransaction()
                     .replace(R.id.frame, RendumFragment()).commit()
@@ -81,10 +87,10 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("MyPreferences", MODE_PRIVATE)
         checkFirstRun()
         val permissionstate =
-            checkCallingOrSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         val permissionLauncher: ActivityResultLauncher<String> =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                 if (it == true) {
@@ -96,15 +102,87 @@ class MainActivity : AppCompatActivity() {
 
             }
         if (permissionstate == PackageManager.PERMISSION_DENIED) {
-            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             Toast.makeText(this, "위치정보 허용", Toast.LENGTH_SHORT).show()
         } else {
             startLast()
         }
 
+        askNotificationPermission()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("qwer1", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = getString(R.string.msg_token_fmt, token)
+            Log.d("qwer2", msg)
+//            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        })
+
+
     }
 
-    private fun getMember() {
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // FCM SDK (and your app) can post notifications.
+        } else {
+            // TODO: Inform user that that your app will not show notifications.
+        }
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    fun getMeberInventory() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                val retrofitService = retrofit.create(RetrofitService::class.java)
+                val response = retrofitService.getMember(G.uid).execute()
+
+                if (response.isSuccessful && response.body() != null) {
+                    dataManager.updateMember(response.body()!!)
+
+                    val retrofit2 = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                    val retrofitService2 = retrofit2.create(RetrofitService::class.java)
+                    val response2 = retrofitService2.getInventory(dataManager.memberFlow.value!!.no).execute()
+//                    Log.d("asqw", "${response.body()}, ${response2.body()}")
+
+                    if (response2.isSuccessful && response2.body() != null) {
+                        dataManager.updateInventory(response2.body()!!)
+
+                        supportFragmentManager.beginTransaction().add(R.id.frame, HomeFragment()).commit()
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.d("getErr", "${e.message}")
+            }
+        }
+    }
+
+    fun getMember() {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
@@ -112,9 +190,9 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(p0: Call<Member2>, p1: Response<Member2>) {
 
                 if (p1.body() != null) {
-                    member = p1.body()
+                    dataManager.updateMember(p1.body()!!)
 
-                    getInventory(member!!.no)
+                    getInventory(dataManager.memberFlow.value!!.no)
                 } else {
                     Toast.makeText(this@MainActivity, "회원 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT)
                         .show()
@@ -132,14 +210,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getInventory(no: Int) {
+    fun getInventory(no: Int) {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
         retrofitService.getInventory(no).enqueue(object : Callback<Inventory> {
             override fun onResponse(p0: Call<Inventory>, p1: Response<Inventory>) {
                 if (p1.body() != null) {
-                    inventory = p1.body()
+                    dataManager.updateInventory(p1.body()!!)
                 } else {
                     Toast.makeText(this@MainActivity, "인벤토리 정보가 넘어오지 않았습니다.", Toast.LENGTH_SHORT)
                         .show()
@@ -155,18 +233,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startLast() {
-        val request = com.google.android.gms.location.LocationRequest.create().apply {
-            priority = com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+        val request = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             interval = 1000
         }
 
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             // 위치 권한이 부여되지 않았을 경우 처리
@@ -192,7 +270,7 @@ class MainActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call = retrofitService.kakoDataSearch(
-            "",
+            "지하철역",
             myLocation!!.longitude.toString(),
             myLocation!!.latitude.toString()
         )
@@ -265,6 +343,19 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         }
+    }
+    override fun onBackPressed() {
+
+        AlertDialog.Builder(this)
+            .setMessage("앱을 종료 하시겠습니까?")
+            .setPositiveButton("확인") { dialog, which ->
+                super.onBackPressed()
+            }
+            .setNegativeButton("취소") { dialog, which ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }
 

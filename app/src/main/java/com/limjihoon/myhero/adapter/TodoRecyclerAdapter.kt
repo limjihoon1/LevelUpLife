@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.RecyclHomeBinding
 import com.limjihoon.myhero.databinding.RecyclHome2Binding
@@ -19,6 +20,7 @@ class TodoRecyclerAdapter(
     private val context: Context,
     private val items: MutableList<Todo>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val ma = context as MainActivity
 
     companion object {
         const val TYPE_NORMAL = 0
@@ -38,7 +40,6 @@ class TodoRecyclerAdapter(
                     deleteTodoItem(item.no, position)
                 }
             }
-
             binding.ivSuccess.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {

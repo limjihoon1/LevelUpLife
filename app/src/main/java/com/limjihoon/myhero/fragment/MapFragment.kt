@@ -51,13 +51,6 @@ class MapFragment : Fragment() {
     var longityde = 0.0
     var items = mutableListOf<Markers>()
     private val handler = Handler()
-    private val updateTask = object : Runnable {
-        override fun run() {
-            search()  // search 메소드 호출
-            handler.postDelayed(this, 1000)  // 1초마다 반복
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,9 +70,6 @@ class MapFragment : Fragment() {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
         binding.mySw.setOnClickListener { moveToMyLocation() }
-        binding.search.setOnClickListener { search() }
-
-        handler.post(updateTask)
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -104,8 +94,6 @@ class MapFragment : Fragment() {
             labelOptionsLayout.addLabel(labelOptions)
 
             loadMapMarkers(kakaoMap)
-//            val positions:MutableList<LatLng> = mutableListOf()
-//            positions.add(LatLng.from(35.1555,125.5054))
 
 
             val placeLists: List<DocumentOfPlace>? = (activity as MainActivity).kakaoData?.documents
@@ -165,9 +153,6 @@ class MapFragment : Fragment() {
         })
     }
 
-    private fun search() {
-        // 검색 기능 구현
-    }
 
     private fun moveToMyLocation() {
         kakaoMap?.let {

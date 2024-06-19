@@ -136,32 +136,49 @@ class MapActivity : AppCompatActivity() {
             locationProviderClient.removeLocationUpdates(this)
         }
     }
-
     private val mapShow: KakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         override fun onMapReady(kakaoMap: KakaoMap) {
-            val myPos: LatLng = LatLng.from(lat, lng)
+            // 맵에 로딩이 완료되면 실행되는 영역
+
+
+            //카메라 위치 이동
+            val myPos: LatLng = LatLng.from(lat,lng)
             var cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(myPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
+            //내 위치에 마커 만들이 - 아이콘모양 [ 백터는 안됨 ]
+            //라벨(마커)의 위치와 스타일 지정하는 옵션 객체 생성
             var labelOptions: LabelOptions = LabelOptions.from(myPos).setStyles(R.drawable.eeeee)
+
+            //라벨의 레이어 얻어오기
             val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
+
+            // 라벨 추가
             labelLayer.addLabel(labelOptions)
 
+            //여러지점에 대한 마커들 추가하기
             val positions: MutableList<LatLng> = mutableListOf()
             positions.add(LatLng.from(latitude, longitude))
 
-            val placeLists: List<DocumentOfPlace>? = searchPlaceResponse?.documents
+
+            val placeLists:List<DocumentOfPlace>? = searchPlaceResponse?.documents
             placeLists?.forEach {
-                val mypo = LatLng.from(it.y.toDouble(), it.x.toDouble())
-                val options = LabelOptions.from(mypo).setStyles(R.drawable.ic_pin).setTexts(it.place_name, "${it.distance}m").setTag(it)
+                //마커(라벨) 옵션 객체
+                Log.d("마커", it.place_name)
+                val mypo = LatLng.from(it.y.toDouble(),it.x.toDouble())
+                val options =LabelOptions.from(mypo).setStyles(R.drawable.ic_pin).setTexts(it.place_name,"${it.distance}m").setTag(it)
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
             }
 
+
+            //포지션 개수만큼 라커 추가
             for (pos in positions) {
                 var op: LabelOptions = LabelOptions.from(pos).setStyles(R.drawable.qqqqq)
                     .setTexts("위도 : ${pos.latitude} , 경도 :${pos.longitude}")
+                //카머 추가
                 kakaoMap.labelManager!!.layer!!.addLabel(op)
             }
+
 
             kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
                 label.apply {
@@ -182,7 +199,6 @@ class MapActivity : AppCompatActivity() {
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
                 }
             }
-
             kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
                 val tag = infoWindow.tag
                 if (tag is DocumentOfPlace) {
@@ -204,11 +220,26 @@ class MapActivity : AppCompatActivity() {
                     btnconfirm.setOnClickListener {
                         val ss = todolist.text.toString()
 
-                        // 장소 등록 메서드 호출
-                        val marker = Markers(todouid, ss, place.y.toDouble(), place.x.toDouble())
-                        insertMarker(marker)
+                        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                        val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        dialog.dismiss()
+                        retrofitService.insertMap(todouid, ss, place.y.toDouble(), place.x.toDouble()).enqueue(object : Callback<String> {
+                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                if (response.isSuccessful && response.body() != null) {
+                                    Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                                    Log.d("업데이트 실패", "응답 실패: ${response.errorBody()?.string()}")
+                                }
+                                Log.d("성공", response.body().toString())
+                            }
+
+                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                Toast.makeText(this@MapActivity, "요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                                Log.d("실패", t.message.toString())
+                            }
+                        })
                     }
 
                     btncancel.setOnClickListener {
@@ -218,31 +249,9 @@ class MapActivity : AppCompatActivity() {
                     Toast.makeText(this@MapActivity, "장소 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
+
         }
+
     }
 
-    // 장소 등록 메서드 추가
-    private fun insertMarker(marker: Markers) {
-        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-        val retrofitService = retrofit.create(RetrofitService::class.java)
-
-        retrofitService.insertMap(marker.todouid, marker.worktodo, marker.lat, marker.lng).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@MapActivity, "등록 성공", Toast.LENGTH_SHORT).show()
-                    // 등록 후 결과 설정
-                    val resultIntent = Intent()
-                    resultIntent.putExtra("isUpdated", true)
-                    setResult(RESULT_OK, resultIntent)
-                    finish()
-                } else {
-                    Toast.makeText(this@MapActivity, "등록 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Toast.makeText(this@MapActivity, "등록 에러: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
 }
