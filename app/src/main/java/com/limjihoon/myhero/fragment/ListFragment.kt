@@ -8,9 +8,11 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentNotificationsBinding
+import com.limjihoon.myhero.model.DataManager
 
 class ListFragment : Fragment(){
     lateinit var binding: FragmentNotificationsBinding
+    private lateinit var dataManager: DataManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,8 +34,11 @@ class ListFragment : Fragment(){
         binding.wv.webViewClient = WebViewClient()
 
         val ma = activity as MainActivity
-        ma.member ?: return
-        
+        ma.dataManager.memberFlow.value ?: return
+
+        dataManager = ma.dataManager
+
+
     }
 
 }
