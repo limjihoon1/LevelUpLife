@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
         binding.creatTodo.setOnClickListener { listCreate() }
@@ -59,6 +60,7 @@ class HomeFragment : Fragment() {
         binding.recy.adapter = TodoRecyclerAdapter(requireContext(), items)
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -178,4 +180,5 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
 }
