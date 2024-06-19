@@ -43,6 +43,7 @@ class ListFragment : Fragment(){
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
 
         binding.wv.settings.javaScriptEnabled = true
         binding.wv.settings.builtInZoomControls = true
@@ -156,5 +157,5 @@ class ListFragment : Fragment(){
         }
 
     }//inner class
-        
+
 }

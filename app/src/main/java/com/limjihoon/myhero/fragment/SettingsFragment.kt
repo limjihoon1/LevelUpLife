@@ -3,6 +3,7 @@ package com.limjihoon.myhero.fragment
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.limjihoon.myhero.G
@@ -25,12 +29,22 @@ import com.limjihoon.myhero.activitis.LoginActivity
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MemberManageActivity
 import com.limjihoon.myhero.activitis.MyBoardActivity
+import com.limjihoon.myhero.activitis.MyTodoActivity
 import com.limjihoon.myhero.activitis.NotificationManageActivity
 import com.limjihoon.myhero.data.Inventory
+import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
+import com.limjihoon.myhero.model.DataManager
+import com.limjihoon.myhero.network.RetrofitHelper
+import com.limjihoon.myhero.network.RetrofitService
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SettingsFragment : Fragment() {
     lateinit var binding: FragmentSettingBinding
+    private lateinit var dataManager: DataManager
     private val auth = Firebase.auth
     private val spf by lazy {
         activity?.getSharedPreferences(
@@ -47,6 +61,7 @@ class SettingsFragment : Fragment() {
     private val spfEdit by lazy { spf?.edit() }
     private val spfEdit2 by lazy { spf2?.edit() }
     private var inventory: Inventory? = null
+    private var hero = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,11 +74,19 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val ma = activity as MainActivity
-        ma.inventory ?: return
+        ma.dataManager.inventoryFlow.value ?: return
 
-        inventory = ma.inventory
-        updateUI2(ma)
-        setItemMenu(ma.member!!.level, ma)
+        dataManager = ma.dataManager
+        inventory = ma.dataManager.inventoryFlow.value
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dataManager.memberFlow.collect { member ->
+                    updateUI(member)
+                    setItemMenu(dataManager.memberFlow.value!!.level)
+                }
+            }
+        }
 
         binding.changeImage.setOnClickListener { select(ma) }
         binding.settingBtn.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.END) }
@@ -88,13 +111,42 @@ class SettingsFragment : Fragment() {
                         }.create().show()
                 }
                 R.id.menu_die -> {
-//                    auth.currentUser?.delete()
+                    AlertDialog.Builder(requireContext()).setTitle("회원탈퇴")
+                        .setMessage("탈퇴 하시겠습니까?").setPositiveButton("확인") { dialog, id ->
+                            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                            val retrofitService = retrofit.create(RetrofitService::class.java)
+
+                            retrofitService.myMemberOut(G.uid).enqueue(object : Callback<String> {
+                                override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                                    spfEdit?.putBoolean("isLogin", false)
+                                    spfEdit2?.clear()
+                                    spfEdit?.apply()
+                                    spfEdit2?.apply()
+                                    G.uid = ""
+                                    G.nickname = ""
+
+                                    auth.currentUser?.delete()
+                                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                                    activity?.finish()
+                                    Toast.makeText(requireContext(), "탈퇴 완료", Toast.LENGTH_SHORT).show()
+                                }
+
+                                override fun onFailure(p0: Call<String>, p1: Throwable) {
+                                    Log.d("err", p1.message.toString())
+                                }
+
+                            })
+
+                        }.setNegativeButton("취소") { dialog, id ->
+                            dialog.dismiss()
+                        }.create().show()
+
                 }
                 R.id.menu_list -> {
                     startActivity(Intent(requireContext(), MyBoardActivity::class.java))
                 }
                 R.id.menu_todo -> {
-
+                    startActivity(Intent(requireContext(), MyTodoActivity::class.java))
                 }
                 R.id.menu_member_manage -> {
                     startActivity(Intent(requireContext(), MemberManageActivity::class.java))
@@ -131,7 +183,11 @@ class SettingsFragment : Fragment() {
 
     }
 
-    private fun setItemMenu(level: Int, ma: MainActivity) {
+    override fun onResume() {
+        super.onResume()
+    }
+
+    private fun setItemMenu(level: Int) {
         val headerLayout = binding.navigationView.getHeaderView(0).findViewById<RelativeLayout>(R.id.header_layout)
         val iv = binding.navigationView.getHeaderView(0).findViewById<ImageView>(R.id.iv_hero)
         val tv = binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tv_nickname_hearder)
@@ -155,7 +211,7 @@ class SettingsFragment : Fragment() {
         if (level == 999) {
             g2Items.forEach { binding.navigationView.menu.findItem(it).isVisible = true }
             headerLayout.setBackgroundResource(R.color.myPrimaryColor)
-            when(ma.member!!.hero){
+            when(dataManager.memberFlow.value!!.hero){
                 1 -> iv.setImageResource(R.drawable.level_up_char1)
                 2 -> iv.setImageResource(R.drawable.level_up_char2)
                 3 -> iv.setImageResource(R.drawable.level_up_char3)
@@ -169,11 +225,11 @@ class SettingsFragment : Fragment() {
                 11 -> iv.setImageResource(R.drawable.level_up_char11)
                 else -> iv.setImageResource(R.drawable.level_up_char_hiden2)
             }
-            tv.text = ma.member!!.nickname
+            tv.text = dataManager.memberFlow.value!!.nickname
             tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         } else {
             g1Items.forEach { binding.navigationView.menu.findItem(it).isVisible = true }
-            when(ma.member!!.hero){
+            when(dataManager.memberFlow.value!!.hero){
                 1 -> iv.setImageResource(R.drawable.level_up_char1)
                 2 -> iv.setImageResource(R.drawable.level_up_char2)
                 3 -> iv.setImageResource(R.drawable.level_up_char3)
@@ -187,11 +243,11 @@ class SettingsFragment : Fragment() {
                 11 -> iv.setImageResource(R.drawable.level_up_char11)
                 else -> iv.setImageResource(R.drawable.level_up_char_hiden2)
             }
-            tv.text = ma.member!!.nickname
+            tv.text = dataManager.memberFlow.value!!.nickname
         }
     }
 
-    private fun updateUI2(ma: MainActivity) {
+    private fun updateUI(member: Member2?) {
         var progress: Double = 0.0
 
         if (inventory!!.char1 >= 1) {
@@ -255,35 +311,35 @@ class SettingsFragment : Fragment() {
             binding.progressText.text = "100"
         }
 
-        if (ma.member!!.hero == 1) {
+        if (member!!.hero == 1) {
             binding.myChar.setImageResource(R.drawable.level_up_char1)
-        } else if (ma.member!!.hero == 2) {
+        } else if (member.hero == 2) {
             binding.myChar.setImageResource(R.drawable.level_up_char2)
-        } else if (ma.member!!.hero == 3) {
+        } else if (member.hero == 3) {
             binding.myChar.setImageResource(R.drawable.level_up_char3)
-        } else if (ma.member!!.hero == 4) {
+        } else if (member.hero == 4) {
             binding.myChar.setImageResource(R.drawable.level_up_char4)
-        } else if (ma.member!!.hero == 5) {
+        } else if (member.hero == 5) {
             binding.myChar.setImageResource(R.drawable.level_up_char5)
-        } else if (ma.member!!.hero == 6) {
+        } else if (member.hero == 6) {
             binding.myChar.setImageResource(R.drawable.level_up_char6)
-        } else if (ma.member!!.hero == 7) {
+        } else if (member.hero == 7) {
             binding.myChar.setImageResource(R.drawable.level_up_char7)
-        } else if (ma.member!!.hero == 8) {
+        } else if (member.hero == 8) {
             binding.myChar.setImageResource(R.drawable.level_up_char8)
-        } else if (ma.member!!.hero == 9) {
+        } else if (member.hero == 9) {
             binding.myChar.setImageResource(R.drawable.level_up_char9)
-        } else if (ma.member!!.hero == 10) {
+        } else if (member.hero == 10) {
             binding.myChar.setImageResource(R.drawable.level_up_char10)
-        } else if (ma.member!!.hero == 11) {
+        } else if (member.hero == 11) {
             binding.myChar.setImageResource(R.drawable.level_up_char11)
         } else {
             binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
         }
-        binding.nickname.text = ma.member!!.nickname
-        binding.level.text = "Lv : ${ma.member!!.level}"
-        binding.coin.text = "${ma.member!!.coin} Coin"
-        binding.tvExp2.text = "${ma.member!!.exp} / 50"
+        binding.nickname.text = member.nickname
+        binding.level.text = "Lv : ${member.level}"
+        binding.coin.text = "${member.coin} Coin"
+        binding.tvExp2.text = "${member.exp} / 50"
 
         val ppp = (progress / 10).toInt()
         binding.progressBar.progress = ppp
@@ -292,7 +348,7 @@ class SettingsFragment : Fragment() {
 
     fun select(ma: MainActivity) {
         val builder = AlertDialog.Builder(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.custum_dialog_select_char2, null)
+        val dialogView = layoutInflater.inflate(R.layout.custum_dialog_select_char, null)
         val gridLayout = dialogView.findViewById<GridLayout>(R.id.gridLayout)
         val image1: ImageView = dialogView.findViewById(R.id.select_char1)
         val image2: ImageView = dialogView.findViewById(R.id.select_char2)
@@ -514,18 +570,54 @@ class SettingsFragment : Fragment() {
                 it.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
 
                 when(it.id){
-                    R.id.select_char1 -> binding.myChar.setImageResource(R.drawable.level_up_char1)
-                    R.id.select_char2 -> binding.myChar.setImageResource(R.drawable.level_up_char2)
-                    R.id.select_char3 -> binding.myChar.setImageResource(R.drawable.level_up_char3)
-                    R.id.select_char4 -> binding.myChar.setImageResource(R.drawable.level_up_char4)
-                    R.id.select_char5 -> binding.myChar.setImageResource(R.drawable.level_up_char5)
-                    R.id.select_char6 -> binding.myChar.setImageResource(R.drawable.level_up_char6)
-                    R.id.select_char7 -> binding.myChar.setImageResource(R.drawable.level_up_char7)
-                    R.id.select_char8 -> binding.myChar.setImageResource(R.drawable.level_up_char8)
-                    R.id.select_char9 -> binding.myChar.setImageResource(R.drawable.level_up_char9)
-                    R.id.select_char10 -> binding.myChar.setImageResource(R.drawable.level_up_char10)
-                    R.id.select_char11 -> binding.myChar.setImageResource(R.drawable.level_up_char11)
-                    R.id.select_charhiden -> binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
+                    R.id.select_char1 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char1)
+                        hero = 1
+                    }
+                    R.id.select_char2 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char2)
+                        hero = 2
+                    }
+                    R.id.select_char3 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char3)
+                        hero = 3
+                    }
+                    R.id.select_char4 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char4)
+                        hero = 4
+                    }
+                    R.id.select_char5 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char5)
+                        hero = 5
+                    }
+                    R.id.select_char6 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char6)
+                        hero = 6
+                    }
+                    R.id.select_char7 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char7)
+                        hero = 7
+                    }
+                    R.id.select_char8 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char8)
+                        hero = 8
+                    }
+                    R.id.select_char9 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char9)
+                        hero = 9
+                    }
+                    R.id.select_char10 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char10)
+                        hero = 10
+                    }
+                    R.id.select_char11 -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char11)
+                        hero = 11
+                    }
+                    R.id.select_charhiden -> {
+                        binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
+                        hero = 12
+                    }
                 }
             }
         }
@@ -534,7 +626,22 @@ class SettingsFragment : Fragment() {
 
         val dialogButton: Button = dialogView.findViewById(R.id.confirmButton)
         dialogButton.setOnClickListener {
-            dialog.dismiss()
+            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+            val retrofitService = retrofit.create(RetrofitService::class.java)
+
+            retrofitService.updateHero(G.uid, hero).enqueue(object : Callback<String> {
+                override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                    ma.getMember()
+                    Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+
+                override fun onFailure(p0: Call<String>, p1: Throwable) {
+                    Log.d("err", p1.message.toString())
+                }
+
+            })
+
         }
     }
 

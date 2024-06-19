@@ -3,37 +3,31 @@ package com.limjihoon.myhero.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.databinding.FragmentProfileBinding
+import com.limjihoon.myhero.model.DataManager
+import com.limjihoon.myhero.network.RetrofitHelper
+import com.limjihoon.myhero.network.RetrofitService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.random.Random
 
 
 class RendumFragment : Fragment() {
-    lateinit var binding: FragmentProfileBinding
-
-    private var loadingDialog: AlertDialog? = null
-    val updatedField1: Map<String, Any> = hashMapOf("char1" to 1)
-    val updatedField2: Map<String, Any> = hashMapOf("char2" to 1)
-    val updatedField3: Map<String, Any> = hashMapOf("char3" to 1)
-    val updatedField4: Map<String, Any> = hashMapOf("char4" to 1)
-    val updatedField5: Map<String, Any> = hashMapOf("char5" to 1)
-    val updatedField6: Map<String, Any> = hashMapOf("char6" to 1)
-    val updatedField7: Map<String, Any> = hashMapOf("char7" to 1)
-    val updatedField8: Map<String, Any> = hashMapOf("char8" to 1)
-    val updatedField9: Map<String, Any> = hashMapOf("char9" to 1)
-    val updatedField10: Map<String, Any> = hashMapOf("char10" to 1)
-    val updatedField11: Map<String, Any> = hashMapOf("char11" to 1)
-    val updatedFieldhiden: Map<String, Any> = hashMapOf("charhiden" to 1)
-    var fb = Firebase.firestore.collection("users")
+    private lateinit var binding: FragmentProfileBinding
+    private lateinit var dataManager: DataManager
+    private var hero = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,97 +35,118 @@ class RendumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
-
-
-        binding.rendumBtn.setOnClickListener { rendum() }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val ma = activity as MainActivity
-        ma.member ?: return
+        ma.dataManager.memberFlow.value ?: return
+        dataManager = ma.dataManager
+
+        binding.rendumBtn.setOnClickListener {
+            rendum(ma)
+        }
 
     }
-//    private fun dilrendum() {
-//        Handler(Looper.getMainLooper()).postDelayed({
-////            showLoadingDialog()
-//            rendum()
-//        }, 3000) // 3000 milliseconds delay
-//    }
 
+    override fun onResume() {
+        super.onResume()
+        getMember(MainActivity())
+    }
 
-//    private fun showLoadingDialog() {
-//        val builder = AlertDialog.Builder(requireContext())
-//        val inflater = layoutInflater
-//        val dialogView = inflater.inflate(R.layout.loding_layout, null)
-//        builder.setView(dialogView)
-//        builder.setCancelable(false)
-//
-//        val loadingGif: ImageView = dialogView.findViewById(R.id.loadingGif)
-//        Glide.with(this).asGif().load(R.drawable.loding).into(loadingGif)
-//
-//        loadingDialog = builder.create()
-//        loadingDialog?.show()
-//    }
-//
-//    private fun hideLoadingDialog() {
-//        loadingDialog?.dismiss()
-//    }
-//
+    private fun getMember(ma: MainActivity) {
+        ma.getMember()
+    }
 
-
-    private fun rendum() {
+    private fun rendum(ma: MainActivity) {
         val randomNumber = Random.nextInt(1, 12)
-
 
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.custum_dialog_rendum, null)
-        var img: ImageView = dialogView.findViewById(R.id.dialogImage)
-        if (randomNumber == 1) {
-            img.setImageResource(R.drawable.level_up_char1)
-            fb.document("1").update(updatedField1)
-        } else if (randomNumber == 2) {
-            img.setImageResource(R.drawable.level_up_char2)
-            fb.document("1").update(updatedField2)
-        } else if (randomNumber == 3) {
-            img.setImageResource(R.drawable.level_up_char3)
-            fb.document("1").update(updatedField3)
-        } else if (randomNumber == 4) {
-            img.setImageResource(R.drawable.level_up_char4)
-            fb.document("1").update(updatedField4)
-        } else if (randomNumber == 5) {
-            img.setImageResource(R.drawable.level_up_char5)
-            fb.document("1").update(updatedField5)
-        } else if (randomNumber == 6) {
-            img.setImageResource(R.drawable.level_up_char6)
-            fb.document("1").update(updatedField6)
-        } else if (randomNumber == 7) {
-            img.setImageResource(R.drawable.level_up_char7)
-            fb.document("1").update(updatedField7)
-        } else if (randomNumber == 8) {
-            img.setImageResource(R.drawable.level_up_char8)
-            fb.document("1").update(updatedField8)
-        } else if (randomNumber == 9) {
-            img.setImageResource(R.drawable.level_up_char9)
-            fb.document("1").update(updatedField9)
-        } else if (randomNumber == 10) {
-            img.setImageResource(R.drawable.level_up_char10)
-            fb.document("1").update(updatedField10)
-        } else if (randomNumber == 11) {
-            img.setImageResource(R.drawable.level_up_char11)
-            fb.document("1").update(updatedField11)
+        val img: ImageView = dialogView.findViewById(R.id.dialogImage)
+
+        when (randomNumber) {
+            1 -> {
+                img.setImageResource(R.drawable.level_up_char1)
+                hero = 1
+            }
+
+            2 -> {
+                img.setImageResource(R.drawable.level_up_char2)
+                hero = 2
+            }
+
+            3 -> {
+                img.setImageResource(R.drawable.level_up_char3)
+                hero = 3
+            }
+
+            4 -> {
+                img.setImageResource(R.drawable.level_up_char4)
+                hero = 4
+            }
+
+            5 -> {
+                img.setImageResource(R.drawable.level_up_char5)
+                hero = 5
+            }
+
+            6 -> {
+                img.setImageResource(R.drawable.level_up_char6)
+                hero = 6
+            }
+
+            7 -> {
+                img.setImageResource(R.drawable.level_up_char7)
+                hero = 7
+            }
+
+            8 -> {
+                img.setImageResource(R.drawable.level_up_char8)
+                hero = 8
+            }
+
+            9 -> {
+                img.setImageResource(R.drawable.level_up_char9)
+                hero = 9
+            }
+
+            10 -> {
+                img.setImageResource(R.drawable.level_up_char10)
+                hero = 10
+            }
+
+            else -> {
+                img.setImageResource(R.drawable.level_up_char11)
+                hero = 11
+            }
         }
-
-
 
         builder.setView(dialogView)
 
-
         val dialog = builder.create()
-        dialog.show()
 
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.updateInventory(G.uid, hero).enqueue(object : Callback<String> {
+            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                ma.getMember()
+
+                if (p1.body() == "캐릭터 뽑기 완료") {
+                    dialog.show()
+                    Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(p0: Call<String>, p1: Throwable) {
+                Log.d("invenErr", p1.message.toString())
+            }
+
+        })
 
         val dialogButton: Button = dialogView.findViewById(R.id.dialogButton)
         dialogButton.setOnClickListener {

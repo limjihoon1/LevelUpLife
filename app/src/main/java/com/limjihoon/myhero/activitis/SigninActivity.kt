@@ -111,7 +111,9 @@ class SigninActivity : AppCompatActivity() {
                             Toast.makeText(this@SigninActivity, "중복된 닉네임이 있습니다!!", Toast.LENGTH_SHORT).show()
                         } else if (hero == 0) {
                             Toast.makeText(this@SigninActivity, "캐릭터를 선택해주세요!!", Toast.LENGTH_SHORT).show()
-                        } else {
+                        } else if(password.length >6) {
+                            Toast.makeText(this@SigninActivity, "비밀번호 7자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
+                        }else{
 
                             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
