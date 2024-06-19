@@ -46,7 +46,7 @@ class ListFragment : Fragment(){
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
+       binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
 
         binding.wv.settings.javaScriptEnabled = true
         binding.wv.settings.builtInZoomControls = true
@@ -62,32 +62,29 @@ class ListFragment : Fragment(){
 
         //1) native app 에서 web js를 제어하기
         //웹뷰에 보낼 메세지
-        val ma = activity as MainActivity
-        ma.dataManager.memberFlow.value ?: return
-        dataManager = ma.dataManager
-        val member = dataManager.memberFlow.value
-
-        if(member != null){
-            val gson = Gson()
-            val userSet = gson.toJson(member)
-            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
-
-            binding.wv.webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
-                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
-                            { result->Log.d("web","${result}")})
-                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
-                    }
-                }
-            }
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
-            }, 2000)
-
-        }
+//        val ma = activity as MainActivity
+//        ma.dataManager.memberFlow.value ?: return
+//        dataManager = ma.dataManager
+//        val member = dataManager.memberFlow.value
+//
+//        if(member != null) {
+//            val gson = Gson()
+//            val userSet = gson.toJson(member)
+//            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
+//            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
+//            Log.d("웹뷰 그려짐!!", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
+//            binding.wv.webViewClient = object : WebViewClient() {
+//                override fun onPageFinished(view: WebView?, url: String?) {
+//                    super.onPageFinished(view, url)
+//                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
+//                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
+//                            { result -> Log.d("web", "${result}") })
+//                        Toast.makeText(requireContext(), "웹으로전송~", Toast.LENGTH_SHORT).show()
+//                        Log.d("웹뷰 계정전송", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
+//                    }
+//                }
+//            }
+//        }
 
 
 
@@ -110,28 +107,32 @@ class ListFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-//        val ma = activity as MainActivity
-//        ma.dataManager.memberFlow.value ?: return
-//        dataManager = ma.dataManager
-//        val member = dataManager.memberFlow.value
 //
-//        if(member != null){
-//            val gson = Gson()
-//            val userSet = gson.toJson(member)
-//            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
-//            binding.wv.webViewClient = object : WebViewClient() {
-//                override fun onPageFinished(view: WebView?, url: String?) {
-//                    super.onPageFinished(view, url)
-//                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
-//                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
-//                            { result->Log.d("web","${result}")})
-//                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
-//                    }
-//                }
-//            }
-//
+//        Handler(Looper.getMainLooper()).postDelayed({
 //            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
-//        }
+//        }, 1000)
+
+
+        val ma = activity as MainActivity
+        ma.dataManager.memberFlow.value ?: return
+        dataManager = ma.dataManager
+        val member = dataManager.memberFlow.value
+
+        if(member != null){
+            val gson = Gson()
+            val userSet = gson.toJson(member)
+            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
+            binding.wv.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
+                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
+                            { result->Log.d("web","${result}")})
+                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
+                    }
+                }
+            }
+        }
 
     }
 
@@ -182,7 +183,7 @@ class ListFragment : Fragment(){
             message: String?,
             result: JsResult?
         ): Boolean {
-            Toast.makeText(context, "다이얼로그~", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "다이얼로그~", Toast.LENGTH_SHORT).show()
 
             val dialog= AlertDialog.Builder(context).setMessage(message)
                 .setPositiveButton("확인", { dialog, which -> result!!.confirm() })
