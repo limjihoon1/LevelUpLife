@@ -250,93 +250,73 @@ class SettingsFragment : Fragment() {
     private fun updateUI(member: Member2?) {
         var progress: Double = 0.0
 
-        if (inventory!!.char1 >= 1) {
-            binding.char1.setImageResource(R.drawable.level_up_char1)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char2 >= 1) {
-            binding.char2.setImageResource(R.drawable.level_up_char2)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char3 >= 1) {
-            binding.char3.setImageResource(R.drawable.level_up_char3)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char4 >= 1) {
-            binding.char4.setImageResource(R.drawable.level_up_char4)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char5 >= 1) {
-            binding.char5.setImageResource(R.drawable.level_up_char5)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char6 >= 1) {
-            binding.char6.setImageResource(R.drawable.level_up_char6)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char7 >= 1) {
-            binding.char7.setImageResource(R.drawable.level_up_char7)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char8 >= 1) {
-            binding.char8.setImageResource(R.drawable.level_up_char8)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char9 >= 1) {
-            binding.char9.setImageResource(R.drawable.level_up_char9)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char10 >= 1) {
-            binding.char10.setImageResource(R.drawable.level_up_char10)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char11 >= 1) {
-            binding.char11.setImageResource(R.drawable.level_up_char11)
-            progress += 91
-            binding.progressText.text = "${progress / 10}"
-        }
-        if (inventory!!.char1 >= 1 && inventory!!.char2 >= 1 && inventory!!.char3 >= 1 && inventory!!.char4 >= 1 && inventory!!.char5 >= 1 && inventory!!.char6 >= 1 && inventory!!.char7 >= 1 && inventory!!.char8 >= 1 && inventory!!.char9 >= 1 && inventory!!.char10 >= 1 && inventory!!.char11 >= 1) {
-            binding.charhiden.setImageResource(R.drawable.level_up_char_hiden2)
+        inventory?.let { inv ->
+            member?.let { mem ->
+                val charIds = listOf(
+                    R.id.char1, R.id.char2, R.id.char3, R.id.char4,
+                    R.id.char5, R.id.char6, R.id.char7, R.id.char8,
+                    R.id.char9, R.id.char10, R.id.char11
+                )
+                val charDrawables = listOf(
+                    R.drawable.level_up_char1, R.drawable.level_up_char2, R.drawable.level_up_char3, R.drawable.level_up_char4,
+                    R.drawable.level_up_char5, R.drawable.level_up_char6, R.drawable.level_up_char7, R.drawable.level_up_char8,
+                    R.drawable.level_up_char9, R.drawable.level_up_char10, R.drawable.level_up_char11
+                )
+                val charCounts = listOf(
+                    inv.char1, inv.char2, inv.char3, inv.char4,
+                    inv.char5, inv.char6, inv.char7, inv.char8,
+                    inv.char9, inv.char10, inv.char11
+                )
 
-            binding.progressText.text = "100"
+                // 이미지 뷰 리스트와 캐릭터 정보 리스트를 함께 순회
+                for (i in charIds.indices) {
+                    if (charCounts[i] >= 1) {
+                        val charBinding = when (charIds[i]) {
+                            R.id.char1 -> binding.char1
+                            R.id.char2 -> binding.char2
+                            R.id.char3 -> binding.char3
+                            R.id.char4 -> binding.char4
+                            R.id.char5 -> binding.char5
+                            R.id.char6 -> binding.char6
+                            R.id.char7 -> binding.char7
+                            R.id.char8 -> binding.char8
+                            R.id.char9 -> binding.char9
+                            R.id.char10 -> binding.char10
+                            R.id.char11 -> binding.char11
+                            else -> null
+                        }
+                        charBinding?.setImageResource(charDrawables[i])
+                        progress += 91
+                        binding.progressText.text = "${progress / 10}"
+                    }
+                }
+
+                // 모든 캐릭터가 1 이상인 경우 숨겨진 캐릭터 표시 및 progress 설정
+                if (charCounts.all { it >= 1 }) {
+                    binding.charhiden.setImageResource(R.drawable.level_up_char_hiden2)
+                    binding.progressText.text = "100"
+                }
+
+                // 선택된 영웅 이미지 설정
+                val heroDrawable = when (mem.hero) {
+                    1 -> R.drawable.level_up_char1
+                    2 -> R.drawable.level_up_char2
+                    3 -> R.drawable.level_up_char3
+                    4 -> R.drawable.level_up_char4
+                    5 -> R.drawable.level_up_char5
+                    6 -> R.drawable.level_up_char6
+                    7 -> R.drawable.level_up_char7
+                    8 -> R.drawable.level_up_char8
+                    9 -> R.drawable.level_up_char9
+                    10 -> R.drawable.level_up_char10
+                    11 -> R.drawable.level_up_char11
+                    else -> R.drawable.level_up_char_hiden2
+                }
+                binding.myChar.setImageResource(heroDrawable)
+            }
         }
 
-        if (member!!.hero == 1) {
-            binding.myChar.setImageResource(R.drawable.level_up_char1)
-        } else if (member.hero == 2) {
-            binding.myChar.setImageResource(R.drawable.level_up_char2)
-        } else if (member.hero == 3) {
-            binding.myChar.setImageResource(R.drawable.level_up_char3)
-        } else if (member.hero == 4) {
-            binding.myChar.setImageResource(R.drawable.level_up_char4)
-        } else if (member.hero == 5) {
-            binding.myChar.setImageResource(R.drawable.level_up_char5)
-        } else if (member.hero == 6) {
-            binding.myChar.setImageResource(R.drawable.level_up_char6)
-        } else if (member.hero == 7) {
-            binding.myChar.setImageResource(R.drawable.level_up_char7)
-        } else if (member.hero == 8) {
-            binding.myChar.setImageResource(R.drawable.level_up_char8)
-        } else if (member.hero == 9) {
-            binding.myChar.setImageResource(R.drawable.level_up_char9)
-        } else if (member.hero == 10) {
-            binding.myChar.setImageResource(R.drawable.level_up_char10)
-        } else if (member.hero == 11) {
-            binding.myChar.setImageResource(R.drawable.level_up_char11)
-        } else {
-            binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
-        }
-        binding.nickname.text = member.nickname
+        binding.nickname.text = member!!.nickname
         binding.level.text = "Lv : ${member.level}"
         binding.coin.text = "${member.coin} Coin"
         binding.tvExp2.text = "${member.exp} / 50"
@@ -348,276 +328,71 @@ class SettingsFragment : Fragment() {
 
     fun select(ma: MainActivity) {
         val builder = AlertDialog.Builder(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.custum_dialog_select_char, null)
+        val dialogView = layoutInflater.inflate(R.layout.custum_dialog_select_char2, null)
         val gridLayout = dialogView.findViewById<GridLayout>(R.id.gridLayout)
-        val image1: ImageView = dialogView.findViewById(R.id.select_char1)
-        val image2: ImageView = dialogView.findViewById(R.id.select_char2)
-        val image3: ImageView = dialogView.findViewById(R.id.select_char3)
-        val image4: ImageView = dialogView.findViewById(R.id.select_char4)
-        val image5: ImageView = dialogView.findViewById(R.id.select_char5)
-        val image6: ImageView = dialogView.findViewById(R.id.select_char6)
-        val image7: ImageView = dialogView.findViewById(R.id.select_char7)
-        val image8: ImageView = dialogView.findViewById(R.id.select_char8)
-        val image9: ImageView = dialogView.findViewById(R.id.select_char9)
-        val image10: ImageView = dialogView.findViewById(R.id.select_char10)
-        val image11: ImageView = dialogView.findViewById(R.id.select_char11)
-        val imagehiden: ImageView = dialogView.findViewById(R.id.select_charhiden)
         val imageViews = mutableListOf<ImageView>()
 
         builder.setView(dialogView)
 
         val dialog = builder.create()
 
-        if (inventory!!.char1 <= 1) {
-            gridLayout.removeView(image1)
-        }
-        if (inventory!!.char1 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char1 // 기존 id와 동일하게 설정
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char1)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char2 <= 1) {
-            gridLayout.removeView(image2)
-        }
-        if (inventory!!.char2 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char2 // 기존 id와 동일하게 설정
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char2)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char3 <= 1) {
-            gridLayout.removeView(image3)
-        }
-        if (inventory!!.char3 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char3 // 기존 id와 동일하게 설정
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char3)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char4 <= 1) {
-            gridLayout.removeView(image4)
-        }
-        if (inventory!!.char4 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char4
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char4)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char5 <= 1) {
-            gridLayout.removeView(image5)
-        }
-        if (inventory!!.char5 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char5
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char5)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char6 <= 1) {
-            gridLayout.removeView(image6)
-        }
-        if (inventory!!.char6 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char6
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char6)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char7 <= 1) {
-            gridLayout.removeView(image7)
-        }
-        if (inventory!!.char7 >= 1){
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char7
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char7)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char8 <= 1) {
-            gridLayout.removeView(image8)
-        }
-        if (inventory!!.char8 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char8
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char8)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char9 <= 1) {
-            gridLayout.removeView(image9)
-        }
-        if (inventory!!.char9 >= 1) {
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char9
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char9)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char10 <= 1) {
-            gridLayout.removeView(image10)
-        }
-        if (inventory!!.char10 >= 1){
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char10
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char10)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.char11 <= 1) {
-            gridLayout.removeView(image11)
-        }
-        if (inventory!!.char11 >= 1){
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_char11
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char11)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
-        if (inventory!!.charHiden <= 1) {
-            gridLayout.removeView(imagehiden)
-        }
-        if (inventory!!.charHiden >= 1){
-            val newImageView = ImageView(requireContext()).apply {
-                id = R.id.select_charhiden
-                layoutParams = GridLayout.LayoutParams().apply {
-                    width = resources.getDimensionPixelSize(R.dimen.image_width)
-                    height = resources.getDimensionPixelSize(R.dimen.image_height)
-                }
-                setImageResource(R.drawable.level_up_char_hiden2)
-                setBackgroundResource(R.drawable.char_bg)
-            }
-            gridLayout.addView(newImageView)
-            imageViews.add(newImageView)
-        }
+        inventory?.let { inv ->
+            val charIds = listOf(
+                R.id.selected_char1, R.id.selected_char2, R.id.selected_char3, R.id.selected_char4,
+                R.id.selected_char5, R.id.selected_char6, R.id.selected_char7, R.id.selected_char8,
+                R.id.selected_char9, R.id.selected_char10, R.id.selected_char11, R.id.selected_charhiden
+            )
+            val charDrawables = listOf(
+                R.drawable.level_up_char1, R.drawable.level_up_char2, R.drawable.level_up_char3, R.drawable.level_up_char4,
+                R.drawable.level_up_char5, R.drawable.level_up_char6, R.drawable.level_up_char7, R.drawable.level_up_char8,
+                R.drawable.level_up_char9, R.drawable.level_up_char10, R.drawable.level_up_char11, R.drawable.level_up_char_hiden2
+            )
+            val charCounts = listOf(
+                inv.char1, inv.char2, inv.char3, inv.char4,
+                inv.char5, inv.char6, inv.char7, inv.char8,
+                inv.char9, inv.char10, inv.char11, inv.charHiden
+            )
 
-        imageViews.forEach {
-            it.setOnClickListener {
-                imageViews.forEach {
-                    it.setBackgroundResource(R.drawable.char_bg)
-                }
+            // 이미지 뷰 리스트와 캐릭터 정보 리스트를 함께 순회
+            for (i in charIds.indices) {
+                val charId = charIds[i]
+                val charDrawable = charDrawables[i]
+                val charCount = charCounts[i]
 
-                it.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+                if (charCount >= 1) {
+                    val newImageView = ImageView(requireContext()).apply {
+                        id = charId
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            width = resources.getDimensionPixelSize(R.dimen.image_width)
+                            height = resources.getDimensionPixelSize(R.dimen.image_height)
+                        }
+                        setImageResource(charDrawable)
+                        setBackgroundResource(R.drawable.char_bg)
 
-                when(it.id){
-                    R.id.select_char1 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char1)
-                        hero = 1
+                        setOnClickListener { clickedView ->
+                            imageViews.forEach { it.setBackgroundResource(R.drawable.char_bg) }
+                            clickedView.setBackgroundColor(resources.getColor(R.color.ypgbtn, null))
+
+                            hero = when (clickedView.id) {
+                                R.id.selected_char1 -> 1
+                                R.id.selected_char2 -> 2
+                                R.id.selected_char3 -> 3
+                                R.id.selected_char4 -> 4
+                                R.id.selected_char5 -> 5
+                                R.id.selected_char6 -> 6
+                                R.id.selected_char7 -> 7
+                                R.id.selected_char8 -> 8
+                                R.id.selected_char9 -> 9
+                                R.id.selected_char10 -> 10
+                                R.id.selected_char11 -> 11
+                                R.id.selected_charhiden -> 12
+                                else -> 0
+                            }
+                            binding.myChar.setImageResource(charDrawable)
+                        }
                     }
-                    R.id.select_char2 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char2)
-                        hero = 2
-                    }
-                    R.id.select_char3 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char3)
-                        hero = 3
-                    }
-                    R.id.select_char4 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char4)
-                        hero = 4
-                    }
-                    R.id.select_char5 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char5)
-                        hero = 5
-                    }
-                    R.id.select_char6 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char6)
-                        hero = 6
-                    }
-                    R.id.select_char7 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char7)
-                        hero = 7
-                    }
-                    R.id.select_char8 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char8)
-                        hero = 8
-                    }
-                    R.id.select_char9 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char9)
-                        hero = 9
-                    }
-                    R.id.select_char10 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char10)
-                        hero = 10
-                    }
-                    R.id.select_char11 -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char11)
-                        hero = 11
-                    }
-                    R.id.select_charhiden -> {
-                        binding.myChar.setImageResource(R.drawable.level_up_char_hiden2)
-                        hero = 12
-                    }
+                    gridLayout.addView(newImageView)
+                    imageViews.add(newImageView)
                 }
             }
         }
@@ -626,21 +401,28 @@ class SettingsFragment : Fragment() {
 
         val dialogButton: Button = dialogView.findViewById(R.id.confirmButton)
         dialogButton.setOnClickListener {
-            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-            val retrofitService = retrofit.create(RetrofitService::class.java)
 
-            retrofitService.updateHero(G.uid, hero).enqueue(object : Callback<String> {
-                override fun onResponse(p0: Call<String>, p1: Response<String>) {
-                    ma.getMember()
-                    Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                }
+            if (hero != 0) {
+                val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                override fun onFailure(p0: Call<String>, p1: Throwable) {
-                    Log.d("err", p1.message.toString())
-                }
+                retrofitService.updateHero(G.uid, hero).enqueue(object : Callback<String> {
+                    override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                        ma.getMember()
+                        Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
 
-            })
+                    override fun onFailure(p0: Call<String>, p1: Throwable) {
+                        Log.d("err", p1.message.toString())
+                    }
+
+                })
+            } else {
+                Toast.makeText(requireContext(), "캐릭터 변경을 취소했습니다.", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+
 
         }
     }

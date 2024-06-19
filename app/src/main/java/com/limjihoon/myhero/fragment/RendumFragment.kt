@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
+import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.databinding.FragmentProfileBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -27,6 +29,7 @@ import kotlin.random.Random
 class RendumFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var dataManager: DataManager
+    private var inventory: Inventory? = null
     private var hero = 0
 
     override fun onCreateView(
@@ -42,6 +45,19 @@ class RendumFragment : Fragment() {
         val ma = activity as MainActivity
         ma.dataManager.memberFlow.value ?: return
         dataManager = ma.dataManager
+        inventory = dataManager.inventoryFlow.value
+
+        inventory?.let { inv ->
+            val charCounts = listOf(
+                inv.char1, inv.char2, inv.char3, inv.char4,
+                inv.char5, inv.char6, inv.char7, inv.char8,
+                inv.char9, inv.char10, inv.char11
+            )
+
+            if (charCounts.all { it >= 1 } && inv.charHiden == 0) {
+                getHiden(ma)
+            }
+        }
 
         binding.rendumBtn.setOnClickListener {
             rendum(ma)
@@ -56,6 +72,41 @@ class RendumFragment : Fragment() {
 
     private fun getMember(ma: MainActivity) {
         ma.getMember()
+    }
+
+    private fun getHiden(ma: MainActivity) {
+        val builder = AlertDialog.Builder(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.custum_dialog_rendum, null)
+        val img: ImageView = dialogView.findViewById(R.id.dialogImage)
+
+        img.setImageResource(R.drawable.level_up_char_hiden2)
+
+        builder.setView(dialogView)
+
+        val dialog = builder.create()
+
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.updateInventoryHiden(G.uid).enqueue(object : Callback<String> {
+            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                ma.getMember()
+                Toast.makeText(requireContext(), "${p1.body()}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(p0: Call<String>, p1: Throwable) {
+                Log.d("invenErr", p1.message.toString())
+            }
+
+        })
+
+        dialog.show()
+
+        val dialogButton: Button = dialogView.findViewById(R.id.dialogButton)
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
     }
 
     private fun rendum(ma: MainActivity) {
