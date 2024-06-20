@@ -18,19 +18,8 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
+import com.google.android.gms.location.*
+import com.kakao.vectormap.*
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
@@ -59,24 +48,31 @@ import java.lang.Exception
 class MapActivity : AppCompatActivity() {
     lateinit var binding: ActivityMapBinding
 
-    val mapView : MapView by lazy { findViewById(R.id.map_view) }
-    var myLocation:Location ?=null
+    val mapView: MapView by lazy { findViewById(R.id.map_view) }
+    var myLocation: Location? = null
     val locationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
-    var searchQuery:String="화장실"
-    var latitude:Double=35.1796
-    var longitude:Double=129.0756
-    private var todouid =G.uid
-    var searchPlaceResponse:KakaoData?=null
+    var searchQuery: String = "ㄱ"
+    var latitude: Double = 35.1796
+    var longitude: Double = 129.0756
+    private var todouid = G.uid
+    var searchPlaceResponse: KakaoData? = null
 
     var items = mutableListOf<Markers>()
     var kakaoMap:KakaoMap? =null
 
     var lat:Double=0.0
     var lng:Double=0.0
+    var lat2:Double=0.0
+    var lng2:Double=0.0
+
     var ss: Double = 35.55
     var tt: Double = 127.632
     var document :List<DocumentOfPlace>? = null
+
+
+    private var isLabelAdded = false
+    private var currentLabel: Label? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,13 +205,45 @@ class MapActivity : AppCompatActivity() {
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
             }
 
+            binding.btnAddMaker.setOnClickListener {
 
-            //포지션 개수만큼 라커 추가
-            for (pos in positions) {
-                var op: LabelOptions = LabelOptions.from(pos).setStyles(R.drawable.qqqqq)
-                    .setTexts("위도 : ${pos.latitude} , 경도 :${pos.longitude}")
-                //카머 추가
-                kakaoMap.labelManager!!.layer!!.addLabel(op)
+                Toast.makeText(this@MapActivity, "원하는 위치의 라벨을 추가해주세요!!", Toast.LENGTH_SHORT).show()
+
+                kakaoMap.setOnMapClickListener { kakaoMap, latLng, pointF, poi ->
+                    if (isLabelAdded) {
+                        return@setOnMapClickListener
+                    }
+                    currentLabel?.let {
+                        kakaoMap.labelManager!!.layer!!.remove(it)
+
+                    }
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+
+                    val options = LabelOptions.from(latLng).setStyles(R.drawable.ic_pin)
+                    val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
+                    currentLabel = newLabel
+                    lat2 = latLng.latitude
+                    lng2 = latLng.longitude
+
+//
+//                    이 위치에 마커누르면 인포윈도우를  추가하고싶어
+//
+                    val layout = GuiLayout(Orientation.Vertical)
+                    layout.setPadding(16, 16, 16, 16)
+                    layout.setBackground(R.drawable.char_bg, true)
+                    val infoText = GuiText("이 곳에 일정 추가 하기")
+                    infoText.setTextSize(28)
+                    infoText.setTextColor(Color.WHITE)
+                    layout.addView(infoText)
+                    val infoOptions = InfoWindowOptions.from(latLng)
+                    infoOptions.body = layout
+                    infoOptions.setBodyOffset(0f, -100f)
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(infoOptions)
+
+                    isLabelAdded = true
+
+                }
+                isLabelAdded = false
             }
 
 
@@ -232,13 +260,63 @@ class MapActivity : AppCompatActivity() {
                     }
                     val options = InfoWindowOptions.from(label.position)
                     options.body = layout
-                    options.setBodyOffset(0f, -150f)
+                    options.setBodyOffset(0f, -100f)
                     options.setTag(tag)
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
                 }
             }
             kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
+                if (lat2 != 0.0){
+                    Toast.makeText(this@MapActivity, "성공~~$lat2 $lng2", Toast.LENGTH_SHORT).show()
+                    val builder = AlertDialog.Builder(this@MapActivity)
+                    val inflater = layoutInflater
+                    val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo_map, null)
+                    builder.setView(dialogView)
+
+
+                    val dialog = builder.create()
+                    dialog.show()
+
+                    val btnconfirm: Button = dialogView.findViewById(R.id.confirmButton)
+                    val todolist: EditText = dialogView.findViewById(R.id.scheduleEditText)
+                    val btncancel: Button = dialogView.findViewById(R.id.cancelButton)
+
+                    btnconfirm.setOnClickListener {
+                        Toast.makeText(this@MapActivity, "데이터 통신이 들어가야 하는 코드 자리", Toast.LENGTH_SHORT).show()
+
+                        val ss = todolist.text.toString()
+
+                        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+                        retrofitService.insertMap(todouid, ss, lat2, lng2,0).enqueue(object : Callback<String> {
+                            override fun onResponse(call: Call<String>, response: Response<String>) {
+                                if (response.isSuccessful && response.body() != null) {
+                                    Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                } else {
+                                    Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                                    Log.d("업데이트 실패", "응답 실패: ${response.errorBody()?.string()}")
+                                }
+                                Log.d("성공", response.body().toString())
+                            }
+
+                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                Toast.makeText(this@MapActivity, "요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                                Log.d("실패", t.message.toString())
+                            }
+                        })
+
+                    }
+                    btncancel.setOnClickListener {
+                        dialog.dismiss()
+
+                        return@setOnClickListener
+                    }
+                    lat2 = 0.0
+                    return@setOnInfoWindowClickListener
+                }
                 val tag = infoWindow.tag
                 if (tag is DocumentOfPlace) {
                     val place = tag
@@ -262,7 +340,7 @@ class MapActivity : AppCompatActivity() {
                         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        retrofitService.insertMap(todouid, ss, place.y.toDouble(), place.x.toDouble()).enqueue(object : Callback<String> {
+                        retrofitService.insertMap(todouid, ss, place.y.toDouble(), place.x.toDouble(),0).enqueue(object : Callback<String> {
                             override fun onResponse(call: Call<String>, response: Response<String>) {
                                 if (response.isSuccessful && response.body() != null) {
                                     Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()

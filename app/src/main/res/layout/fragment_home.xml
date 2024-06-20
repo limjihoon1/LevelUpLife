@@ -86,10 +86,11 @@
                 android:id="@+id/bar"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="130dp"
-                android:layout_height="25dp"
+                android:layout_height="10dp"
                 android:layout_below="@id/coin"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginStart="4dp"
+                android:progressDrawable="@drawable/prograsbar2"
                 android:layout_toEndOf="@id/tv_exp" />
 
             <TextView
@@ -145,7 +146,17 @@
                 android:layout_height="80dp"
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/tv_quest"
-                android:src="@drawable/mapicon" />
+                android:src="@drawable/mapicon"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="오늘의 보상 횟수 0/5 "
+                android:layout_below="@+id/create_map"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_quest"
@@ -174,7 +185,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
                 />
 
         </RelativeLayout>

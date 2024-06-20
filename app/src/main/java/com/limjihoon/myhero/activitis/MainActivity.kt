@@ -1,6 +1,7 @@
 package com.limjihoon.myhero.activitis
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
@@ -30,6 +31,7 @@ import com.limjihoon.myhero.adapter.ViewPagerAdapter
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
 import com.limjihoon.myhero.fragment.ListFragment
@@ -37,6 +39,7 @@ import com.limjihoon.myhero.fragment.RendumFragment
 import com.limjihoon.myhero.fragment.MapFragment
 import com.limjihoon.myhero.fragment.SettingsFragment
 import com.limjihoon.myhero.model.DataManager
+import com.limjihoon.myhero.model.MyAlarmScheduler
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +53,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private val scheduler by lazy { MyAlarmScheduler(this) }
     val dataManager = DataManager()
     var tutorial = true
     var myLocation: Location? = null
@@ -61,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val navView: BottomNavigationView = findViewById(R.id.bnv)
         navView.itemIconTintList = null
+
+        scheduler.scheduleMidnightTask()
 
         getMeberInventory()
 
@@ -134,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         if (isGranted) {
             // FCM SDK (and your app) can post notifications.
         } else {
-            // TODO: Inform user that that your app will not show notifications.
+
         }
     }
 
@@ -153,6 +159,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
     fun getMeberInventory() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -232,6 +239,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun getTodo() {
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.getTodo(G.uid).enqueue(object : Callback<List<Todo>> {
+            override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
+                dataManager.updateTodo(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<List<Todo>>, t: Throwable) {
+                Log.d("etodo", "${t.message}")
+//                Toast.makeText(this@MainActivity(), "할 일 목록을 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun startLast() {
         val request = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -247,7 +270,7 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // 위치 권한이 부여되지 않았을 경우 처리
+
             return
         }
 
@@ -270,7 +293,7 @@ class MainActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call = retrofitService.kakoDataSearch(
-            "지하철역",
+            "",
             myLocation!!.longitude.toString(),
             myLocation!!.latitude.toString()
         )
@@ -295,6 +318,7 @@ class MainActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putBoolean("isFirstRun", tutorial)
             editor.apply()
+
         }
     }
 
@@ -307,7 +331,7 @@ class MainActivity : AppCompatActivity() {
 
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton("Next", null)
+            .setPositiveButton("다음으로", null)
             .setNegativeButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -327,7 +351,7 @@ class MainActivity : AppCompatActivity() {
                     tutorial = true
 
                 } else {
-                    positiveButton.text = "다음으로"
+                    positiveButton.text = "취소"
                 }
             }
         })
