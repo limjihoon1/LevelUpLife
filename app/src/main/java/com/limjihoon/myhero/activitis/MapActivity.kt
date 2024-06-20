@@ -73,6 +73,7 @@ class MapActivity : AppCompatActivity() {
 
     private var isLabelAdded = false
     private var currentLabel: Label? = null
+    private var latLng2: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -222,6 +223,7 @@ class MapActivity : AppCompatActivity() {
                     val options = LabelOptions.from(latLng).setStyles(R.drawable.ic_pin)
                     val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
                     currentLabel = newLabel
+                    latLng2 = latLng
                     lat2 = latLng.latitude
                     lng2 = latLng.longitude
 
@@ -294,6 +296,15 @@ class MapActivity : AppCompatActivity() {
                             override fun onResponse(call: Call<String>, response: Response<String>) {
                                 if (response.isSuccessful && response.body() != null) {
                                     Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
+                                    currentLabel?.let {
+                                        kakaoMap.labelManager!!.layer!!.remove(it)
+
+                                    }
+                                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+                                    val options = LabelOptions.from(latLng2).setStyles(R.drawable.qqqqq)
+                                    val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
+                                    currentLabel = newLabel
+
                                     dialog.dismiss()
                                 } else {
                                     Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
@@ -310,7 +321,14 @@ class MapActivity : AppCompatActivity() {
 
                     }
                     btncancel.setOnClickListener {
+                        currentLabel?.let {
+                            kakaoMap.labelManager!!.layer!!.remove(it)
+
+                        }
+                        kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+
                         dialog.dismiss()
+
 
                         return@setOnClickListener
                     }
