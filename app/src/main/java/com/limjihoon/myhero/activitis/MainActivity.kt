@@ -37,6 +37,7 @@ import com.limjihoon.myhero.fragment.RendumFragment
 import com.limjihoon.myhero.fragment.MapFragment
 import com.limjihoon.myhero.fragment.SettingsFragment
 import com.limjihoon.myhero.model.DataManager
+import com.limjihoon.myhero.model.MyAlarmScheduler
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +51,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private val scheduler by lazy { MyAlarmScheduler(this) }
     val dataManager = DataManager()
     var tutorial = true
     var myLocation: Location? = null
@@ -61,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val navView: BottomNavigationView = findViewById(R.id.bnv)
         navView.itemIconTintList = null
+
+        scheduler.scheduleMidnightTask()
 
         getMeberInventory()
 

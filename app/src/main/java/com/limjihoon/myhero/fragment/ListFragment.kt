@@ -110,28 +110,6 @@ class ListFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-//        val ma = activity as MainActivity
-//        ma.dataManager.memberFlow.value ?: return
-//        dataManager = ma.dataManager
-//        val member = dataManager.memberFlow.value
-//
-//        if(member != null){
-//            val gson = Gson()
-//            val userSet = gson.toJson(member)
-//            val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
-//            binding.wv.webViewClient = object : WebViewClient() {
-//                override fun onPageFinished(view: WebView?, url: String?) {
-//                    super.onPageFinished(view, url)
-//                    if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
-//                        binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
-//                            { result->Log.d("web","${result}")})
-//                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
-//                    }
-//                }
-//            }
-//
-//            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
-//        }
 
     }
 
