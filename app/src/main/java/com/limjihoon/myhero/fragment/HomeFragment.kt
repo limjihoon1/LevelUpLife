@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.MainActivity
@@ -37,6 +38,7 @@ class HomeFragment : Fragment() {
     private lateinit var dataManager: DataManager
     private var uid = ""
     var items = mutableListOf<Todo>()
+    var questions = "오늘의 보상 횟수 0/5 "
     private val retrofitService: RetrofitService by lazy {
         RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
     }
@@ -138,7 +140,6 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<List<Todo>>, t: Throwable) {
                 Log.d("etodo", "${t.message}")
-                Toast.makeText(requireContext(), "할 일 목록을 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -175,7 +176,6 @@ class HomeFragment : Fragment() {
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
                     Log.d("error", "${t.message}")
-                    Toast.makeText(requireContext(), "할 일 추가에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
         }

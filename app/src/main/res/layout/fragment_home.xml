@@ -147,7 +147,16 @@
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/tv_quest"
                 android:src="@drawable/mapicon"
-                android:onClick="onCreateMapClick"/>
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="오늘의 보상 횟수 0/5 "
+                android:layout_below="@+id/create_map"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_quest"

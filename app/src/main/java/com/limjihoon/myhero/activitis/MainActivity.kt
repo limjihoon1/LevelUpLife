@@ -160,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     fun getMeberInventory() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -269,7 +270,7 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // 위치 권한이 부여되지 않았을 경우 처리
+
             return
         }
 
@@ -292,7 +293,7 @@ class MainActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
         val call = retrofitService.kakoDataSearch(
-            "지하철역",
+            "",
             myLocation!!.longitude.toString(),
             myLocation!!.latitude.toString()
         )
@@ -317,6 +318,7 @@ class MainActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putBoolean("isFirstRun", tutorial)
             editor.apply()
+
         }
     }
 
@@ -329,7 +331,7 @@ class MainActivity : AppCompatActivity() {
 
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton("Next", null)
+            .setPositiveButton("다음으로", null)
             .setNegativeButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -349,7 +351,7 @@ class MainActivity : AppCompatActivity() {
                     tutorial = true
 
                 } else {
-                    positiveButton.text = "다음으로"
+                    positiveButton.text = "취소"
                 }
             }
         })
