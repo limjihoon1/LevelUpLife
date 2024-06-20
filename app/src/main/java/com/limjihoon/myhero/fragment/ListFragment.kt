@@ -77,6 +77,7 @@ class ListFragment : Fragment(){
                     if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
                         binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
                             { result -> Log.d("web", "${result}") })
+
                         //Toast.makeText(requireContext(), "웹으로전송~", Toast.LENGTH_SHORT).show()
                         Log.d("웹뷰 계정전송", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
                     }
