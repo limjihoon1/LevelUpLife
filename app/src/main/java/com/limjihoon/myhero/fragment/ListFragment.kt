@@ -107,9 +107,6 @@ class ListFragment : Fragment(){
     override fun onResume() {
         super.onResume()
 
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
-//        }, 1000)
     }
 
 
