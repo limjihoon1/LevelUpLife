@@ -46,7 +46,6 @@ class ListFragment : Fragment(){
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
 
         binding.wv.settings.javaScriptEnabled = true
         binding.wv.settings.builtInZoomControls = true
@@ -54,7 +53,6 @@ class ListFragment : Fragment(){
         binding.wv.settings.allowFileAccess = true
         binding.wv.settings.domStorageEnabled= true
         binding.wv.settings.allowFileAccess = true
-
         binding.wv.webViewClient= WebViewClient()
 
         binding.wv.webChromeClient= MyWebChromeClient(requireContext())
@@ -67,29 +65,28 @@ class ListFragment : Fragment(){
         dataManager = ma.dataManager
         val member = dataManager.memberFlow.value
 
-        if(member != null){
+        if(member != null) {
             val gson = Gson()
             val userSet = gson.toJson(member)
             val escapedUserSet = userSet.replace("\\", "\\\\").replace("'", "\\'")
+            Log.d("웹뷰 그려짐!!", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
 
             binding.wv.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
                         binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
-                            { result->Log.d("web","${result}")})
-                        Log.d("계정","uid${member.level},히어로${member.hero},닉네임${member.nickname}")
+                            { result -> Log.d("web", "${result}") })
+
+                        //Toast.makeText(requireContext(), "웹으로전송~", Toast.LENGTH_SHORT).show()
+                        Log.d("웹뷰 계정전송", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
                     }
                 }
             }
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife/")
-            }, 2000)
-
+            binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
+        }else {
+            Toast.makeText(context, "유저 null 새로고침 해주세요", Toast.LENGTH_SHORT).show()
         }
-
-
 
     //뒤로가기 눌렀을때 페이지 전환
         val callback = object : OnBackPressedCallback(true) {
@@ -101,7 +98,6 @@ class ListFragment : Fragment(){
                 }
             }
         }
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.wv.addJavascriptInterface(MyWebViewConnector(),"Droid")
@@ -115,12 +111,10 @@ class ListFragment : Fragment(){
 
 
     inner class MyWebViewConnector{
-
         @JavascriptInterface
         fun user(msg:String){
 
         }
-
     }
 
     var mFilePathCallback: ValueCallback<Array<Uri>>? = null
@@ -160,11 +154,39 @@ class ListFragment : Fragment(){
             message: String?,
             result: JsResult?
         ): Boolean {
-            Toast.makeText(context, "다이얼로그~", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "다이얼로그~", Toast.LENGTH_SHORT).show()
 
-            val dialog= AlertDialog.Builder(context).setMessage(message)
-                .setPositiveButton("확인", { dialog, which -> result!!.confirm() })
-                .setNegativeButton("취소", { dialog, which -> result!!.cancel() })
+            val dialog= AlertDialog.Builder(context)
+                .setMessage(message)
+                .setPositiveButton("확인") { _, _ ->
+                    if(message?.trim() == "게시물을 삭제합니다"){
+                        binding.wv.loadUrl("javascript:postDelete()")
+                        Log.d("다이얼로그", "댓글을삭제합니다")
+
+                    }else if (message?.trim() == "댓글을 삭제합니다"){
+                        binding.wv.loadUrl("javascript:deleteComment()")
+                        Log.d("다이얼로그", "댓글을삭제합니다")
+
+                    }else if (message?.trim() == "게시물을 신고합니까?"){
+                        binding.wv.loadUrl("javascript:postReportUser()")
+                        Log.d("다이얼로그", "신고되었습니다")
+
+                    }else if (message?.trim() == "댓글을 신고합니까?"){
+                        binding.wv.loadUrl("javascript:commentReportUser()")
+                        Log.d("다이얼로그", "신고되었습니다")
+                    }else {}
+
+                    Log.d("다이얼로그", "Confirm button clicked")
+                    result?.confirm()
+                }
+                .setNegativeButton("취소") { _, _ ->
+                    result?.cancel()
+                }
+                .setOnCancelListener {
+                    result?.cancel()
+                    it.dismiss()
+                }
+                .setCancelable(true)
                 .create()
             dialog.setCanceledOnTouchOutside(false)
             dialog.show()
