@@ -232,12 +232,25 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/nummm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="오늘의 보상 횟수 0/5 "
+                android:layout_below="@+id/linearQ"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp"
-                android:layout_below="@id/linearQ"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:layout_below="@id/nummm"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
