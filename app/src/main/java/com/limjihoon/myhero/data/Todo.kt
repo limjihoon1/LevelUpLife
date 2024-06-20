@@ -1,7 +1,5 @@
 package com.limjihoon.myhero.data
 
-import com.limjihoon.myhero.R
-
 data class Todo(
     val uid: String,
     val workTodo: String,
