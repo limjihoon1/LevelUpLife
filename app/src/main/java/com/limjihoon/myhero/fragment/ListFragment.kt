@@ -77,14 +77,14 @@ class ListFragment : Fragment(){
                     if (url == "http://myhero.dothome.co.kr/levelUpLife/") {
                         binding.wv.evaluateJavascript("javascript:sendToWeb('${escapedUserSet}')",
                             { result -> Log.d("web", "${result}") })
-                        Toast.makeText(requireContext(), "웹으로전송~", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), "웹으로전송~", Toast.LENGTH_SHORT).show()
                         Log.d("웹뷰 계정전송", "uid${member.level},히어로${member.hero},닉네임${member.nickname}")
                     }
                 }
             }
             binding.wv.loadUrl("http://myhero.dothome.co.kr/levelUpLife")
         }else {
-            Toast.makeText(context, "유저 null", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "유저 null 새로고침 해주세요", Toast.LENGTH_SHORT).show()
         }
 
     //뒤로가기 눌렀을때 페이지 전환
