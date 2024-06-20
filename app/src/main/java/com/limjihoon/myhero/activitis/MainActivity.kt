@@ -1,6 +1,7 @@
 package com.limjihoon.myhero.activitis
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
@@ -30,6 +31,7 @@ import com.limjihoon.myhero.adapter.ViewPagerAdapter
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.ActivityMainBinding
 import com.limjihoon.myhero.fragment.HomeFragment
 import com.limjihoon.myhero.fragment.ListFragment
@@ -234,6 +236,22 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    fun getTodo() {
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.getTodo(G.uid).enqueue(object : Callback<List<Todo>> {
+            override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
+                dataManager.updateTodo(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<List<Todo>>, t: Throwable) {
+                Log.d("etodo", "${t.message}")
+//                Toast.makeText(this@MainActivity(), "할 일 목록을 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun startLast() {
