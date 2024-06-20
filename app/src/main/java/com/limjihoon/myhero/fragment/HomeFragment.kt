@@ -24,6 +24,7 @@ import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.data.Todo2
+import com.limjihoon.myhero.databinding.FragmentHome2Binding
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -34,7 +35,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentHome2Binding
     private lateinit var dataManager: DataManager
     private var uid = ""
     var items = mutableListOf<Todo>()
@@ -48,7 +49,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        binding = FragmentHome2Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -89,9 +90,9 @@ class HomeFragment : Fragment() {
     private fun updateInfo(member: Member2?) {
         member?.let {
             binding.nickname.text = it.nickname
-            binding.level.text = "Lv : ${it.level}"
+            binding.level.text = "${it.level}"
             binding.tvExp2.text = "${it.exp}/50"
-            binding.coin.text = "${it.coin} COIN"
+            binding.coin.text = "${it.coin}"
             uid = it.uid
             var progress = 0
 
@@ -120,9 +121,9 @@ class HomeFragment : Fragment() {
             }
         } ?: run {
             binding.nickname.text = "정보 없음"
-            binding.level.text = "Lv : -"
+            binding.level.text = "-"
             binding.tvExp2.text = "-/50"
-            binding.coin.text = "- COIN"
+            binding.coin.text = "-"
         }
     }
 
