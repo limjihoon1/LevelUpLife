@@ -105,7 +105,7 @@ class SigninActivity : AppCompatActivity() {
                             Toast.makeText(this@SigninActivity,"비밀번호 또는 비밀번호 확인을 입력해주세요!!",Toast.LENGTH_SHORT).show()
                         } else if(password != passwordConfirm) {
                             Toast.makeText(this@SigninActivity, "비밀번호가 일치하지않습니다!!", Toast.LENGTH_SHORT).show()
-                        } else if(password.length >6) {
+                        } else if(password.length <6) {
                             Toast.makeText(this@SigninActivity, "비밀번호 7자 이상 입력해주세요", Toast.LENGTH_SHORT).show()
                         } else if (nickname.isEmpty()) {
                             Toast.makeText(this@SigninActivity, "닉네임을 입력해주세요!!", Toast.LENGTH_SHORT).show()
@@ -113,7 +113,7 @@ class SigninActivity : AppCompatActivity() {
                             Toast.makeText(this@SigninActivity, "중복된 닉네임이 있습니다!!", Toast.LENGTH_SHORT).show()
                         } else if (hero == 0) {
                             Toast.makeText(this@SigninActivity, "캐릭터를 선택해주세요!!", Toast.LENGTH_SHORT).show()
-                        } else{
+                        }else{
 
                             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 

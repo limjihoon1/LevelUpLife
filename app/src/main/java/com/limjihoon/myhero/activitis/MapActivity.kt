@@ -18,19 +18,8 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
+import com.google.android.gms.location.*
+import com.kakao.vectormap.*
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
@@ -59,15 +48,15 @@ import java.lang.Exception
 class MapActivity : AppCompatActivity() {
     lateinit var binding: ActivityMapBinding
 
-    val mapView : MapView by lazy { findViewById(R.id.map_view) }
-    var myLocation:Location ?=null
+    val mapView: MapView by lazy { findViewById(R.id.map_view) }
+    var myLocation: Location? = null
     val locationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
-    var searchQuery:String="ㄱ"
-    var latitude:Double=35.1796
-    var longitude:Double=129.0756
-    private var todouid =G.uid
-    var searchPlaceResponse:KakaoData?=null
+    var searchQuery: String = "화장실"
+    var latitude: Double = 35.1796
+    var longitude: Double = 129.0756
+    private var todouid = G.uid
+    var searchPlaceResponse: KakaoData? = null
 
     var items = mutableListOf<Markers>()
     var kakaoMap:KakaoMap? =null

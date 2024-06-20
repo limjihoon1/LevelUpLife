@@ -10,6 +10,7 @@ import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.MyBoard
 import com.limjihoon.myhero.data.MyTodo
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.data.Todo2
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -20,6 +21,9 @@ import retrofit2.http.Query
 interface RetrofitService {
     @GET("/levelUpLife/map/LoadMap.php")
     fun loadMap(@Query("todouid") todouid:String): Call<List<Markers>>
+
+    @GET("/levelUpLife/map/GetAllMarkers.php")
+    fun getAllMarkers():Call<List<Markers>>
 
     @GET("/levelUpLife/map/insertMap.php")
     fun insertMap(@Query("todouid") todouid: String,
@@ -42,7 +46,7 @@ interface RetrofitService {
     fun getInventory(@Query("memberNo") memberNo: Int): Call<Inventory>
 
     @POST("/levelUpLife/todo/insertTodo.php")
-    fun insertTodo(@Body todo: Todo): Call<String>
+    fun insertTodo(@Body todo: Todo2): Call<String>
 
     @GET("/levelUpLife/member/getTodo.php")
     fun getTodo(@Query("uid") uid: String): Call<List<Todo>>
@@ -85,16 +89,14 @@ interface RetrofitService {
 
     @GET("/levelUpLife/todo/UpdateTodoQuest.php")
     fun updateQuest(
+        @Query("no")no:Int,
         @Query("uid")uid:String,
         @Query("quest")quest:String,
+        @Query("exp")exp:Int,
+        @Query("level")level:Int,
+        @Query("qcc")qcc: Int
     ):Call<String>
 
-    @GET("/levelUpLife/todo/UpdateTodoQuest.php")
-    fun updateQuest(
-        @Query("no") no: Int,
-        @Query("uid")uid:String,
-        @Query("quest")quest:String,
-    ):Call<String>
 
     @GET("/levelUpLife/member/updateHero.php")
     fun updateHero(@Query("uid") uid: String, @Query("hero") hero: Int): Call<String>
@@ -139,5 +141,11 @@ interface RetrofitService {
 
     @GET("/levelUpLife/my/myMemberOut.php")
     fun myMemberOut(@Query("uid") uid: String) : Call<String>
+
+    @GET("/levelUpLife/my/aaa.php")
+    fun aaa() : Call<String>
+
+    @GET("/levelUpLife/my/reset.php")
+    fun reset() : Call<String>
 
 }

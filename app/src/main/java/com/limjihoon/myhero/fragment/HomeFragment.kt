@@ -1,5 +1,6 @@
 package com.limjihoon.myhero.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.data.Todo2
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -37,6 +39,9 @@ class HomeFragment : Fragment() {
     private var uid = ""
     var items = mutableListOf<Todo>()
     var questions = "오늘의 보상 횟수 0/5 "
+    private val retrofitService: RetrofitService by lazy {
+        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,6 +93,16 @@ class HomeFragment : Fragment() {
             binding.tvExp2.text = "${it.exp}/50"
             binding.coin.text = "${it.coin} COIN"
             uid = it.uid
+            var progress = 0
+
+            when (it.exp) {
+                0 -> progress = 0
+                10 -> progress = 20
+                20 -> progress = 40
+                30 -> progress = 60
+                40 -> progress = 80
+            }
+            binding.bar.progress = progress
 
             when(it.hero) {
                 1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
@@ -112,10 +127,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchTodos() {
-        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-        val retrofitService = retrofit.create(RetrofitService::class.java)
-
-        retrofitService.getTodo(dataManager.memberFlow.value!!.uid).enqueue(object : Callback<List<Todo>> {
+        retrofitService.getTodo(uid).enqueue(object : Callback<List<Todo>> {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
                 val data = response.body()
                 data?.let {
@@ -145,15 +158,13 @@ class HomeFragment : Fragment() {
         val dialogTv = dialogView.findViewById<EditText>(R.id.scheduleEditText)
 
         dialogButton.setOnClickListener {
-            val todo = Todo(dataManager.memberFlow.value!!.uid, dialogTv.text.toString(), 0, 0)
             val todoText = dialogTv.text.toString().trim()
             if (todoText.isEmpty()) {
                 Toast.makeText(requireContext(), "할 일 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
-            val retrofitService = retrofit.create(RetrofitService::class.java)
+            val todo = Todo2(uid, todoText, 0, "normal")
 
             retrofitService.insertTodo(todo).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
