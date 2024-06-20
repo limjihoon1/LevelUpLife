@@ -18,31 +18,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <RelativeLayout
-                android:layout_width="100dp"
-                android:layout_height="wrap_content">
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp">
                 <ImageView
                     android:id="@+id/img"
-                    android:layout_width="100dp"
-                    android:layout_height="130dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
                     android:src="@drawable/profile"
                     android:layout_centerInParent="true"/>
 
                 <ImageView
                     android:id="@+id/hero"
-                    android:layout_width="50dp"
-                    android:layout_height="70dp"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
                     android:layout_alignBottom="@id/img"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginBottom="16dp"
                     android:src="@drawable/level_up_char6" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
                 android:padding="4dp"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -74,7 +77,7 @@
                             android:layout_height="wrap_content"
                             android:text="Lv : "
                             android:textColor="#ffff0000"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_toStartOf="@id/level"
                             android:layout_centerHorizontal="true"/>
@@ -85,7 +88,7 @@
                             android:layout_height="wrap_content"
                             android:text="10"
                             android:textColor="#ffff0000"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_centerHorizontal="true"/>
 
@@ -95,7 +98,7 @@
                             android:layout_height="wrap_content"
                             android:text="Coin : "
                             android:textColor="#ffffda00"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_below="@id/levelT"
                             android:layout_alignEnd="@id/levelT" />
@@ -106,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:text="1000"
                             android:textColor="#ffffda00"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_below="@id/level"
                             android:layout_toRightOf="@id/coinT"/>
