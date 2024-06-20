@@ -130,4 +130,10 @@ interface RetrofitService {
     @GET("/levelUpLife/my/myMemberOut.php")
     fun myMemberOut(@Query("uid") uid: String) : Call<String>
 
+    @GET("/levelUpLife/my/aaa.php")
+    fun aaa() : Call<String>
+
+    @GET("/levelUpLife/my/reset.php")
+    fun reset() : Call<String>
+
 }

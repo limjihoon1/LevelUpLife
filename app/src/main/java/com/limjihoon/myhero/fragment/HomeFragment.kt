@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var dataManager: DataManager
     private var uid = ""
+    private var quest = ""
     var items = mutableListOf<Todo>()
 
     override fun onCreateView(
@@ -51,9 +52,11 @@ class HomeFragment : Fragment() {
         binding.creatTodo.setOnClickListener { listCreate() }
 
         binding.createMap.setOnClickListener {
+            quest = "map"
             val mapIntent = Intent(requireContext(), MapActivity::class.java).apply {
                 putExtra("lat", (activity as MainActivity).myLocation?.latitude ?: 37.555)
                 putExtra("lng", (activity as MainActivity).myLocation?.longitude ?: 126.9746)
+                putExtra("quest", quest)
             }
             startActivity(mapIntent)
         }
@@ -131,6 +134,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun listCreate() {
+        quest = "normal"
         val builder = AlertDialog.Builder(requireContext())
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo, null)
@@ -144,7 +148,7 @@ class HomeFragment : Fragment() {
         val dialogTv = dialogView.findViewById<EditText>(R.id.scheduleEditText)
 
         dialogButton.setOnClickListener {
-            val todo = Todo(dataManager.memberFlow.value!!.uid, dialogTv.text.toString(), 0, 0)
+            val todo = Todo(dataManager.memberFlow.value!!.uid, dialogTv.text.toString(), 0, 0, quest)
             val todoText = dialogTv.text.toString().trim()
             if (todoText.isEmpty()) {
                 Toast.makeText(requireContext(), "할 일 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -160,6 +164,7 @@ class HomeFragment : Fragment() {
                     Toast.makeText(requireContext(), "$data", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                     fetchTodos()
+
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
