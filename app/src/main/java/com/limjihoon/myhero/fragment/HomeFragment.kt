@@ -1,5 +1,6 @@
 package com.limjihoon.myhero.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.data.Todo2
 import com.limjihoon.myhero.databinding.FragmentHome2Binding
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.model.DataManager
