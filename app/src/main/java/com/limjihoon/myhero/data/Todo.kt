@@ -6,7 +6,6 @@ data class Todo(
     var state: Int,
     val no: Int,
     var quest:String="",
-
     )
 
 data class Todo2(
@@ -14,7 +13,6 @@ data class Todo2(
     val workTodo: String,
     var state: Int,
     var quest:String="",
-
     )
 
 data class MyTodo(
@@ -23,5 +21,4 @@ data class MyTodo(
     var state: Int,
     val no: Int,
 //    var quest:String,
-
 )
