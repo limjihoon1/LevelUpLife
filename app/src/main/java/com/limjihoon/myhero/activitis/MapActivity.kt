@@ -2,7 +2,6 @@ package com.limjihoon.myhero.activitis
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location

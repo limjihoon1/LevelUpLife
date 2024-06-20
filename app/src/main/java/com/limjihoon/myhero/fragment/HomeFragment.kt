@@ -1,5 +1,6 @@
 package com.limjihoon.myhero.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -10,13 +11,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.MainActivity
@@ -24,6 +22,7 @@ import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.data.Todo2
 import com.limjihoon.myhero.databinding.FragmentHomeBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -92,6 +91,16 @@ class HomeFragment : Fragment() {
             binding.tvExp2.text = "${it.exp}/50"
             binding.coin.text = "${it.coin} COIN"
             uid = it.uid
+            var progress = 0
+
+            when (it.exp) {
+                0 -> progress = 0
+                10 -> progress = 20
+                20 -> progress = 40
+                30 -> progress = 60
+                40 -> progress = 80
+            }
+            binding.bar.progress = progress
 
             when(it.hero) {
                 1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
@@ -117,6 +126,7 @@ class HomeFragment : Fragment() {
 
     private fun fetchTodos() {
         retrofitService.getTodo(uid).enqueue(object : Callback<List<Todo>> {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
                 val data = response.body()
                 data?.let {
@@ -153,7 +163,7 @@ class HomeFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val todo = Todo(uid, todoText, 0, 0, quest)
+            val todo = Todo2(uid, todoText, 0, "normal")
 
             retrofitService.insertTodo(todo).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {

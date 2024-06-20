@@ -11,6 +11,14 @@ data class Todo(
 
     )
 
+data class Todo2(
+    val uid: String,
+    val workTodo: String,
+    var state: Int,
+    var quest:String="",
+
+    )
+
 data class MyTodo(
     val uid: String,
     val workTodo: String,
