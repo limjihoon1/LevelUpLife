@@ -72,6 +72,16 @@ interface RetrofitService {
     @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakaoSearchPlaceToString3(@Query("query") query:String,@Query("x") longitude:String,@Query("y") latitude:String ) : Call<KakaoData>
+    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @GET("/v2/local/search/keyword.json?sort=distance")
+    fun kakaoSearchPlaceToString2(@Query("x") longitude:String,@Query("y") latitude:String ) : Call<KakaoData>
+
+
+
+
+
+
+
 
     @GET("/levelUpLife/todo/UpdateTodoQuest.php")
     fun updateQuest(

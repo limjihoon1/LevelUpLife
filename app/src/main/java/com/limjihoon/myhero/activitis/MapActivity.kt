@@ -63,7 +63,7 @@ class MapActivity : AppCompatActivity() {
     var myLocation:Location ?=null
     val locationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
-    var searchQuery:String="화장실"
+    var searchQuery:String="ㄱ"
     var latitude:Double=35.1796
     var longitude:Double=129.0756
     private var todouid =G.uid
@@ -74,9 +74,16 @@ class MapActivity : AppCompatActivity() {
 
     var lat:Double=0.0
     var lng:Double=0.0
+    var lat2:Double=0.0
+    var lng2:Double=0.0
+
     var ss: Double = 35.55
     var tt: Double = 127.632
     var document :List<DocumentOfPlace>? = null
+
+
+    private var isLabelAdded = false
+    private var currentLabel: Label? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -219,6 +226,79 @@ class MapActivity : AppCompatActivity() {
             }
 
 
+            binding.btnAddMaker.setOnClickListener {
+
+                Toast.makeText(this@MapActivity, "원하는 위치의 라벨을 추가해주세요!!", Toast.LENGTH_SHORT).show()
+
+                kakaoMap.setOnMapClickListener { kakaoMap, latLng, pointF, poi ->
+                    if (isLabelAdded) {
+                        return@setOnMapClickListener
+                    }
+                    currentLabel?.let {
+                        kakaoMap.labelManager!!.layer!!.remove(it)
+
+                    }
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+
+                    val options = LabelOptions.from(latLng).setStyles(R.drawable.ic_pin)
+                    val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
+                    currentLabel = newLabel
+                    lat2 = latLng.latitude
+                    lng2 = latLng.longitude
+
+                    val retrofit =RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
+                    val retrofitService = retrofit.create(RetrofitService::class.java)
+
+                    val call = retrofitService.kakaoSearchPlaceToString2(lng2.toString(),lat2.toString())
+
+                    call.enqueue(object :Callback<KakaoData>{
+                        override fun onResponse(
+                            call: Call<KakaoData>,
+                            response: Response<KakaoData>
+                        ) {
+                            // 응답받은 json 을 파싱한 객체 를 참조
+                            searchPlaceResponse = response.body()
+                            //먼저 데이터가 온전히 잘 왔는지 파악
+                            var meta :MetaOfPlace? = searchPlaceResponse?.meta
+                            document  = searchPlaceResponse?.documents
+                            if (document.isNullOrEmpty()){
+                                androidx.appcompat.app.AlertDialog.Builder(this@MapActivity).setMessage("검색 결과가 없습니다").create().show()
+                            }else{
+                                Toast.makeText(this@MapActivity, "$lat2 $lng2", Toast.LENGTH_SHORT).show()
+                            }
+
+
+                        }
+
+                        override fun onFailure(call: Call<KakaoData>, t: Throwable) {
+                            androidx.appcompat.app.AlertDialog.Builder(this@MapActivity).setMessage("서버 오류 가 있습니다").create().show()
+                        }
+
+                    })
+
+
+//
+//                    이 위치에 마커누르면 인포윈도우를  추가하고싶어
+//
+                    val layout = GuiLayout(Orientation.Vertical)
+                    layout.setPadding(16, 16, 16, 16)
+                    layout.setBackground(R.drawable.char_bg, true)
+                    val infoText = GuiText("인포윈도우 텍스트")
+                    infoText.setTextSize(28)
+                    infoText.setTextColor(Color.WHITE)
+                    layout.addView(infoText)
+                    val infoOptions = InfoWindowOptions.from(latLng)
+                    infoOptions.body = layout
+                    infoOptions.setBodyOffset(0f, -150f)
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(infoOptions)
+
+                    isLabelAdded = true
+
+                }
+                isLabelAdded = false
+            }
+
+
             kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
                 label.apply {
                     val layout = GuiLayout(Orientation.Vertical)
@@ -239,6 +319,10 @@ class MapActivity : AppCompatActivity() {
                 }
             }
             kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
+                if (lat2 != 0.0){
+                    Toast.makeText(this@MapActivity, "성공~~", Toast.LENGTH_SHORT).show()
+                    return@setOnInfoWindowClickListener
+                }
                 val tag = infoWindow.tag
                 if (tag is DocumentOfPlace) {
                     val place = tag

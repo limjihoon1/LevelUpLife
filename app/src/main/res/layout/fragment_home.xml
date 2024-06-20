@@ -146,6 +146,14 @@
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@id/tv_quest"
                 android:src="@drawable/mapicon" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="오늘의 보상 횟수 0/5 "
+                android:layout_below="@+id/create_map"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_quest"
@@ -167,15 +175,14 @@
                 android:layout_below="@id/creat_todo"
                 android:layout_marginTop="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
                 />
+
 
         </RelativeLayout>
 

@@ -36,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var dataManager: DataManager
     private var uid = ""
     var items = mutableListOf<Todo>()
+    var questions = "오늘의 보상 횟수 0/5 "
 
     override fun onCreateView(
         inflater: LayoutInflater,
