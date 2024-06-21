@@ -39,7 +39,8 @@ class HomeFragment : Fragment() {
     private lateinit var dataManager: DataManager
     private var uid = ""
     var items = mutableListOf<Todo>()
-    var questions = "오늘의 보상 횟수 0/5 "
+    var questions = 0
+
     private val retrofitService: RetrofitService by lazy {
         RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
     }
@@ -95,7 +96,15 @@ class HomeFragment : Fragment() {
             binding.coin.text = "${it.coin}"
             uid = it.uid
             var progress = 0
+            when (it.qcc) {
+                0 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 0/5 "
+                1 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 1/5 "
+                2 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 2/5 "
+                3 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 3/5 "
+                4 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 4/5 "
+                5 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 5/5 "
 
+            }
             when (it.exp) {
                 0 -> progress = 0
                 10 -> progress = 20
