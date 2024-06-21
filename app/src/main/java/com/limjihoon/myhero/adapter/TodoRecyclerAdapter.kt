@@ -1,5 +1,6 @@
 package com.limjihoon.myhero.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,25 +40,21 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
 
             vh.binding.ivSuccess.setOnClickListener {
                 updateTodo(position, ma.dataManager.memberFlow.value!!.exp, ma.dataManager.memberFlow.value!!.level, ma.dataManager.memberFlow.value!!.qcc)
-//                Toast.makeText(context, "${ma.dataManager.memberFlow.value!!.exp}", Toast.LENGTH_SHORT).show()
             }
 
             vh.binding.ivDelete.setOnClickListener {
-                deleteTodo(position, item.no)
-//                Toast.makeText(context, "${ma.dataManager.memberFlow.value!!.exp}", Toast.LENGTH_SHORT).show()
+                deleteTodo(position, item.no, item.quest)
             }
         } else {
             val vh = holder as VH2
             vh.binding.tvWorkTodo.text = item.workTodo
 
             vh.binding.ivSuccess.setOnClickListener {
-                updateTodo(position, ma.dataManager.memberFlow.value!!.exp, ma.dataManager.memberFlow.value!!.level, ma.dataManager.memberFlow.value!!.qcc)
-                Toast.makeText(context, "aaaaaaaa", Toast.LENGTH_SHORT).show()
+                AlertDialog.Builder(context).setMessage("퀘스트 지역이 아닙니다 퀘스트 위치로 이동하세요!!").create().show()
             }
 
             vh.binding.ivDelete.setOnClickListener {
-                deleteTodo(position, item.no)
-                Toast.makeText(context, "aaaaaaaa", Toast.LENGTH_SHORT).show()
+                deleteTodo(position, item.no, item.quest)
             }
         }
     }
@@ -121,12 +118,12 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
 //        })
     }
 
-    private fun deleteTodo(position: Int, no: Int) {
+    private fun deleteTodo(position: Int, no: Int, quest: String) {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
         try {
-            retrofitService.deleteTodo(no).enqueue(object : Callback<String> {
+            retrofitService.deleteTodo(no, quest).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful && response.body() == "삭제 성공") {
                         items.removeAt(position)
