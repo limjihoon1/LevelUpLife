@@ -47,7 +47,7 @@ class MapActivity : AppCompatActivity() {
     val locationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
     var searchQuery: String = "ㄱ"
-    var latitude: Double = 35.1796
+    var latitude: Double = 35.1796        //내위치
     var longitude: Double = 129.0756
     private var todouid = G.uid
     var searchPlaceResponse: KakaoData? = null
@@ -55,9 +55,9 @@ class MapActivity : AppCompatActivity() {
     var items = mutableListOf<Markers>()
     var kakaoMap:KakaoMap? =null
 
-    var lat:Double=0.0
+    var lat:Double=0.0     //검색위치
     var lng:Double=0.0
-    var lat2:Double=0.0
+    var lat2:Double=0.0    //터치 위치
     var lng2:Double=0.0
 
     var ss: Double = 35.55
