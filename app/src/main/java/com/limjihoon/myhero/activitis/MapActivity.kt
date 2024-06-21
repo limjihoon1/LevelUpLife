@@ -83,7 +83,6 @@ class MapActivity : AppCompatActivity() {
         binding.search.setOnClickListener {
             searchQuery=binding.et.text.toString()
             searchPlaces()
-//            recreate()
         }
 
     }
@@ -134,9 +133,8 @@ class MapActivity : AppCompatActivity() {
             }
 
         })
-
-
-
+    }
+    private fun moveCamera() {
 
     }
     private fun requestMyrecatiomn(){
@@ -175,6 +173,11 @@ class MapActivity : AppCompatActivity() {
             val myPos: LatLng = LatLng.from(lat,lng)
             var cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(myPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
+            if (searchQuery !="ㄱ"){
+                val searchPos: LatLng = LatLng.from(tt,ss)
+                var cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(searchPos, 16)
+                kakaoMap.moveCamera(cameraUpdate)
+            }
 
             //내 위치에 마커 만들이 - 아이콘모양 [ 백터는 안됨 ]
             //라벨(마커)의 위치와 스타일 지정하는 옵션 객체 생성
