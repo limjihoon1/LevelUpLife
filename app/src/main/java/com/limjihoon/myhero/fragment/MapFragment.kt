@@ -34,6 +34,7 @@ import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.databinding.FragmentSearch2Binding
 import com.limjihoon.myhero.databinding.FragmentSearchBinding
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
@@ -43,7 +44,7 @@ import retrofit2.Response
 import java.lang.Exception
 
 class MapFragment : Fragment() {
-    lateinit var binding: FragmentSearchBinding
+    lateinit var binding: FragmentSearch2Binding
     private var kakaoMap: KakaoMap? = null
     var search = ""
     private var todouid = G.uid
@@ -56,7 +57,7 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        binding = FragmentSearch2Binding.inflate(inflater, container, false)
         return binding.root
     }
 

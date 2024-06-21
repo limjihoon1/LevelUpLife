@@ -37,6 +37,7 @@ import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.MetaOfPlace
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.databinding.ActivityMap2Binding
 import com.limjihoon.myhero.databinding.ActivityMapBinding
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
@@ -46,7 +47,7 @@ import retrofit2.Response
 import java.lang.Exception
 
 class MapActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMapBinding
+    lateinit var binding: ActivityMap2Binding
 
     val mapView: MapView by lazy { findViewById(R.id.map_view) }
     var myLocation: Location? = null
@@ -76,7 +77,7 @@ class MapActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityMapBinding.inflate(layoutInflater)
+        binding = ActivityMap2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 

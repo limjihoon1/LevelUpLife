@@ -44,26 +44,29 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/my_sw"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
-        android:backgroundTint="@color/white"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#EDDEB6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="16dp"
-        android:layout_toLeftOf="@id/q_btn"
-        android:layout_below="@id/linear_search"
-        app:cardCornerRadius="16dp">
+        android:layout_marginBottom="16dp"
+        app:strokeColor="#8E6700"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/my_image"
-                android:layout_width="55dp"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/eeeee" />
 
             <TextView
@@ -71,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="내 위치"
+                android:textColor="@color/mapsha"
                 android:textStyle="bold"
                 android:paddingBottom="4dp"/>
         </LinearLayout>
@@ -78,14 +82,15 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/q_btn"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
-        android:backgroundTint="@color/white"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#EDDEB6"
         android:layout_below="@id/linear_search"
         android:layout_marginRight="16dp"
         android:layout_alignParentRight="true"
-        app:cardCornerRadius="16dp">
-
+        app:strokeColor="#8E6700"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -106,6 +111,7 @@
                 android:layout_gravity="center"
                 android:text="내 목표"
                 android:textStyle="bold"
+                android:textColor="@color/mapsha"
                 android:paddingBottom="4dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -113,5 +119,4 @@
   <include
       android:id="@+id/navigation_view"
       layout="@layout/drawer_hearder_map"/>
-
 </androidx.drawerlayout.widget.DrawerLayout>
