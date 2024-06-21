@@ -15,6 +15,11 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -30,13 +35,17 @@ import com.kakao.vectormap.mapwidget.component.Orientation
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
+import com.limjihoon.myhero.adapter.MapDrawerAdapter
+import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.Member2
 import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.FragmentSearchBinding
+import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,6 +66,10 @@ class MapFragment : Fragment() {
     var longityde = 0.0
     var items = mutableListOf<Markers>()
     private val handler = Handler()
+
+
+    private lateinit var dataManager: DataManager
+    private lateinit var recyclerViewAdapter: MapDrawerAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,6 +89,24 @@ class MapFragment : Fragment() {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
         binding.mySw.setOnClickListener { moveToMyLocation() }
+        Log.d("제발 되라", items.toString())
+
+
+        val navigationView = view.findViewById<View>(R.id.navigation_view)
+        val recyclerView = navigationView.findViewById<RecyclerView>(R.id.rec)
+        recyclerViewAdapter = MapDrawerAdapter(requireContext(), items)
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recyclerViewAdapter
+        }
+
+        val ma = activity as MainActivity
+        ma.dataManager.memberFlow.value ?: return
+
+        dataManager = ma.dataManager
+
+
+
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -143,6 +174,7 @@ class MapFragment : Fragment() {
                 data?.let {
                     items.clear()
                     items.addAll(it)
+                    recyclerViewAdapter.notifyDataSetChanged()
                     items.forEach {
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
