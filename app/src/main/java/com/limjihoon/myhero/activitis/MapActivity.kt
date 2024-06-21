@@ -243,7 +243,7 @@ class MapActivity : AppCompatActivity() {
             }
 
 
-            kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
+            kakaoMap.setOnLabelClickListener {  kakaoMap, layer, label ->
                 label.apply {
                     val layout = GuiLayout(Orientation.Vertical)
                     layout.setPadding(16, 16, 16, 16)
@@ -347,7 +347,7 @@ class MapActivity : AppCompatActivity() {
                         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        retrofitService.insertMap(G.uid, ss, lat2, lng2,0).enqueue(object : Callback<String> {
+                        retrofitService.insertMap(G.uid, ss, latitude, longitude,0).enqueue(object : Callback<String> {
                             override fun onResponse(p0: Call<String>, p1: Response<String>) {
                                 Toast.makeText(this@MapActivity, "일정 추가 성공: ${p1.body()}", Toast.LENGTH_SHORT).show()
                                 currentLabel?.let {
