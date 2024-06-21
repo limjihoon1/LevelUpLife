@@ -1,13 +1,10 @@
 package com.limjihoon.myhero.activitis
 
 import android.Manifest
-import android.animation.ObjectAnimator
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -15,7 +12,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
@@ -25,7 +21,6 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.mapwidget.InfoWindow
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
 import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
@@ -36,7 +31,6 @@ import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.MetaOfPlace
-import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.ActivityMapBinding
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
@@ -270,7 +264,7 @@ class MapActivity : AppCompatActivity() {
             }
             kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
                 if (lat2 != 0.0){
-                    Toast.makeText(this@MapActivity, "성공~~$lat2 $lng2", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MapActivity, "성공~~$lat2 $lng2", Toast.LENGTH_SHORT).show()
                     val builder = AlertDialog.Builder(this@MapActivity)
                     val inflater = layoutInflater
                     val dialogView = inflater.inflate(R.layout.custum_dialog_input_todo_map, null)
@@ -285,38 +279,33 @@ class MapActivity : AppCompatActivity() {
                     val btncancel: Button = dialogView.findViewById(R.id.cancelButton)
 
                     btnconfirm.setOnClickListener {
-                        Toast.makeText(this@MapActivity, "데이터 통신이 들어가야 하는 코드 자리", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this@MapActivity, "데이터 통신이 들어가야 하는 코드 자리", Toast.LENGTH_SHORT).show()
 
                         val ss = todolist.text.toString()
 
                         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        retrofitService.insertMap(todouid, ss, lat2, lng2,0).enqueue(object : Callback<String> {
-                            override fun onResponse(call: Call<String>, response: Response<String>) {
-                                if (response.isSuccessful && response.body() != null) {
-                                    Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
-                                    currentLabel?.let {
-                                        kakaoMap.labelManager!!.layer!!.remove(it)
+                        retrofitService.insertMap(G.uid, ss, lat2, lng2,0).enqueue(object : Callback<String> {
+                            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                                Toast.makeText(this@MapActivity, "${p1.body()}", Toast.LENGTH_SHORT).show()
+                                currentLabel?.let {
+                                    kakaoMap.labelManager!!.layer!!.remove(it)
 
-                                    }
-                                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
-                                    val options = LabelOptions.from(latLng2).setStyles(R.drawable.qqqqq)
-                                    val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
-                                    currentLabel = newLabel
-
-                                    dialog.dismiss()
-                                } else {
-                                    Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
-                                    Log.d("업데이트 실패", "응답 실패: ${response.errorBody()?.string()}")
                                 }
-                                Log.d("성공", response.body().toString())
+                                kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+
+                                val options = LabelOptions.from(latLng2).setStyles(R.drawable.qqqqq)
+                                val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
+                                currentLabel = newLabel
+                                lat2 = 0.0
+                                dialog.dismiss()
                             }
 
-                            override fun onFailure(call: Call<String>, t: Throwable) {
-                                Toast.makeText(this@MapActivity, "요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
-                                Log.d("실패", t.message.toString())
+                            override fun onFailure(p0: Call<String>, p1: Throwable) {
+                                Log.d("일정 추가 실패", "응답 실패: ${p1.message}")
                             }
+
                         })
 
                     }
@@ -332,7 +321,7 @@ class MapActivity : AppCompatActivity() {
 
                         return@setOnClickListener
                     }
-                    lat2 = 0.0
+
                     return@setOnInfoWindowClickListener
                 }
                 val tag = infoWindow.tag
@@ -358,22 +347,26 @@ class MapActivity : AppCompatActivity() {
                         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        retrofitService.insertMap(todouid, ss, place.y.toDouble(), place.x.toDouble(),0).enqueue(object : Callback<String> {
-                            override fun onResponse(call: Call<String>, response: Response<String>) {
-                                if (response.isSuccessful && response.body() != null) {
-                                    Toast.makeText(this@MapActivity, "업데이트 성공: ${response.body()}", Toast.LENGTH_SHORT).show()
-                                    dialog.dismiss()
-                                } else {
-                                    Toast.makeText(this@MapActivity, "업데이트 실패: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
-                                    Log.d("업데이트 실패", "응답 실패: ${response.errorBody()?.string()}")
+                        retrofitService.insertMap(G.uid, ss, lat2, lng2,0).enqueue(object : Callback<String> {
+                            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                                Toast.makeText(this@MapActivity, "일정 추가 성공: ${p1.body()}", Toast.LENGTH_SHORT).show()
+                                currentLabel?.let {
+                                    kakaoMap.labelManager!!.layer!!.remove(it)
+
                                 }
-                                Log.d("성공", response.body().toString())
+                                kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+
+                                val options = LabelOptions.from(latLng2).setStyles(R.drawable.qqqqq)
+                                val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
+                                currentLabel = newLabel
+
+                                dialog.dismiss()
                             }
 
-                            override fun onFailure(call: Call<String>, t: Throwable) {
-                                Toast.makeText(this@MapActivity, "요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
-                                Log.d("실패", t.message.toString())
+                            override fun onFailure(p0: Call<String>, p1: Throwable) {
+                                Log.d("일정 추가 실패", "응답 실패: ${p1.message}")
                             }
+
                         })
                     }
 
