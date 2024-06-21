@@ -59,7 +59,8 @@
                         android:text="캐릭터변경 +"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
+                        android:textColor="@color/ypg"
+                        android:layout_marginBottom="4dp"
                         android:layout_alignParentBottom="true"/>
                 </RelativeLayout>
 
