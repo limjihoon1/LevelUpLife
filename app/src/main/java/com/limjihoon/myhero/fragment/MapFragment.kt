@@ -41,6 +41,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class MapFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
@@ -143,6 +149,13 @@ class MapFragment : Fragment() {
                             .setTexts(it.workTodo).setTag(it)
 
                         kakaoMap.labelManager!!.layer!!.addLabel(options)
+                        val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
+                        val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+                        if (isWithin50Meters(latitude, longitude, it.lat, it.lng)) {
+                            Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo}", Toast.LENGTH_SHORT).show()
+                            //완료 시키기
+
+                        }
                     }
                 }
             }
@@ -152,6 +165,19 @@ class MapFragment : Fragment() {
             }
         })
 
+    }
+    private fun isWithin50Meters(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Boolean {
+        val R = 6371e3
+        val phi1 = lat1 * PI / 180
+        val phi2 = lat2 * PI / 180
+        val deltaPhi = (lat2 - lat1) * PI / 180
+        val deltaLambda = (lon2 - lon1) * PI / 180
+
+        val a = sin(deltaPhi / 2).pow(2) + cos(phi1) * cos(phi2) * sin(deltaLambda / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        val distance = R * c
+        return distance <= 50
     }
 
 
