@@ -83,7 +83,6 @@ class MapActivity : AppCompatActivity() {
         binding.search.setOnClickListener {
             searchQuery=binding.et.text.toString()
             searchPlaces()
-//            recreate()
         }
 
     }
@@ -134,9 +133,8 @@ class MapActivity : AppCompatActivity() {
             }
 
         })
-
-
-
+    }
+    private fun moveCamera() {
 
     }
     private fun requestMyrecatiomn(){
@@ -175,6 +173,11 @@ class MapActivity : AppCompatActivity() {
             val myPos: LatLng = LatLng.from(lat,lng)
             var cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(myPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
+            if (searchQuery !="ㄱ"){
+                val searchPos: LatLng = LatLng.from(tt,ss)
+                var cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(searchPos, 16)
+                kakaoMap.moveCamera(cameraUpdate)
+            }
 
             //내 위치에 마커 만들이 - 아이콘모양 [ 백터는 안됨 ]
             //라벨(마커)의 위치와 스타일 지정하는 옵션 객체 생성
@@ -221,9 +224,6 @@ class MapActivity : AppCompatActivity() {
                     lat2 = latLng.latitude
                     lng2 = latLng.longitude
 
-//
-//                    이 위치에 마커누르면 인포윈도우를  추가하고싶어
-//
                     val layout = GuiLayout(Orientation.Vertical)
                     layout.setPadding(16, 16, 16, 16)
                     layout.setBackground(R.drawable.char_bg, true)
@@ -347,16 +347,18 @@ class MapActivity : AppCompatActivity() {
                         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-                        retrofitService.insertMap(G.uid, ss, latitude, longitude,0).enqueue(object : Callback<String> {
+                        retrofitService.insertMap(G.uid, ss,  tt,this@MapActivity.ss,0).enqueue(object : Callback<String> {
                             override fun onResponse(p0: Call<String>, p1: Response<String>) {
                                 Toast.makeText(this@MapActivity, "일정 추가 성공: ${p1.body()}", Toast.LENGTH_SHORT).show()
+
                                 currentLabel?.let {
                                     kakaoMap.labelManager!!.layer!!.remove(it)
 
                                 }
                                 kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+                                var latLng = LatLng.from(tt,this@MapActivity.ss)
 
-                                val options = LabelOptions.from(latLng2).setStyles(R.drawable.qqqqq)
+                                val options = LabelOptions.from(latLng).setStyles(R.drawable.qqqqq)
                                 val newLabel = kakaoMap.labelManager!!.layer!!.addLabel(options)
                                 currentLabel = newLabel
 
