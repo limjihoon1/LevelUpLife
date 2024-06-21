@@ -231,13 +231,22 @@
                     android:src="@drawable/mapicon" />
 
             </LinearLayout>
+            <TextView
+                android:id="@+id/tv_today_quest"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="오늘의 보상 횟수 0/5 "
+                android:layout_below="@+id/linearQ"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textSize="14sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
-                android:layout_below="@id/linearQ"
+                android:layout_below="@id/tv_today_quest"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
