@@ -19,17 +19,20 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface RetrofitService {
+
     @GET("/levelUpLife/map/LoadMap.php")
-    fun loadMap(@Query("todouid") todouid: String): Call<List<Markers>>
+    fun loadMap(@Query("todoUid") todoUid: String): Call<List<Markers>>
+
+    @GET("/levelUpLife/map/LoadMap.php")
+    fun loadMap2(@Query("todoUid") todoUid: String): Call<String>
 
     @GET("/levelUpLife/map/GetAllMarkers.php")
     fun getAllMarkers(): Call<List<Markers>>
 
     @GET("/levelUpLife/map/insertMap.php")
     fun insertMap(
-
-        @Query("todouid") todouid: String,
-        @Query("worktodo") worktodo: String,
+        @Query("todoUid") todouid: String,
+        @Query("workTodo") worktodo: String,
         @Query("lat") lat: Double,
         @Query("lng") lng: Double,
         @Query("state") state: Int,
@@ -58,10 +61,16 @@ interface RetrofitService {
 
 
     @GET("/levelUpLife/member/DeleteTodo.php")
-    fun deleteTodo(@Query("no") no: Int): Call<String>
+    fun deleteTodo(@Query("no") no: Int, @Query("quest") quest: String): Call<String>
 
     @GET("/levelUpLife/member/UpdateTodo.php")
     fun updateTodo(@Query("no") no: Int): Call<String>
+
+
+
+
+
+
 
 
     @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
@@ -71,7 +80,6 @@ interface RetrofitService {
         @Query("x") longitude: String,
         @Query("y") latitude: String
     ): Call<KakaoData>
-
     //카카오 로컬 검색 api 요청해주는 코드 만들어줘 우선 응답type 을  :KakaoData
     @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
@@ -110,32 +118,44 @@ interface RetrofitService {
     fun updateInventoryHiden(@Query("uid") uid: String): Call<String>
 
 
+
+
+
+
+
+
     @GET("/levelUpLife/admin/adminGetMember.php")
-    fun adminGetMember(): Call<List<AdminMember>>
+    fun adminGetMember() : Call<List<AdminMember>>
 
     @GET("/levelUpLife/admin/adminDeleteMember.php")
-    fun adminDeleteMember(@Query("no") no: Int, @Query("uid") uid: String): Call<String>
+    fun adminDeleteMember(@Query("no") no: Int, @Query("uid") uid: String) : Call<String>
 
     @GET("/levelUpLife/admin/adminGetBoard.php")
-    fun adminGetBoard(): Call<List<Board>>
+    fun adminGetBoard() : Call<List<Board>>
 
     @GET("/levelUpLife/admin/adminDeleteBoard.php")
-    fun adminDeleteBoard(@Query("no") no: Int): Call<String>
+    fun adminDeleteBoard(@Query("no") no: Int) : Call<String>
+
+
+
+
+
+
 
 
     @GET("/levelUpLife/my/getMyBoard.php")
-    fun getMyBoard(@Query("uid") uid: String): Call<List<MyBoard>>
+    fun getMyBoard(@Query("uid") uid: String) : Call<List<MyBoard>>
 
     @GET("/levelUpLife/my/getMyTodo.php")
-    fun getMyTodo(@Query("uid") uid: String): Call<List<MyTodo>>
+    fun  getMyTodo(@Query("uid") uid: String) : Call<List<MyTodo>>
 
     @GET("/levelUpLife/my/myMemberOut.php")
-    fun myMemberOut(@Query("uid") uid: String): Call<String>
+    fun myMemberOut(@Query("uid") uid: String) : Call<String>
 
     @GET("/levelUpLife/my/aaa.php")
-    fun aaa(): Call<String>
+    fun aaa() : Call<String>
 
     @GET("/levelUpLife/my/reset.php")
-    fun reset(): Call<String>
+    fun reset() : Call<String>
 
 }

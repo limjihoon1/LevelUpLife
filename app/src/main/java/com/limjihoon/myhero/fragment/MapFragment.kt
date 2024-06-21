@@ -140,7 +140,7 @@ class MapFragment : Fragment() {
                     items.forEach {
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
-                            .setTexts(it.worktodo).setTag(it)
+                            .setTexts(it.workTodo).setTag(it)
 
                         kakaoMap.labelManager!!.layer!!.addLabel(options)
                     }
@@ -151,6 +151,7 @@ class MapFragment : Fragment() {
                 Log.e("RetrofitError", t.message.toString())
             }
         })
+
     }
 
 
