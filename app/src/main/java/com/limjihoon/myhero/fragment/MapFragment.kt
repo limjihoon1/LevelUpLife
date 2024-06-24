@@ -1,6 +1,6 @@
 package com.limjihoon.myhero.fragment
 
-import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -8,19 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.kakao.vectormap.*
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
@@ -30,27 +24,21 @@ import com.kakao.vectormap.mapwidget.component.Orientation
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
+import com.limjihoon.myhero.activitis.MapActivity
+import com.limjihoon.myhero.adapter.MapDrawerAdapter
 import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.Markers
-import com.limjihoon.myhero.data.Member2
-import com.limjihoon.myhero.data.Todo
-import com.limjihoon.myhero.databinding.FragmentSearch2Binding
 import com.limjihoon.myhero.databinding.FragmentSearchBinding
+import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
-class MapFragment : Fragment() {
-    lateinit var binding: FragmentSearch2Binding
+class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
+    lateinit var binding: FragmentSearchBinding
     private var kakaoMap: KakaoMap? = null
     var search = ""
     private var todouid = G.uid
@@ -58,12 +46,16 @@ class MapFragment : Fragment() {
     var longityde = 0.0
     var items = mutableListOf<Markers>()
     private val handler = Handler()
+
+    private lateinit var dataManager: DataManager
+    private lateinit var recyclerViewAdapter: MapDrawerAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearch2Binding.inflate(inflater, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -76,7 +68,36 @@ class MapFragment : Fragment() {
         binding.qBtn.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
+        binding.searchBtn.setOnClickListener {
+            startActivity(Intent(requireContext(),MapActivity::class.java))
+
+        }
         binding.mySw.setOnClickListener { moveToMyLocation() }
+        Log.d("제발 되라", items.toString())
+
+        val navigationView = view.findViewById<View>(R.id.navigation_view)
+        val recyclerView = navigationView.findViewById<RecyclerView>(R.id.rec)
+        recyclerViewAdapter = MapDrawerAdapter(requireContext(), items, this)
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recyclerViewAdapter
+        }
+
+        val ma = activity as MainActivity
+        ma.dataManager.memberFlow.value ?: return
+
+        dataManager = ma.dataManager
+    }
+
+    override fun onItemClick(marker: Markers) {
+        moveToMarkerLocation(marker.lat, marker.lng)
+    }
+
+    private fun moveToMarkerLocation(lat: Double, lng: Double) {
+        val mypos: LatLng = LatLng.from(lat, lng)
+        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16)) ?: run {
+            Toast.makeText(activity, "맵이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -101,7 +122,6 @@ class MapFragment : Fragment() {
             labelOptionsLayout.addLabel(labelOptions)
 
             loadMapMarkers(kakaoMap)
-
 
             val placeLists: List<DocumentOfPlace>? = (activity as MainActivity).kakaoData?.documents
             placeLists?.forEach {
@@ -144,6 +164,7 @@ class MapFragment : Fragment() {
                 data?.let {
                     items.clear()
                     items.addAll(it)
+                    recyclerViewAdapter.notifyDataSetChanged()
                     items.forEach {
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
@@ -165,8 +186,8 @@ class MapFragment : Fragment() {
                 Log.e("RetrofitError", t.message.toString())
             }
         })
-
     }
+
     private fun isWithin50Meters(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Boolean {
         val R = 6371e3
         val phi1 = lat1 * PI / 180
@@ -180,7 +201,6 @@ class MapFragment : Fragment() {
         val distance = R * c
         return distance <= 50
     }
-
 
     private fun moveToMyLocation() {
         kakaoMap?.let {
