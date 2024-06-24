@@ -59,6 +59,7 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
         }
     }
 
+
     private fun updateTodo(position: Int, exp: Int, level: Int, qcc: Int) {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
