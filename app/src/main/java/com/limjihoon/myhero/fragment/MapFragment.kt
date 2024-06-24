@@ -120,9 +120,9 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         binding.qBtn.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
-        binding.searchBtn.setOnClickListener {
-            startActivity(Intent(requireContext(), MapActivity::class.java))
-        }
+//        binding.searchBtn.setOnClickListener {
+//            startActivity(Intent(requireContext(), MapActivity::class.java))
+//        }
         binding.mySw.setOnClickListener { moveToMyLocation() }
         Log.d("제발 되라", items.toString())
 
