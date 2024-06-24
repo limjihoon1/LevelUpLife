@@ -33,6 +33,7 @@ import com.limjihoon.myhero.activitis.MyTodoActivity
 import com.limjihoon.myhero.activitis.NotificationManageActivity
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.databinding.FragmentSetting2Binding
 import com.limjihoon.myhero.databinding.FragmentSettingBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -43,7 +44,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SettingsFragment : Fragment() {
-    lateinit var binding: FragmentSettingBinding
+    lateinit var binding: FragmentSetting2Binding
     private lateinit var dataManager: DataManager
     private val auth = Firebase.auth
     private val spf by lazy {
@@ -68,7 +69,7 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSettingBinding.inflate(layoutInflater, container, false)
+        binding = FragmentSetting2Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -317,9 +318,9 @@ class SettingsFragment : Fragment() {
         }
 
         binding.nickname.text = member!!.nickname
-        binding.level.text = "Lv : ${member.level}"
-        binding.coin.text = "${member.coin} Coin"
-        binding.tvExp2.text = "${member.exp} / 50"
+        binding.level.text = "${member.level}"
+        binding.coin.text = "${member.coin}"
+        binding.tvExp2.text = "${member.exp}/50"
 
         val ppp = (progress / 10).toInt()
         binding.progressBar.progress = ppp

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitis.MapActivity">
+    <com.kakao.vectormap.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/linear_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/map_shape"
+            android:gravity="center"
+            android:hint="지역을 입력해주세요" />
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/map_btn_shape"
+            android:text="검색"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginLeft="8dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#A9E3E3E3"
+        android:text="일정 등록 방법 2가지\n1. 지역 검색 후 지도에 그려진 마커 선택\n
+        2. 장소 지정 아이콘 누르고 원하는 위치 터치 "
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#E91E63"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="12dp"
+        android:paddingTop="8dp"/>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btnAddMaker"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_below="@id/linear_search"
+        android:backgroundTint="#EDDEB6"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        app:strokeColor="#8E6700"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/my_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/eeeee" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="4dp"
+                android:text="장소지정"
+                android:textColor="@color/mapsha"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>
