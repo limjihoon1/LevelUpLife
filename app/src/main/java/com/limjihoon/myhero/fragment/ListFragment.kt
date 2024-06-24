@@ -121,7 +121,7 @@ class ListFragment : Fragment(){
 
 //            웹으로 보내는 작업은 머신러닝 완료후...
 //            val result:Boolean = false // 여기에 값 넣어주세요
-//            binding.wv.loadUrl("javascript:addWrite(${result})")
+//            binding.wv.loadUrl("javascript:addWrite()")
 //            Log.d("로드글쓰기","웹으로전송")
         }
 
