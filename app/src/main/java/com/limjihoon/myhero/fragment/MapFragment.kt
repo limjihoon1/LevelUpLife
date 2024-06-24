@@ -70,6 +70,9 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
+    private val labelMap = HashMap<String, LabelOptions>()
+
+
 
     val retrofitServiceLoad: RetrofitService by lazy {
         RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
@@ -93,8 +96,8 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
         // LocationRequest 설정
         locationRequest = LocationRequest.create().apply {
-            interval = 10000 // 10 seconds
-            fastestInterval = 5000 // 5 seconds
+            interval = 3000 // 10 seconds
+            fastestInterval = 2000 // 5 seconds
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
@@ -105,13 +108,13 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                 for (location in p0.locations) {
                     // 위치가 갱신될 때마다 지도 업데이트
                     updateMapLocation(location.latitude, location.longitude)
+
                 }
             }
         }
+        startLocationUpdates()
 
-        binding.mySw.setOnClickListener {
-            startLocationUpdates()
-        }
+
 
         val mapView = view.findViewById<MapView>(R.id.map_view)
         mapView.start(mapLifiCycleCallback, mapShow)
@@ -123,8 +126,12 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 //        binding.searchBtn.setOnClickListener {
 //            startActivity(Intent(requireContext(), MapActivity::class.java))
 //        }
-        binding.mySw.setOnClickListener { moveToMyLocation() }
-        Log.d("제발 되라", items.toString())
+        binding.mySw.setOnClickListener {
+            val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
+            val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+
+            updateMapLocation2(latitude, longitude) }
+
 
         val navigationView = view.findViewById<View>(R.id.navigation_view)
         val recyclerView = navigationView.findViewById<RecyclerView>(R.id.rec)
@@ -160,6 +167,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
     override fun onItemClick(marker: Markers) {
         moveToMarkerLocation(marker.lat, marker.lng)
+
     }
 
     private fun moveToMarkerLocation(lat: Double, lng: Double) {
@@ -257,10 +265,12 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
 
+        Log.d("updateTodoQuest", "${itemsd[position].uid}")
+            retrofitService.updateQuest(position,itemsd[position].uid,itemsd[position].quest,exp,level,qcc).enqueue(object : Callback<String> {
 
-            retrofitService.updateQuest(itemsd[position].no,itemsd[position].uid,itemsd[position].quest,exp,level,qcc).enqueue(object : Callback<String> {
                 override fun onResponse(p0: Call<String>, p1: Response<String>) {
-                    Toast.makeText(context, "이게 왜 안댐?", Toast.LENGTH_SHORT).show()
+
+                    Log.d("updateTodoQuest", "${p1.body()}")
                     itemsd.removeAt(position)
                     recyclerViewAdapter.notifyItemRemoved(position)
                     ma?.getMember()
@@ -274,7 +284,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
             })
 
-            Toast.makeText(context, "이게 왜 안댐?!!!!", Toast.LENGTH_SHORT).show()
+
 
     }
         private fun loadMapMarkers(kakaoMap: KakaoMap) {
@@ -294,14 +304,15 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
                             .setTexts(it.workTodo).setTag(it)
-                        var ss =it.todoNo
+
                         kakaoMap.labelManager!!.layer!!.addLabel(options)
                         val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
                         val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
                         if (isWithin50Meters(latitude, longitude, it.lat, it.lng)) {
                             Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo}", Toast.LENGTH_SHORT).show()
                             //완료 시키기
-                            updateTodoQuest(ss, ma?.dataManager?.memberFlow?.value!!.exp, ma?.dataManager?.memberFlow?.value!!.level, ma?.dataManager?.memberFlow?.value!!.qcc)
+                            updateTodoQuest(position = items.indexOf(it), ma?.dataManager?.memberFlow?.value!!.exp, ma?.dataManager?.memberFlow?.value!!.level, ma?.dataManager?.memberFlow?.value!!.qcc)
+
 
                         }
                     }
@@ -353,6 +364,19 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
     }
 
     private fun updateMapLocation(lat: Double, lng: Double) {
+        val mypos:LatLng = LatLng.from(lat, lng)
+        kakaoMap?.labelManager?.layer?.removeAll()
+        // 라벨 추가하기
+        val labelOptions = LabelOptions.from(mypos)
+            .setTexts("여기에 라벨 텍스트", "부가 정보")
+            .setStyles(R.drawable.eeeee) // 원하는 스타일로 변경
+
+        kakaoMap?.labelManager?.layer?.addLabel(labelOptions)
+        loadMapMarkers(kakaoMap!!)
+
+    }
+    private fun updateMapLocation2(lat: Double, lng: Double) {
+
         val mypos:LatLng = LatLng.from(lat, lng)
         kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16)) ?: run {
             Toast.makeText(activity, "맵이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
