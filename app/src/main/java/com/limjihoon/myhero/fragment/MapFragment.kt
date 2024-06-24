@@ -1,19 +1,27 @@
 package com.limjihoon.myhero.fragment
-
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.*
 import com.kakao.vectormap.*
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
@@ -28,14 +36,19 @@ import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.MapDrawerAdapter
 import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.Markers
+import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.databinding.FragmentSearchBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
 import com.limjihoon.myhero.network.RetrofitService
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.math.*
+
+
 
 class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
     lateinit var binding: FragmentSearchBinding
@@ -45,10 +58,23 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
     var latitude = 0.0
     var longityde = 0.0
     var items = mutableListOf<Markers>()
+    var itemsd = mutableListOf<Todo>()
     private val handler = Handler()
+    private var ma: MainActivity? = null
+    var uid = ""
+
 
     private lateinit var dataManager: DataManager
     private lateinit var recyclerViewAdapter: MapDrawerAdapter
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+
+
+    val retrofitServiceLoad: RetrofitService by lazy {
+        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +87,32 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Initialize FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        // LocationRequest 설정
+        locationRequest = LocationRequest.create().apply {
+            interval = 10000 // 10 seconds
+            fastestInterval = 5000 // 5 seconds
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        // LocationCallback 설정
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                p0 ?: return
+                for (location in p0.locations) {
+                    // 위치가 갱신될 때마다 지도 업데이트
+                    updateMapLocation(location.latitude, location.longitude)
+                }
+            }
+        }
+
+        binding.mySw.setOnClickListener {
+            startLocationUpdates()
+        }
+
         val mapView = view.findViewById<MapView>(R.id.map_view)
         mapView.start(mapLifiCycleCallback, mapShow)
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -69,8 +121,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
         binding.searchBtn.setOnClickListener {
-            startActivity(Intent(requireContext(),MapActivity::class.java))
-
+            startActivity(Intent(requireContext(), MapActivity::class.java))
         }
         binding.mySw.setOnClickListener { moveToMyLocation() }
         Log.d("제발 되라", items.toString())
@@ -83,10 +134,28 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
             adapter = recyclerViewAdapter
         }
 
-        val ma = activity as MainActivity
-        ma.dataManager.memberFlow.value ?: return
+        activity?.let {
+            if (it is MainActivity) {
+                ma = it
+                dataManager = it.dataManager
+                dataManager.memberFlow.value ?: return
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dataManager.memberFlow.collect { member ->
+                    updateInfo(member)
+                }
+            }
+        }
 
-        dataManager = ma.dataManager
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchTodos()
     }
 
     override fun onItemClick(marker: Markers) {
@@ -98,6 +167,29 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16)) ?: run {
             Toast.makeText(activity, "맵이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun updateInfo(member: Member2?) {
+        member?.let {
+            uid = it.uid
+        }
+
+    }
+
+    private fun fetchTodos() {
+        retrofitServiceLoad.getTodo(uid).enqueue(object : Callback<List<Todo>> {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onResponse(call: Call<List<Todo>>, response: Response<List<Todo>>) {
+                val data = response.body()
+                data?.let {
+                    itemsd.clear()
+                    itemsd.addAll(it)
+                }
+            }
+
+            override fun onFailure(call: Call<List<Todo>>, t: Throwable) {
+                Log.d("etodo", "${t.message}")
+            }
+        })
     }
 
     private val mapLifiCycleCallback = object : MapLifeCycleCallback() {
@@ -154,7 +246,38 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         }
     }
 
-    private fun loadMapMarkers(kakaoMap: KakaoMap) {
+    private fun updateTodoQuest(position: Int, exp: Int, level: Int, qcc: Int) {
+        if (position >= itemsd.size) {
+            Log.e("updateTodoQuest", "Invalid index: $position, size: ${itemsd.size}")
+            return
+        }
+
+        val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+
+
+            retrofitService.updateQuest(itemsd[position].no,itemsd[position].uid,itemsd[position].quest,exp,level,qcc).enqueue(object : Callback<String> {
+                override fun onResponse(p0: Call<String>, p1: Response<String>) {
+                    Toast.makeText(context, "이게 왜 안댐?", Toast.LENGTH_SHORT).show()
+                    itemsd.removeAt(position)
+                    recyclerViewAdapter.notifyItemRemoved(position)
+                    ma?.getMember()
+                    Toast.makeText(context, "${p1.body()}", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onFailure(p0: Call<String>, p1: Throwable) {
+                    Toast.makeText(context, "업데이트 에러: ${p1.message}", Toast.LENGTH_SHORT).show()
+                    Log.d("error", "${p1.message}")
+                }
+
+            })
+
+            Toast.makeText(context, "이게 왜 안댐?!!!!", Toast.LENGTH_SHORT).show()
+
+    }
+        private fun loadMapMarkers(kakaoMap: KakaoMap) {
+
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
@@ -165,17 +288,19 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                     items.clear()
                     items.addAll(it)
                     recyclerViewAdapter.notifyDataSetChanged()
+
                     items.forEach {
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
                             .setTexts(it.workTodo).setTag(it)
-
+                        var ss =it.todoNo
                         kakaoMap.labelManager!!.layer!!.addLabel(options)
                         val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
                         val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
                         if (isWithin50Meters(latitude, longitude, it.lat, it.lng)) {
                             Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo}", Toast.LENGTH_SHORT).show()
                             //완료 시키기
+                            updateTodoQuest(ss, ma?.dataManager?.memberFlow?.value!!.exp, ma?.dataManager?.memberFlow?.value!!.level, ma?.dataManager?.memberFlow?.value!!.qcc)
 
                         }
                     }
@@ -199,18 +324,41 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         val distance = R * c
-        return distance <= 50
+        return distance <= 50   /*미터 단위*/
     }
 
     private fun moveToMyLocation() {
-        kakaoMap?.let {
-            val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
-            val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
-            val mypos: LatLng = LatLng.from(latitude, longitude)
+        startLocationUpdates()
+    }
 
-            it.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16))
-        } ?: run {
-            Toast.makeText(activity, "잠시 기다린후 다시한번 눌러주세요", Toast.LENGTH_SHORT).show()
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            return
         }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
+    private fun updateMapLocation(lat: Double, lng: Double) {
+        val mypos:LatLng = LatLng.from(lat, lng)
+        kakaoMap?.moveCamera(CameraUpdateFactory.newCenterPosition(mypos, 16)) ?: run {
+            Toast.makeText(activity, "맵이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }
