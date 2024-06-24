@@ -16,6 +16,7 @@ import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.data.Inventory
+import com.limjihoon.myhero.databinding.FragmentProfile2Binding
 import com.limjihoon.myhero.databinding.FragmentProfileBinding
 import com.limjihoon.myhero.model.DataManager
 import com.limjihoon.myhero.network.RetrofitHelper
@@ -27,7 +28,7 @@ import kotlin.random.Random
 
 
 class RendumFragment : Fragment() {
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentProfile2Binding
     private lateinit var dataManager: DataManager
     private var inventory: Inventory? = null
     private var hero = 0
@@ -37,7 +38,7 @@ class RendumFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
+        binding = FragmentProfile2Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
