@@ -246,6 +246,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun updateTodoQuest(position: Int, exp: Int, level: Int, qcc: Int) {
         if (position >= itemsd.size) {
             Log.e("updateTodoQuest", "Invalid index: $position, size: ${itemsd.size}")
