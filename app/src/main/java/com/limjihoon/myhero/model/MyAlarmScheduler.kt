@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import java.util.Calendar
+import java.util.TimeZone
 
 class MyAlarmScheduler(private val context: Context) {
 
@@ -17,6 +18,7 @@ class MyAlarmScheduler(private val context: Context) {
 
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
+            setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
             set(Calendar.HOUR_OF_DAY, 0) // 밤 12시 (24시 형식)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)

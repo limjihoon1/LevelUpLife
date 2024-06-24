@@ -5,5 +5,4 @@ data class InsertMarker(
     val workTodo: String,
     var state: Int,
     val no: Int,
-
 )

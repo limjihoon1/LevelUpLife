@@ -9,6 +9,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven (url = "https://jitpack.io")
     }
 }
 dependencyResolutionManagement {
@@ -19,6 +20,7 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://devrepo.kakao.com/nexus/repository/kakaomap-releases/")
         }
+        maven (url = "https://jitpack.io")
 
 
     }
