@@ -34,6 +34,7 @@ import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.MapDrawerAdapter
+import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
 import com.limjihoon.myhero.data.DocumentOfPlace
 import com.limjihoon.myhero.data.Markers
 import com.limjihoon.myhero.data.Member2
@@ -64,13 +65,16 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
     var uid = ""
 
 
+
     private lateinit var dataManager: DataManager
     private lateinit var recyclerViewAdapter: MapDrawerAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
-    private val labelMap = HashMap<String, LabelOptions>()
+
+//    private lateinit var adapter: TodoRecyclerAdapter
+//    lateinit var  recyclerView: RecyclerView
 
 
 
@@ -90,6 +94,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -127,8 +132,8 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 //            startActivity(Intent(requireContext(), MapActivity::class.java))
 //        }
         binding.mySw.setOnClickListener {
-            val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
-            val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+            val latitude: Double = (activity as? MainActivity)?.myLocation?.latitude ?: 37.555
+            val longitude: Double = (activity as? MainActivity)?.myLocation?.longitude ?: 126.9746
 
             updateMapLocation2(latitude, longitude) }
 
@@ -210,8 +215,8 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
         override fun onMapReady(kakaoMap: KakaoMap) {
             this@MapFragment.kakaoMap = kakaoMap
 
-            val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
-            val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+            val latitude: Double = (activity as? MainActivity)?.myLocation?.latitude ?: 37.555
+            val longitude: Double = (activity as? MainActivity)?.myLocation?.longitude ?: 126.9746
             val mypos: LatLng = LatLng.from(latitude, longitude)
 
             val cameraUpdate = CameraUpdateFactory.newCenterPosition(mypos, 16)
@@ -223,7 +228,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
             loadMapMarkers(kakaoMap)
 
-            val placeLists: List<DocumentOfPlace>? = (activity as MainActivity).kakaoData?.documents
+            val placeLists: List<DocumentOfPlace>? = (activity as? MainActivity)?.kakaoData?.documents
             placeLists?.forEach {
                 val mypo = LatLng.from(it.y.toDouble(), it.x.toDouble())
                 val options = LabelOptions.from(mypo).setStyles(R.drawable.ic_pin)
@@ -245,7 +250,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                     }
                     val options = InfoWindowOptions.from(label.position)
                     options.body = layout
-                    options.setBodyOffset(0f, -150f)
+                    options.setBodyOffset(0f, -100f)
                     options.setTag(tag)
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
                     kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
@@ -266,28 +271,28 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
 
 
         Log.d("updateTodoQuest", "${itemsd[position].uid}")
-            retrofitService.updateQuest(position,itemsd[position].uid,itemsd[position].quest,exp,level,qcc).enqueue(object : Callback<String> {
+        retrofitService.updateQuest(position,itemsd[position].uid,itemsd[position].quest,exp,level,qcc).enqueue(object : Callback<String> {
 
-                override fun onResponse(p0: Call<String>, p1: Response<String>) {
+            override fun onResponse(p0: Call<String>, p1: Response<String>) {
 
-                    Log.d("updateTodoQuest", "${p1.body()}")
-                    itemsd.removeAt(position)
-                    recyclerViewAdapter.notifyItemRemoved(position)
-                    ma?.getMember()
-                    Toast.makeText(context, "${p1.body()}", Toast.LENGTH_SHORT).show()
-                }
+                Log.d("updateTodoQuest", "${p1.body()}")
+                itemsd.removeAt(position)
+                recyclerViewAdapter.notifyItemRemoved(position)
+                ma?.getMember()
+                Toast.makeText(context, "${p1.body()}", Toast.LENGTH_SHORT).show()
+            }
 
-                override fun onFailure(p0: Call<String>, p1: Throwable) {
-                    Toast.makeText(context, "업데이트 에러: ${p1.message}", Toast.LENGTH_SHORT).show()
-                    Log.d("error", "${p1.message}")
-                }
+            override fun onFailure(p0: Call<String>, p1: Throwable) {
+                Toast.makeText(context, "업데이트 에러: ${p1.message}", Toast.LENGTH_SHORT).show()
+                Log.d("error", "${p1.message}")
+            }
 
-            })
+        })
 
 
 
     }
-        private fun loadMapMarkers(kakaoMap: KakaoMap) {
+    private fun loadMapMarkers(kakaoMap: KakaoMap) {
 
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
         val retrofitService = retrofit.create(RetrofitService::class.java)
@@ -301,17 +306,20 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                     recyclerViewAdapter.notifyDataSetChanged()
 
                     items.forEach {
+//                        var i=0
                         val mypo = LatLng.from(it.lat, it.lng)
                         val options = LabelOptions.from(mypo).setStyles(R.drawable.qqqqq)
                             .setTexts(it.workTodo).setTag(it)
 
                         kakaoMap.labelManager!!.layer!!.addLabel(options)
-                        val latitude: Double = (activity as MainActivity).myLocation?.latitude ?: 37.555
-                        val longitude: Double = (activity as MainActivity).myLocation?.longitude ?: 126.9746
+                        val latitude: Double = (activity as? MainActivity)?.myLocation?.latitude ?: 37.555
+                        val longitude: Double = (activity as? MainActivity)?.myLocation?.longitude ?: 126.9746
                         if (isWithin50Meters(latitude, longitude, it.lat, it.lng)) {
                             Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo}", Toast.LENGTH_SHORT).show()
                             //완료 시키기
-                            updateTodoQuest(position = items.indexOf(it), ma?.dataManager?.memberFlow?.value!!.exp, ma?.dataManager?.memberFlow?.value!!.level, ma?.dataManager?.memberFlow?.value!!.qcc)
+//                            itemsd.get(i).oinm = true
+//                            i++
+//                            updateTodoQuest(itemsd.indexOf(Todo(G.uid, it.workTodo, 0, 0, "map")), ma?.dataManager?.memberFlow?.value!!.exp, ma?.dataManager?.memberFlow?.value!!.level, ma?.dataManager?.memberFlow?.value!!.qcc)
 
 
                         }

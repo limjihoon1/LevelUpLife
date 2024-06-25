@@ -111,6 +111,8 @@ class SigninActivity : AppCompatActivity() {
                             Toast.makeText(this@SigninActivity, "닉네임을 입력해주세요!!", Toast.LENGTH_SHORT).show()
                         } else if (nickname == checkNickname) {
                             Toast.makeText(this@SigninActivity, "중복된 닉네임이 있습니다!!", Toast.LENGTH_SHORT).show()
+                        } else if (nickname.length > 15) {
+                            Toast.makeText(this@SigninActivity, "15자 이내로 닉네임을 설정해 주세요", Toast.LENGTH_SHORT).show()
                         } else if (hero == 0) {
                             Toast.makeText(this@SigninActivity, "캐릭터를 선택해주세요!!", Toast.LENGTH_SHORT).show()
                         }else{
@@ -121,8 +123,7 @@ class SigninActivity : AppCompatActivity() {
                                     val uid = auth.currentUser?.uid.toString()
                                     val member = Member(email, uid, nickname, hero)
 
-                                    val retrofit3 =
-                                        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+                                    val retrofit3 =RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
                                     val retrofitService3 = retrofit3.create(RetrofitService::class.java)
 
                                     retrofitService3.insertMember(member)
@@ -146,25 +147,11 @@ class SigninActivity : AppCompatActivity() {
                                                             G.uid = uid
                                                             G.nickname = nickname
 
-                                                            startActivity(
-                                                                Intent(
-                                                                    this@SigninActivity,
-                                                                    MainActivity::class.java
-                                                                )
-                                                            )
+                                                            startActivity(Intent(this@SigninActivity,MainActivity::class.java))
                                                             finish()
-                                                            Toast.makeText(
-                                                                this@SigninActivity,
-                                                                "$data3",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
+                                                            Toast.makeText(this@SigninActivity,"$data3",Toast.LENGTH_SHORT).show()
                                                             Log.d("good", "로그인 성공")
-                                                        } else {
-                                                            Toast.makeText(
-                                                                this@SigninActivity,
-                                                                "로그인 실패",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
+                                                        } else {Toast.makeText(this@SigninActivity,"로그인 실패",Toast.LENGTH_SHORT).show()
                                                         }
                                                     }
                                             }
