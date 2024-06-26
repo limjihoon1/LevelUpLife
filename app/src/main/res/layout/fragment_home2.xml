@@ -233,6 +233,22 @@
                     android:src="@drawable/mapicon" />
 
             </LinearLayout>
+            <TextView
+                android:id="@+id/q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일정추가"
+                android:layout_below="@id/linearQ"
+                android:layout_marginLeft="68dp"
+                />
+            <TextView
+                android:id="@+id/q1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="방문일정추가"
+                android:layout_below="@id/linearQ"
+                android:layout_marginLeft="262dp"
+                />
 
             <TextView
                 android:id="@+id/nummm"
@@ -240,9 +256,10 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="오늘의 보상 횟수 0/5 "
-                android:layout_below="@+id/linearQ"
+                android:layout_below="@+id/q"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="4dp"
                 android:textSize="14sp" />
 
             <androidx.recyclerview.widget.RecyclerView
