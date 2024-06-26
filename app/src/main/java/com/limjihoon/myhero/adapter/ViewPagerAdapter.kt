@@ -11,8 +11,13 @@ class ViewPagerAdapter(private val context: Context) : RecyclerView.Adapter<View
     private val layouts = listOf(
 
         R.layout.custum_dialog_viewpager_page_first,
+        R.layout.custum_dialog_viewpager_page_first_1,
         R.layout.custum_dialog_viewpager_page_second,
-        R.layout.custum_dialog_viewpager_page_third
+        R.layout.custum_dialog_viewpager_page_third,
+        R.layout.custum_dialog_viewpager_page_forth,
+        R.layout.custum_dialog_viewpager_page_fifth,
+        R.layout.custum_dialog_viewpager_page_sixth,
+        R.layout.custum_dialog_viewpager_page_seventh
 
     )
 

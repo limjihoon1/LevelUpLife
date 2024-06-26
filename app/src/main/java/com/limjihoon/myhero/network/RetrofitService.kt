@@ -76,7 +76,7 @@ interface RetrofitService {
 
 
 
-    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
+    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakoDataSearch(
         @Query("query") query: String,
@@ -84,7 +84,7 @@ interface RetrofitService {
         @Query("y") latitude: String
     ): Call<KakaoData>
     //카카오 로컬 검색 api 요청해주는 코드 만들어줘 우선 응답type 을  :KakaoData
-    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
+    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakaoSearchPlaceToString3(
         @Query("query") query: String,
