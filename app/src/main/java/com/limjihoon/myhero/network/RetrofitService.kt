@@ -76,7 +76,7 @@ interface RetrofitService {
 
 
 
-    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakoDataSearch(
         @Query("query") query: String,
