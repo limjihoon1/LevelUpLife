@@ -20,10 +20,11 @@ import com.limjihoon.myhero.data.AnalysisResult
 import com.limjihoon.myhero.data.LegendItem
 import com.limjihoon.myhero.data.LegendItem2
 import com.limjihoon.myhero.data.Todo
+import com.limjihoon.myhero.databinding.ActivityChatBot2Binding
 import com.limjihoon.myhero.databinding.ActivityChatBotBinding
 
 class ChatBotActivity : AppCompatActivity() {
-    lateinit var binding: ActivityChatBotBinding
+    lateinit var binding: ActivityChatBot2Binding
     private val dataList: MutableList<PieEntry> = mutableListOf()
     private val dataList2: MutableList<PieEntry> = mutableListOf()
     var items = mutableListOf<LegendItem>()
@@ -42,7 +43,7 @@ class ChatBotActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityChatBotBinding.inflate(layoutInflater)
+        binding = ActivityChatBot2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -141,7 +142,7 @@ class ChatBotActivity : AppCompatActivity() {
                 animateY(1400, Easing.EaseInOutQuad) // 1.4초 동안 애니메이션 설정
                 animate()
             }
-            tvMsg.text = "AI 소감평 : ${analysisResult.msg}"
+            tvMsg.text = "AI 소감평\n${analysisResult.msg}"
         }
 
     }

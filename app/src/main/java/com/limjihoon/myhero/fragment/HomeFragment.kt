@@ -98,6 +98,7 @@ class HomeFragment : Fragment() {
         ma.dataManager.memberFlow.value ?: return
 
         dataManager = ma.dataManager
+        dataManager = ma.dataManager
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
