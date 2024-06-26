@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/bnv_home"
-        android:icon="@drawable/fragment_icon_home"
+        android:icon="@drawable/bottomicon_todo"
         android:title="Home"
         />
     <item

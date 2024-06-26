@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity() {
         if (isFirstRun) {
             showMultiPageDialog()
             val editor = sharedPreferences.edit()
-            editor.putBoolean("isFirstRun", tutorial)
+            editor.putBoolean("isFirstRun", false)
             editor.apply()
 
         }
@@ -345,7 +345,7 @@ class MainActivity : AppCompatActivity() {
 
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(dialogView)
-            .setPositiveButton("다음으로", null)
+            .setPositiveButton("확인", null)
             .setNegativeButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -362,10 +362,8 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 if (position == adapter.itemCount - 1) {
                     positiveButton.text = "확인 (다시는 보지 않음)"
-                    tutorial = true
-
                 } else {
-                    positiveButton.text = "취소"
+                    positiveButton.text = "다음 으로"
                 }
             }
         })
