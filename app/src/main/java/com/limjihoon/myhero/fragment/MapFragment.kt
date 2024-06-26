@@ -315,7 +315,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                         val latitude: Double = (activity as? MainActivity)?.myLocation?.latitude ?: 37.555
                         val longitude: Double = (activity as? MainActivity)?.myLocation?.longitude ?: 126.9746
                         if (isWithin50Meters(latitude, longitude, it.lat, it.lng)) {
-                            Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, "마커가 50m 이내에 있습니다: ${it.workTodo} : 퀘스트 완료", Toast.LENGTH_SHORT).show()
                             //완료 시키기
 //                            itemsd.get(i).oinm = true
 //                            i++

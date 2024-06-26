@@ -22,7 +22,7 @@ android {
         properties.load(project.rootProject.file("local.properties").inputStream())
 
         buildConfigField("String", "GPT_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
-        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
+        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"${properties.getProperty("KAKAO_MAP_API_KEY")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.firebase.messaging.ktx)
     implementation(libs.androidx.lifecycle.runtime.android)
-    implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
