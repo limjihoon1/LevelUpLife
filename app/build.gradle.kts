@@ -22,7 +22,7 @@ android {
         properties.load(project.rootProject.file("local.properties").inputStream())
 
         buildConfigField("String", "GPT_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
-        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
+        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"${properties.getProperty("KAKAO_MAP_API_KEY")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
