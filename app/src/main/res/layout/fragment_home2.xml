@@ -290,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="오늘의 보상 횟수 0/5 "
-                android:layout_below="@+id/linearQ"
+                android:layout_below="@+id/q"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:textSize="14sp" />
