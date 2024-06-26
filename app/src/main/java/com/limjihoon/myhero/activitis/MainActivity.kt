@@ -68,14 +68,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val imageView: ImageView = findViewById(R.id.gifImageView)
-        imageView.visibility = View.VISIBLE  // ImageView를 보이게 설정
-        Glide.with(this).load(R.drawable.loding).into(imageView)
-
-        // 3초 후 ImageView 숨기기
-        Handler(Looper.getMainLooper()).postDelayed({
-            imageView.visibility = View.GONE
-        }, 4000)
+//        val imageView: ImageView = findViewById(R.id.gifImageView)
+//        imageView.visibility = View.VISIBLE  // ImageView를 보이게 설정
+//        Glide.with(this).load(R.drawable.loding).into(imageView)
+//
+//        // 3초 후 ImageView 숨기기
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            imageView.visibility = View.GONE
+//        }, 4000)
 
         val navView: BottomNavigationView = findViewById(R.id.bnv)
         navView.itemIconTintList = null
