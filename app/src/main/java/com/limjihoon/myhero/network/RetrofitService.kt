@@ -1,7 +1,10 @@
 package com.limjihoon.myhero.network
 
+import com.limjihoon.myhero.BuildConfig
 import com.limjihoon.myhero.data.AdminMember
 import com.limjihoon.myhero.data.Board
+import com.limjihoon.myhero.data.ChatGPTRequest
+import com.limjihoon.myhero.data.ChatGPTResponse
 import com.limjihoon.myhero.data.Inventory
 import com.limjihoon.myhero.data.KakaoData
 import com.limjihoon.myhero.data.Markers
@@ -73,7 +76,7 @@ interface RetrofitService {
 
 
 
-    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakoDataSearch(
         @Query("query") query: String,
@@ -81,7 +84,7 @@ interface RetrofitService {
         @Query("y") latitude: String
     ): Call<KakaoData>
     //카카오 로컬 검색 api 요청해주는 코드 만들어줘 우선 응답type 을  :KakaoData
-    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakaoSearchPlaceToString3(
         @Query("query") query: String,
@@ -89,7 +92,7 @@ interface RetrofitService {
         @Query("y") latitude: String
     ): Call<KakaoData>
 
-    @Headers("Authorization: KakaoAK 3f16c86dce6a4075f70b6034a4edcd01")
+    @Headers("Authorization: KakaoAK ${BuildConfig.KAKAO_MAP_API_KEY}")
     @GET("/v2/local/search/keyword.json?sort=distance")
     fun kakaoSearchPlaceToString2(
         @Query("x") longitude: String,
@@ -158,4 +161,11 @@ interface RetrofitService {
     @GET("/levelUpLife/my/reset.php")
     fun reset() : Call<String>
 
+    @Headers("Authorization: Bearer ${BuildConfig.GPT_API_KEY}")
+    @POST("/v1/chat/completions")
+    fun getChatCompletion(@Body request: ChatGPTRequest): Call<ChatGPTResponse>
+
+    @Headers("Authorization: Bearer ${BuildConfig.GPT_API_KEY}")
+    @POST("/v1/chat/completions")
+    fun getChatCompletion2(@Body request: ChatGPTRequest): Call<String>
 }

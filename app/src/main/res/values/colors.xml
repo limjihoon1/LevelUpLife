@@ -10,4 +10,26 @@
 
     <color name="ffcd4a">#FFCD4A</color>
 
+    <color name="pastel_rainbow1">#FF6C6C</color>
+    <color name="pastel_rainbow2">#FB8B8B</color>
+    <color name="pastel_rainbow3">#FBAEAE</color>
+    <color name="pastel_rainbow4">#F38867</color>
+    <color name="pastel_rainbow5">#FFC774</color>
+    <color name="pastel_rainbow6">#FDDE80</color>
+    <color name="pastel_rainbow7">#F3FF80</color>
+    <color name="pastel_rainbow8">#ECF49B</color>
+    <color name="pastel_rainbow9">#F9FFBE</color>
+    <color name="pastel_rainbow10">#D1FF9B</color>
+
+    <color name="pastel_ai1">#89CBFF</color>
+    <color name="pastel_ai2">#69BDFF</color>
+    <color name="pastel_ai3">#008EFF</color>
+    <color name="pastel_ai4">#44C5FF</color>
+    <color name="pastel_ai5">#00E2FF</color>
+    <color name="pastel_ai6">#46EAFF</color>
+    <color name="pastel_ai7">#A4F5FF</color>
+    <color name="pastel_ai8">#A9D9FF</color>
+    <color name="pastel_ai9">#A3B1FD</color>
+    <color name="pastel_ai10">#C7A7FF</color>
+
 </resources>

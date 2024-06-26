@@ -15,6 +15,7 @@ converterScalars = "2.11.0"
 gson = "2.11.0"
 firebaseMessagingKtx = "24.0.0"
 lifecycleRuntimeAndroid = "2.8.2"
+swiperefreshlayout = "1.2.0-alpha01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalar
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 androidx-lifecycle-runtime-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-android", version.ref = "lifecycleRuntimeAndroid" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

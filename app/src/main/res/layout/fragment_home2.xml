@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/background_dim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="2dp"
+        android:visibility="gone" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/animation_ai" />
+
+    <TextView
+        android:id="@+id/tv_ai_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="170dp"
+        android:elevation="2dp"
+        android:text="AI가 일정을 분석중입니다"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/first_card_view"
@@ -256,10 +290,9 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="오늘의 보상 횟수 0/5 "
-                android:layout_below="@+id/q"
+                android:layout_below="@+id/linearQ"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="4dp"
                 android:textSize="14sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -285,5 +318,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>

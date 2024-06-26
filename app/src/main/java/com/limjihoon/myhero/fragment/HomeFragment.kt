@@ -1,7 +1,9 @@
 package com.limjihoon.myhero.fragment
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,13 +17,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.airbnb.lottie.LottieDrawable
+import com.google.gson.Gson
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
+import com.limjihoon.myhero.data.AnalysisResult
+import com.limjihoon.myhero.data.ChatGPTRequest
+import com.limjihoon.myhero.data.ChatGPTResponse
 import com.limjihoon.myhero.data.Member2
+import com.limjihoon.myhero.data.Message
 import com.limjihoon.myhero.data.Todo
 import com.limjihoon.myhero.data.Todo2
 import com.limjihoon.myhero.databinding.FragmentHome2Binding
@@ -39,10 +47,10 @@ class HomeFragment : Fragment() {
     private lateinit var dataManager: DataManager
     private var uid = ""
     var items = mutableListOf<Todo>()
-    var questions = 0
 
     private val retrofitService: RetrofitService by lazy {
-        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr").create(RetrofitService::class.java)
+        RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
+            .create(RetrofitService::class.java)
     }
 
     override fun onCreateView(
@@ -55,7 +63,24 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.fabtn.setOnClickListener { startActivity(Intent(requireContext(), ChatBotActivity::class.java)) }
+        binding.fabtn.setOnClickListener {
+//            AlertDialog.Builder(requireContext()).setMessage("${dataManager.todoFlow.value?.size}").create().show()
+            if (dataManager.todoFlow.value!!.isNotEmpty() && dataManager.todoFlow.value?.size!! >= 3) {
+                todayTodo()
+            } else if (dataManager.todoFlow.value?.size!! <  3) {
+                Toast.makeText(
+                    requireContext(),
+                    "일정이 최소 3개 정도는 있어야 합니다!! ",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "분석할 일정이 없습니다 일정 추가 후 다시 눌러주세요!!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
         binding.creatTodo.setOnClickListener { listCreate() }
 
         binding.createMap.setOnClickListener {
@@ -82,12 +107,133 @@ class HomeFragment : Fragment() {
             }
         }
 
+//        getMessage()
+    }
+
+    private fun todayTodo() {
+
+        val todoList = StringBuilder()
+
+        if (dataManager.todoFlow.value!!.isNotEmpty()) {
+            for (i in 0 until dataManager.todoFlow.value!!.size) {
+                todoList.append("${dataManager.todoFlow.value!![i].workTodo},")
+            }
+        } else {
+            Log.d("todoErr", "일정 목록이 없습니다")
+        }
+
+        binding.animationView.apply {
+            visibility = View.VISIBLE
+            repeatCount = LottieDrawable.INFINITE
+            playAnimation()
+            binding.backgroundDim.visibility = View.VISIBLE
+            binding.tvAiLoading.visibility = View.VISIBLE
+
+            setOnTouchListener { v, event -> true }
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    setOnTouchListener(null)
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+
+            })
+        }
+        val request = ChatGPTRequest(
+            model = "gpt-3.5-turbo",
+            messages = listOf(
+                Message(
+                    role = "system",
+                    content = "You are an assistant that helps analyze and improve Todo Lists."
+                ),
+                Message(
+                    role = "user",
+                    content = """행동 지침 : 지금부터 내가 너에게 주는 todo list를 기반으로 데이터를 json형태로 줄때에는 사용자(나) 그리고 너(GPT)가 주는대답을 json형식으로 만들어줘
+                         데이터의 구분을위해 사용자(나)는 myTodoList 너(GPT)는 recommendTodo라고 구분지어줘
+                          그리고 todo list에 대해서는 사용자(나)의 todo list를 받아서 너(GPT)가 여러가지 추천사항을 적용해서 새롭게 만든 데이터를 recommendTodo에 적용시켜준뒤에
+                          기존 사용자(나)의 todo list에 너(GPT)가 추천해주는걸 포함해서 백분율표의 퍼센트로도 함께 적용시켜줘 그후에 todo list에 전체 
+                          분위기에 맞춰서 총평을 180자이내로 해줄래? 총평은 msg로 구분지어줄래? 총평을 작성할떄 60자이내에 한번씩 줄을바꿔줘""".trimIndent()
+                ),
+                Message(
+                    role = "user",
+                    content = """예시 응답 : {
+    "myTodoList": [
+        {"todo": "영등포역가기", "percentage": 20},
+        {"todo": "근처 카페에서", "percentage": 20},
+        {"todo": "영화보기", "percentage": 20},
+        {"todo": "늦은 점심먹고 산책하기", "percentage": 20},
+        {"todo": "친구랑 헤어지고 게임하기", "percentage": 20}
+    ],
+    "recommendTodo": [
+        {"todo": "영등포역가기", "percentage": 14.3},
+        {"todo": "근처 카페에서", "percentage": 14.3},
+        {"todo": "영화보기", "percentage": 14.3},
+        {"todo": "늦은 점심먹고 산책하기", "percentage": 14.3},
+        {"todo": "친구랑 헤어지고 게임하기", "percentage": 14.3},
+        {"todo": "저녁 운동하기", "percentage": 14.3},
+        {"todo": "자기 전 독서하기", "percentage": 14.3}
+    ],
+    "msg": "오늘의 일정은 일과 운동, 휴식이 잘 균형 잡혀 있습니다.\n아침 스트레칭과 저녁 명상을 추가하여\n하루를 더욱 활기차고 평온하게 마무리하세요."
+}""".trimIndent()
+                ),
+                Message(role = "user", content = todoList.toString())
+            )
+        )
+
+        val retrofit = RetrofitHelper.getRetrofitInstance("https://api.openai.com")
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+//        retrofitService.getChatCompletion2(request).enqueue(object : Callback<String> {
+//            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+//                AlertDialog.Builder(requireContext()).setMessage("${p1.body()}").create().show()
+//                Log.d("gptG", "${p1.body()}")
+//            }
+//
+//            override fun onFailure(p0: Call<String>, p1: Throwable) {
+//                Log.d("gptErr", "${p1.message}")
+//            }
+//
+//        })
+
+        try {
+            retrofitService.getChatCompletion(request).enqueue(object : Callback<ChatGPTResponse> {
+                override fun onResponse(p0: Call<ChatGPTResponse>, p1: Response<ChatGPTResponse>) {
+                    if (p1.isSuccessful) {
+                        val chatResponse = p1.body()
+                        chatResponse?.choices?.forEach {
+//                        AlertDialog.Builder(requireContext()).setMessage("${it.message.content}")
+//                            .create().show()
+                            val intent = Intent(requireContext(), ChatBotActivity::class.java)
+                            intent.putExtra("result", it.message.content)
+                            binding.animationView.visibility = View.GONE
+                            binding.tvAiLoading.visibility = View.GONE
+                            binding.backgroundDim.visibility = View.GONE
+                            binding.animationView.pauseAnimation()
+                            startActivity(intent)
+                            Log.d("gptG", it.message.content)
+                        }
+                    }
+                }
+
+                override fun onFailure(p0: Call<ChatGPTResponse>, p1: Throwable) {
+                    Log.d("gptErr", "${p1.message}")
+                }
+
+            })
+        } catch (e: Exception) {
+            Log.d("GptTodoErr", "${e.message}")
+        }
+
+
+
     }
 
     override fun onResume() {
         super.onResume()
         fetchTodos()
     }
+
     private fun updateInfo(member: Member2?) {
         member?.let {
             binding.nickname.text = it.nickname
@@ -114,19 +260,54 @@ class HomeFragment : Fragment() {
             }
             binding.bar.progress = progress
 
-            when(it.hero) {
-                1 -> { binding.hero.setImageResource(R.drawable.level_up_char1) }
-                2 -> { binding.hero.setImageResource(R.drawable.level_up_char2) }
-                3 -> { binding.hero.setImageResource(R.drawable.level_up_char3) }
-                4 -> { binding.hero.setImageResource(R.drawable.level_up_char4) }
-                5 -> { binding.hero.setImageResource(R.drawable.level_up_char5) }
-                6 -> { binding.hero.setImageResource(R.drawable.level_up_char6) }
-                7 -> { binding.hero.setImageResource(R.drawable.level_up_char7) }
-                8 -> { binding.hero.setImageResource(R.drawable.level_up_char8) }
-                9 -> { binding.hero.setImageResource(R.drawable.level_up_char9) }
-                10 -> { binding.hero.setImageResource(R.drawable.level_up_char10) }
-                11 -> { binding.hero.setImageResource(R.drawable.level_up_char11) }
-                12 -> { binding.hero.setImageResource(R.drawable.level_up_char_hiden2) }
+            when (it.hero) {
+                1 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char1)
+                }
+
+                2 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char2)
+                }
+
+                3 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char3)
+                }
+
+                4 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char4)
+                }
+
+                5 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char5)
+                }
+
+                6 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char6)
+                }
+
+                7 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char7)
+                }
+
+                8 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char8)
+                }
+
+                9 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char9)
+                }
+
+                10 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char10)
+                }
+
+                11 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char11)
+                }
+
+                12 -> {
+                    binding.hero.setImageResource(R.drawable.level_up_char_hiden2)
+                }
             }
         } ?: run {
             binding.nickname.text = "정보 없음"
@@ -144,6 +325,7 @@ class HomeFragment : Fragment() {
                 data?.let {
                     items.clear()
                     items.addAll(it)
+                    dataManager.updateTodo(data)
                     binding.recy.adapter?.notifyDataSetChanged()
                 }
             }

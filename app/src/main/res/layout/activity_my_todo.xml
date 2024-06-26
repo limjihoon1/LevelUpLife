@@ -11,7 +11,7 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="내 게시글 목록"
+        android:text="내 Todo 목록"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAlignment="center"

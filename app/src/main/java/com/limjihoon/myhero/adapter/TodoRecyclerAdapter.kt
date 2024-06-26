@@ -77,6 +77,7 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
                     items.removeAt(position)
                     notifyItemRemoved(position)
                     ma.getMember()
+                    ma.getTodo()
                     Toast.makeText(context, "${p1.body()}", Toast.LENGTH_SHORT).show()
                 }
 
@@ -135,6 +136,7 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful && response.body() == "삭제 성공") {
                         items.removeAt(position)
+                        ma.getTodo()
                         notifyItemRemoved(position)
                         Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
                     } else {
