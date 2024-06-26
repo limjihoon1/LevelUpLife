@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/drawer_layout"
+    android:backgroundTint="@color/white"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.kakao.vectormap.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/linear_search"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/map_shape"
+                android:gravity="center"
+                android:hint="지역을 입력해주세요" />
+
+            <TextView
+                android:id="@+id/search"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/map_btn_shape"
+                android:text="검색"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginLeft="8dp"/>
+
+        </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/my_sw"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#EDDEB6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:strokeColor="#8E6700"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/my_image"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/eeeee" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="내 위치"
+                android:textColor="@color/mapsha"
+                android:textStyle="bold"
+                android:paddingBottom="4dp"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/q_btn"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#EDDEB6"
+        android:layout_below="@id/linear_search"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        app:strokeColor="#8E6700"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/q_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:src="@drawable/qqqqq" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="내 목표"
+                android:textStyle="bold"
+                android:textColor="@color/mapsha"
+                android:paddingBottom="4dp"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    </RelativeLayout>
+  <include
+      android:id="@+id/navigation_view"
+      layout="@layout/drawer_hearder_map"/>
+</androidx.drawerlayout.widget.DrawerLayout>

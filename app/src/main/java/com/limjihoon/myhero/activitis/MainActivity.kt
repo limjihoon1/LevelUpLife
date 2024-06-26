@@ -7,8 +7,11 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
@@ -63,6 +67,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+//        val imageView: ImageView = findViewById(R.id.gifImageView)
+//        imageView.visibility = View.VISIBLE  // ImageView를 보이게 설정
+//        Glide.with(this).load(R.drawable.loding).into(imageView)
+//
+//        // 3초 후 ImageView 숨기기
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            imageView.visibility = View.GONE
+//        }, 4000)
+
         val navView: BottomNavigationView = findViewById(R.id.bnv)
         navView.itemIconTintList = null
 

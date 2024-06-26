@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:backgroundTint="@color/white"
+        app:strokeColor="#EDDEB6"
         app:cardCornerRadius="16dp">
 
         <LinearLayout
@@ -195,6 +196,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="1"
+        app:strokeColor="#EDDEB6"
         android:backgroundTint="@color/white">
 
         <RelativeLayout
@@ -232,10 +234,12 @@
                     android:src="@drawable/mapicon" />
 
             </LinearLayout>
+
             <TextView
-                android:id="@+id/tv_today_quest"
+                android:id="@+id/nummm"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
                 android:text="오늘의 보상 횟수 0/5 "
                 android:layout_below="@+id/linearQ"
                 android:layout_alignParentRight="true"
@@ -246,8 +250,10 @@
                 android:id="@+id/recy"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp"
-                android:layout_below="@id/tv_today_quest"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:layout_below="@id/nummm"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton

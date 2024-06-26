@@ -179,12 +179,12 @@ AI 추천 todo 분석결과
             uid = it.uid
             var progress = 0
             when (it.qcc) {
-                0 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 0/5 "
-                1 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 1/5 "
-                2 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 2/5 "
-                3 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 3/5 "
-                4 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 4/5 "
-                5 -> binding.tvTodayQuest.text = "오늘의 보상 횟수 5/5 "
+                0 -> binding.nummm.text = "오늘의 보상 횟수 0/5 "
+                1 -> binding.nummm.text = "오늘의 보상 횟수 1/5 "
+                2 -> binding.nummm.text = "오늘의 보상 횟수 2/5 "
+                3 -> binding.nummm.text = "오늘의 보상 횟수 3/5 "
+                4 -> binding.nummm.text = "오늘의 보상 횟수 4/5 "
+                5 -> binding.nummm.text = "오늘의 보상 횟수 5/5 "
 
             }
             when (it.exp) {

@@ -69,6 +69,7 @@ dependencies {
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
     implementation ("com.google.android.material:material:1.3.0")
 
+    
     implementation ("com.kakao.maps.open:android:2.9.5")
     implementation ("com.google.android.gms:play-services-location:21.1.0")
 

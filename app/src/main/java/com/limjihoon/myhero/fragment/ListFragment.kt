@@ -112,8 +112,23 @@ class ListFragment : Fragment(){
 
     inner class MyWebViewConnector{
         @JavascriptInterface
-        fun user(msg:String){
+        fun loadWrite(msg:String){
+            Log.d("로드글쓰기","로드글쓰기 실행")
+            Toast.makeText(context, "웹글쓰기:"+msg, Toast.LENGTH_SHORT).show()
+            Log.d("로드글쓰기","메세지 토스트 실행")
+            // 웹에서 온 글쓰기 내용= msg
+            // 웹으로 Boolean 값으로 보내주세요.
 
+//            웹으로 보내는 작업은 머신러닝 완료후...
+//            val result:Boolean = false // 여기에 값 넣어주세요
+//            binding.wv.loadUrl("javascript:addWrite()")
+//            Log.d("로드글쓰기","웹으로전송")
+        }
+
+        @JavascriptInterface
+        fun loadComment(comment:String){
+            Toast.makeText(context, "웹댓글:"+comment, Toast.LENGTH_SHORT).show()
+            //웹에서 온 댓글 내용
         }
     }
 

@@ -16,7 +16,7 @@
         android:id="@+id/bnv_notifications"
         android:icon="@drawable/fragment_icon_board"
         android:iconTint="@color/white"
-            android:title="Notifications" />
+        android:title="Notifications" />
     <item
         android:id="@+id/bnv_profile"
         android:icon="@drawable/fragment_icon_gachwa"

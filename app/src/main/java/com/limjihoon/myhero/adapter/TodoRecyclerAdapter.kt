@@ -21,6 +21,7 @@ import retrofit2.Response
 class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : RecyclerView.Adapter<ViewHolder>() {
     private val ma = context as MainActivity
 
+
     inner class VH1(val binding: RecyclHomeBinding) : ViewHolder(binding.root)
     inner class VH2(val binding: RecyclHome1Binding) : ViewHolder(binding.root)
 
@@ -34,6 +35,7 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
+        var quest = false
         if (item.quest == "normal") {
             val vh = holder as VH1
             vh.binding.tvWorkTodo.text = item.workTodo
@@ -47,10 +49,15 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
             }
         } else {
             val vh = holder as VH2
+
             vh.binding.tvWorkTodo.text = item.workTodo
 
             vh.binding.ivSuccess.setOnClickListener {
-                AlertDialog.Builder(context).setMessage("퀘스트 지역이 아닙니다 퀘스트 위치로 이동하세요!!").create().show()
+                if (item.oinm){
+                    updateTodo(position, ma.dataManager.memberFlow.value!!.exp, ma.dataManager.memberFlow.value!!.level, ma.dataManager.memberFlow.value!!.qcc)
+                    AlertDialog.Builder(context).setMessage("퀘스트 지역이 아닙니다 퀘스트 위치로 이동하세요!!").create().show()
+                }else    AlertDialog.Builder(context).setMessage("퀘스트 지역이 아닙니다 지도를 확인해 주세요").create().show()
+
             }
 
             vh.binding.ivDelete.setOnClickListener {
@@ -58,6 +65,7 @@ class TodoRecyclerAdapter(val context: Context, val items: MutableList<Todo>) : 
             }
         }
     }
+
 
     private fun updateTodo(position: Int, exp: Int, level: Int, qcc: Int) {
         val retrofit = RetrofitHelper.getRetrofitInstance("http://myhero.dothome.co.kr")
