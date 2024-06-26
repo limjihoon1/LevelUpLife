@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
 
     alias(libs.plugins.androidApplication)
@@ -15,6 +17,12 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+
+        buildConfigField("String", "GPT_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
+        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"${properties.getProperty("GPT_API_KEY")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +45,7 @@ android {
     }
     buildFeatures{
         viewBinding=true
+        buildConfig=true
     }
 }
 
@@ -53,6 +62,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.firebase.messaging.ktx)
     implementation(libs.androidx.lifecycle.runtime.android)
+    implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,5 +84,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.1.0")
 
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation ("com.github.ybq:Android-SpinKit:1.4.0")
+    implementation ("com.airbnb.android:lottie:6.0.0")
 
 }

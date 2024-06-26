@@ -1,7 +1,9 @@
 package com.limjihoon.myhero.fragment
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,12 +17,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.airbnb.lottie.LottieDrawable
+import com.google.gson.Gson
 import com.limjihoon.myhero.G
 import com.limjihoon.myhero.R
 import com.limjihoon.myhero.activitis.ChatBotActivity
 import com.limjihoon.myhero.activitis.MainActivity
 import com.limjihoon.myhero.activitis.MapActivity
 import com.limjihoon.myhero.adapter.TodoRecyclerAdapter
+import com.limjihoon.myhero.data.AnalysisResult
 import com.limjihoon.myhero.data.ChatGPTRequest
 import com.limjihoon.myhero.data.ChatGPTResponse
 import com.limjihoon.myhero.data.Member2
@@ -58,7 +63,24 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.fabtn.setOnClickListener { todayTodo() }
+        binding.fabtn.setOnClickListener {
+//            AlertDialog.Builder(requireContext()).setMessage("${dataManager.todoFlow.value?.size}").create().show()
+            if (dataManager.todoFlow.value!!.isNotEmpty() && dataManager.todoFlow.value?.size!! >= 3) {
+                todayTodo()
+            } else if (dataManager.todoFlow.value?.size!! <  3) {
+                Toast.makeText(
+                    requireContext(),
+                    "일정이 최소 3개 정도는 있어야 합니다!! ",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "분석할 일정이 없습니다 일정 추가 후 다시 눌러주세요!!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
         binding.creatTodo.setOnClickListener { listCreate() }
 
         binding.createMap.setOnClickListener {
@@ -89,9 +111,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun todayTodo() {
-        val todoList = "아침 9시 까지 왕십리 교육원 가기,점심 돈까스 먹기,낮잠 1시간 자기,저녁 간단한 안주와 맥주 먹기, 밤 10시 잠자기".trimIndent()
-        val todoList2 = "아침 9시 까지 왕십리 교육원 가기,점심 라멘 먹기,저녁 6시 집가기, 밤에 잠자기".trimIndent()
 
+        val todoList = StringBuilder()
+
+        if (dataManager.todoFlow.value!!.isNotEmpty()) {
+            for (i in 0 until dataManager.todoFlow.value!!.size) {
+                todoList.append("${dataManager.todoFlow.value!![i].workTodo},")
+            }
+        } else {
+            Log.d("todoErr", "일정 목록이 없습니다")
+        }
+
+        binding.animationView.apply {
+            visibility = View.VISIBLE
+            repeatCount = LottieDrawable.INFINITE
+            playAnimation()
+            binding.backgroundDim.visibility = View.VISIBLE
+            binding.tvAiLoading.visibility = View.VISIBLE
+
+            setOnTouchListener { v, event -> true }
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    setOnTouchListener(null)
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+
+            })
+        }
         val request = ChatGPTRequest(
             model = "gpt-3.5-turbo",
             messages = listOf(
@@ -101,68 +149,84 @@ class HomeFragment : Fragment() {
                 ),
                 Message(
                     role = "user",
-                    content = """행동 지침 : 지금부터 내 todo list에 대해서 분석을 시작할거야 분석한 결과는
-백분율로 계산해서 퍼센트값을 돌려주고 첫번째는 내 todo list에 대한 분석 결과값
-두번째는 내 todo list에 너가 생각할때 이런 일정도 있었으면 좋겠다고 생각한 일정을 추가해서
-새롭게 만든 todo list를 분석한 결과값 이렇게 두개의 결과값을 나한테줘""".trimIndent()
+                    content = """행동 지침 : 지금부터 내가 너에게 주는 todo list를 기반으로 데이터를 json형태로 줄때에는 사용자(나) 그리고 너(GPT)가 주는대답을 json형식으로 만들어줘
+                         데이터의 구분을위해 사용자(나)는 myTodoList 너(GPT)는 recommendTodo라고 구분지어줘
+                          그리고 todo list에 대해서는 사용자(나)의 todo list를 받아서 너(GPT)가 여러가지 추천사항을 적용해서 새롭게 만든 데이터를 recommendTodo에 적용시켜준뒤에
+                          기존 사용자(나)의 todo list에 너(GPT)가 추천해주는걸 포함해서 백분율표의 퍼센트로도 함께 적용시켜줘 그후에 todo list에 전체 
+                          분위기에 맞춰서 총평을 180자이내로 해줄래? 총평은 msg로 구분지어줄래? 총평을 작성할떄 60자이내에 한번씩 줄을바꿔줘""".trimIndent()
                 ),
                 Message(
                     role = "user",
-                    content = """예시 응답 : 홍길동님의 todo 분석결과
-1.왕십리 교육원 가기
-퍼센트: 25%
-2.점심 주먹밥, 라면 먹기
-퍼센트: 12.5%
-3.낮잠 1시간 자기
-퍼센트: 12.5%
-4.저녁 간단한 안주와 맥주 먹기
-퍼센트: 25%
-5.밤에 피시방가기
-퍼센트: 25%
-
-AI 추천 todo 분석결과
-1.왕십리 교육원 가기 (25%)
-2.점심 주먹밥, 라면 먹기 (12.5%)
-3.낮잠 1시간 자기 (12.5%)
-4.운동하기 (6.25%)
-5.독서 또는 자기개발 시간 (12.5%)
-6.저녁 간단한 안주와 맥주 먹기 (18.75%)
-7.밤에 피시방가기 (31.25%)""".trimIndent()
+                    content = """예시 응답 : {
+    "myTodoList": [
+        {"todo": "영등포역가기", "percentage": 20},
+        {"todo": "근처 카페에서", "percentage": 20},
+        {"todo": "영화보기", "percentage": 20},
+        {"todo": "늦은 점심먹고 산책하기", "percentage": 20},
+        {"todo": "친구랑 헤어지고 게임하기", "percentage": 20}
+    ],
+    "recommendTodo": [
+        {"todo": "영등포역가기", "percentage": 14.3},
+        {"todo": "근처 카페에서", "percentage": 14.3},
+        {"todo": "영화보기", "percentage": 14.3},
+        {"todo": "늦은 점심먹고 산책하기", "percentage": 14.3},
+        {"todo": "친구랑 헤어지고 게임하기", "percentage": 14.3},
+        {"todo": "저녁 운동하기", "percentage": 14.3},
+        {"todo": "자기 전 독서하기", "percentage": 14.3}
+    ],
+    "msg": "오늘의 일정은 일과 운동, 휴식이 잘 균형 잡혀 있습니다.\n아침 스트레칭과 저녁 명상을 추가하여\n하루를 더욱 활기차고 평온하게 마무리하세요."
+}""".trimIndent()
                 ),
-                Message(role = "user", content = todoList2)
+                Message(role = "user", content = todoList.toString())
             )
         )
 
         val retrofit = RetrofitHelper.getRetrofitInstance("https://api.openai.com")
         val retrofitService = retrofit.create(RetrofitService::class.java)
 
-        retrofitService.getChatCompletion2(request).enqueue(object : Callback<String> {
-            override fun onResponse(p0: Call<String>, p1: Response<String>) {
-                AlertDialog.Builder(requireContext()).setMessage("${p1.body()}").create().show()
-                Log.d("gptG", "${p1.body()}")
-            }
-
-            override fun onFailure(p0: Call<String>, p1: Throwable) {
-                Log.d("gptErr", "${p1.message}")
-            }
-
-        })
-
-//        retrofitService.getChatCompletion(request).enqueue(object : Callback<ChatGPTResponse> {
-//            override fun onResponse(p0: Call<ChatGPTResponse>, p1: Response<ChatGPTResponse>) {
-//                if (p1.isSuccessful) {
-//                    val chatResponse = p1.body()
-//                    chatResponse?.choices?.forEach {
-//                        AlertDialog.Builder(requireContext()).setMessage("${it.message.content}").create().show()
-//                    }
-//                }
+//        retrofitService.getChatCompletion2(request).enqueue(object : Callback<String> {
+//            override fun onResponse(p0: Call<String>, p1: Response<String>) {
+//                AlertDialog.Builder(requireContext()).setMessage("${p1.body()}").create().show()
+//                Log.d("gptG", "${p1.body()}")
 //            }
 //
-//            override fun onFailure(p0: Call<ChatGPTResponse>, p1: Throwable) {
+//            override fun onFailure(p0: Call<String>, p1: Throwable) {
 //                Log.d("gptErr", "${p1.message}")
 //            }
 //
 //        })
+
+        try {
+            retrofitService.getChatCompletion(request).enqueue(object : Callback<ChatGPTResponse> {
+                override fun onResponse(p0: Call<ChatGPTResponse>, p1: Response<ChatGPTResponse>) {
+                    if (p1.isSuccessful) {
+                        val chatResponse = p1.body()
+                        chatResponse?.choices?.forEach {
+//                        AlertDialog.Builder(requireContext()).setMessage("${it.message.content}")
+//                            .create().show()
+                            val intent = Intent(requireContext(), ChatBotActivity::class.java)
+                            intent.putExtra("result", it.message.content)
+                            binding.animationView.visibility = View.GONE
+                            binding.tvAiLoading.visibility = View.GONE
+                            binding.backgroundDim.visibility = View.GONE
+                            binding.animationView.pauseAnimation()
+                            startActivity(intent)
+                            Log.d("gptG", it.message.content)
+                        }
+                    }
+                }
+
+                override fun onFailure(p0: Call<ChatGPTResponse>, p1: Throwable) {
+                    Log.d("gptErr", "${p1.message}")
+                }
+
+            })
+        } catch (e: Exception) {
+            Log.d("GptTodoErr", "${e.message}")
+        }
+
+
+
     }
 
     override fun onResume() {
@@ -261,6 +325,7 @@ AI 추천 todo 분석결과
                 data?.let {
                     items.clear()
                     items.addAll(it)
+                    dataManager.updateTodo(data)
                     binding.recy.adapter?.notifyDataSetChanged()
                 }
             }
