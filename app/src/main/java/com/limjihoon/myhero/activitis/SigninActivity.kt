@@ -163,7 +163,7 @@ class SigninActivity : AppCompatActivity() {
                                         })
 
                                 } else {
-                                    Toast.makeText(this@SigninActivity, "회원가입 실패", Toast.LENGTH_SHORT)
+                                    Toast.makeText(this@SigninActivity, "회원가입 실패 : 이메일 형식이 맞는지 확인해 주세요", Toast.LENGTH_SHORT)
                                         .show()
                                 }
                             }
