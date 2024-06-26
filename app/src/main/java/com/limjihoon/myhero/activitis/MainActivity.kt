@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity() {
         if (isFirstRun) {
             showMultiPageDialog()
             val editor = sharedPreferences.edit()
-            editor.putBoolean("isFirstRun", true)
+            editor.putBoolean("isFirstRun", false)
             editor.apply()
 
         }
