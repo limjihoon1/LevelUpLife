@@ -70,7 +70,7 @@
             android:exported="false" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_map"/>
+            android:value="@string/kakao_map" />
 
         <service
             android:name=".MyFirebaseMessagingService"
