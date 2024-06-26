@@ -67,7 +67,8 @@
             android:id="@+id/input_layout_login_pw"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="비밀번호 입력">
+            android:hint="비밀번호 입력"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -94,7 +95,8 @@
             android:id="@+id/input_layout_login_pw_cin"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="비밀번호 확인">
+            android:hint="비밀번호 확인"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
