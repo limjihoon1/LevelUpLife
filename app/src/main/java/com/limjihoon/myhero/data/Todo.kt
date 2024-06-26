@@ -6,6 +6,7 @@ data class Todo(
     var state: Int,
     val no: Int,
     var quest:String="",
+    var oinm:Boolean = false
     )
 
 data class Todo2(

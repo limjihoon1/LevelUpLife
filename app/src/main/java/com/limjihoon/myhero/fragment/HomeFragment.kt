@@ -144,7 +144,6 @@ class HomeFragment : Fragment() {
                 data?.let {
                     items.clear()
                     items.addAll(it)
-
                     binding.recy.adapter?.notifyDataSetChanged()
                 }
             }
