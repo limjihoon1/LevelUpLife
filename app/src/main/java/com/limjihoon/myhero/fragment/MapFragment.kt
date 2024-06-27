@@ -112,7 +112,7 @@ class MapFragment : Fragment(), MapDrawerAdapter.OnItemClickListener {
                 p0 ?: return
                 for (location in p0.locations) {
                     // 위치가 갱신될 때마다 지도 업데이트
-                    updateMapLocation(location.latitude, location.longitude)
+//                    updateMapLocation(location.latitude, location.longitude)
 
                 }
             }
