@@ -86,6 +86,15 @@ class MainActivity : AppCompatActivity() {
 
         if (dataManager.memberFlow.value == null && dataManager.inventoryFlow.value == null) {
             Toast.makeText(this, "로딩중...", Toast.LENGTH_SHORT).show()
+//            val imageView: ImageView = findViewById(R.id.gifImageView)
+//            imageView.visibility = View.VISIBLE  // ImageView를 보이게 설정
+//            Glide.with(this).load(R.drawable.loding).into(imageView)
+//
+//            // 4초 후 ImageView 숨기기
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                imageView.visibility = View.GONE
+//            }, 4000)
+////            AlertDialog.Builder(this).setMessage("로딩중 ,,,,").create().show()
         }
 
         binding.bnv.setOnItemSelectedListener {

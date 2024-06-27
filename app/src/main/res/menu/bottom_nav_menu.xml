@@ -3,26 +3,26 @@
 
     <item
         android:id="@+id/bnv_home"
-        android:icon="@drawable/bottomicon_todo"
-        android:title="Home"
+        android:icon="@drawable/fragment_icon_home"
+        android:title="내 일정"
         />
     <item
         android:id="@+id/bnv_search"
         android:icon="@drawable/fragment_icon_map"
         android:iconTint="@color/white"
         android:iconTintMode="src_over"
-        android:title="Search" />
+        android:title="방문일정 보기" />
     <item
         android:id="@+id/bnv_notifications"
         android:icon="@drawable/fragment_icon_board"
         android:iconTint="@color/white"
-        android:title="Notifications" />
+        android:title="게시판" />
     <item
         android:id="@+id/bnv_profile"
         android:icon="@drawable/fragment_icon_gachwa"
-        android:title="Profile" />
+        android:title="뽑기" />
     <item
         android:id="@+id/bnv_settings"
         android:icon="@drawable/fragment_icon_setting"
-        android:title="Settings" />
+        android:title="내 프로필" />
 </menu>

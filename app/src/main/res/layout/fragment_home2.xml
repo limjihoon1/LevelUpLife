@@ -305,14 +305,52 @@
                 android:layout_below="@id/nummm"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/fabtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_alignBottom="@+id/recy"-->
+<!--                android:layout_marginRight="16dp"-->
+<!--                android:layout_marginBottom="16dp"/>-->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/fabtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#EDDEB6"
                 android:layout_alignParentEnd="true"
                 android:layout_alignBottom="@+id/recy"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                app:strokeColor="#8E6700"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/q_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:src="@drawable/bottomicon_ai_1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="AI 분석가"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/mapsha"
+                        android:paddingBottom="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
 
         </RelativeLayout>
 

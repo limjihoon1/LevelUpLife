@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/gifImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
@@ -25,10 +25,10 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="76dp"
         android:layout_alignParentBottom="true"
         android:background="#EDDEB6"
-        app:itemIconSize="50dp"
-        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="40dp"
+
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
